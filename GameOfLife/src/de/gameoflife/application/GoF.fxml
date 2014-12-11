@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.gameoflife.application.GameOfLifeController">
+   <children>
+      <StackPane fx:id="stackPane" prefHeight="40.0" prefWidth="600.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+         <children>
+            <ToolBar prefHeight="40.0" prefWidth="600.0">
+              <items>
+                  <Label fx:id="username" text="name" />
+                <Button mnemonicParsing="false" onAction="#logout" text="log out" />
+                  <Separator orientation="VERTICAL" prefHeight="0.0" prefWidth="0.0" />
+                  <Button mnemonicParsing="false" onAction="#newGame" text="New" />
+                  <Button mnemonicParsing="false" text="Load" />
+                  <Button mnemonicParsing="false" text="Delete" />
+              </items>
+            </ToolBar>
+            <ToolBar prefHeight="40.0" prefWidth="200.0">
+              <items>
+                <Button mnemonicParsing="false" onAction="#login" text="log in" />
+              </items>
+            </ToolBar>
+         </children>
+      </StackPane>
+      <TabPane fx:id="tabPane" layoutY="40.0" prefHeight="364.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="36.0" />
+   </children>
+</AnchorPane>

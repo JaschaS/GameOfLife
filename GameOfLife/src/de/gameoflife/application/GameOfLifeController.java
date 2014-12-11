@@ -13,7 +13,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -29,19 +28,19 @@ import javafx.stage.StageStyle;
 public class GameOfLifeController {
 
     @FXML private TabPane tabPane;
-    @FXML private StackPane stackPane;
+    //@FXML private StackPane stackPane;
     @FXML private Label username;
 
     @FXML
     protected void login(ActionEvent event) throws IOException {
         //System.out.println("Login");
                
-        assert( stackPane == null );
+        //assert( stackPane == null );
         
         //stackPane.getChildren().get(1).toBack();
         
         final Scene loginMask;
-        final Stage stage = new Stage( StageStyle.UTILITY );
+        final Stage stage = new Stage( StageStyle.UNDECORATED );
         
         FXMLLoader loader = new FXMLLoader( getClass().getResource("LoginMask.fxml") );
         
@@ -65,7 +64,7 @@ public class GameOfLifeController {
                     stage.close();
                 
                     username.setText( controller.getUserName() );
-                    stackPane.getChildren().get(1).toBack();
+                    //stackPane.getChildren().get(1).toBack();
                     
                 }
             }
@@ -86,9 +85,9 @@ public class GameOfLifeController {
     protected void logout(ActionEvent event) throws IOException {
         //System.out.println("logout");
                
-        assert( stackPane == null );
+        //assert( stackPane == null );
                 
-        stackPane.getChildren().get(0).toFront();
+        //stackPane.getChildren().get(0).toFront();
         tabPane.getTabs().clear();
         
     }

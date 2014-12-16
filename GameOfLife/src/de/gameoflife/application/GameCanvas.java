@@ -17,7 +17,7 @@ import javafx.scene.paint.Color;
  * @version 2014-12-11-1 
  * 
  */
-class GameCanvas extends Parent {
+public class GameCanvas extends Parent {
     
     protected final Canvas grid;
     protected final Canvas elements;
@@ -27,11 +27,11 @@ class GameCanvas extends Parent {
     protected int height;
     protected ArrayList<Cell> cells = new ArrayList<>();
    
-    GameCanvas(int width, int height, int cellSize) {
+    public GameCanvas(int width, int height, int cellSize) {
         this(width, height, cellSize, cellSize);
     }
     
-    GameCanvas(int width, int height, int cellWidth, int cellHeight) {
+    public GameCanvas(int width, int height, int cellWidth, int cellHeight) {
         super();
         
         this.width = width;
@@ -49,11 +49,11 @@ class GameCanvas extends Parent {
         
     }
     
-    void addListener() {
+    public void addListener() {
         setOnMouseClicked( new GameCanvasListener() );
     }
     
-    void removeListener() {
+    public void removeListener() {
         setOnMouseClicked(null);
     }
     
@@ -77,15 +77,15 @@ class GameCanvas extends Parent {
     
     }
     
-    int getWidth() {
+    public int getWidth() {
         return width;
     }
     
-    int getHeight() {
+    public int getHeight() {
         return height;
     }
     
-    class GameCanvasListener implements EventHandler<MouseEvent> {
+    private class GameCanvasListener implements EventHandler<MouseEvent> {
 
         @Override
         public void handle(MouseEvent event) {

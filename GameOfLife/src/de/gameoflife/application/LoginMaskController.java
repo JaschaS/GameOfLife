@@ -1,9 +1,9 @@
 
 package de.gameoflife.application;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -20,42 +20,31 @@ import javafx.scene.control.TextField;
  * @version 2014-12-11-1
  * 
  */
-public class LoginMaskController implements Initializable {
+public final class LoginMaskController implements Initializable {
 
-    @FXML private Button login;
-    @FXML private TextField user;
-    @FXML private PasswordField password;
     @FXML private Label error;
-    
-    public void setOnActionEvent(EventHandler event) throws IOException {
-    
-        login.setOnAction(event);
-    
+    @FXML private TextField username;
+    @FXML private PasswordField password;
+    @FXML private Button login;
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+    }
+
+    public void loginOnActionEvent( EventHandler<ActionEvent> event ) {
+        login.setOnAction( event );
     }
     
-    public void setError( String errorText ) {
-        error.setText( errorText );
+    public void setErrorText( String text ) {
+        error.setText( text );
     }
     
     public String getUserName() {
-        return user.getText();
+        return username.getText();
     }
     
     public String getPassword() {
         return password.getText();
-    }
-    
-    public boolean isUserAndPasswordEmpty() {
-        return user.getText().equals("") || password.getText().equals("");
-    }
-
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        
-        assert( login == null );
-        
-        login.setDefaultButton(true);
-        
     }
     
 }

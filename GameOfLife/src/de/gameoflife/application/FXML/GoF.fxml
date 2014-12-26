@@ -9,11 +9,11 @@
       <ToolBar prefHeight="40.0" prefWidth="600.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
         <items>
             <Label fx:id="username" text="name" />
-          <Button mnemonicParsing="false" text="log out" />
+          <Button mnemonicParsing="false" text="log out" onAction="#logout" />
             <Separator orientation="VERTICAL" prefHeight="0.0" prefWidth="0.0" />
-            <Button mnemonicParsing="false" text="New" />
-            <Button mnemonicParsing="false" text="Load" />
-            <Button mnemonicParsing="false" text="Delete" />
+            <Button mnemonicParsing="false" text="New" onAction="#newGame" />
+            <Button mnemonicParsing="false" text="Load" onAction="#loadGame" />
+            <Button mnemonicParsing="false" text="Delete" onAction="#deleteGame" />
         </items>
       </ToolBar>
       <TabPane fx:id="tabPane" layoutY="40.0" prefHeight="364.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="36.0" />

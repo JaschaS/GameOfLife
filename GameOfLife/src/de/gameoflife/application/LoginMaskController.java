@@ -47,4 +47,10 @@ public final class LoginMaskController implements Initializable {
         return password.getText();
     }
     
+    public void clear() {
+        error.setText("");
+        password.setText("");
+        username.setText("");
+    }
+    
 }

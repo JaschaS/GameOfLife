@@ -36,10 +36,15 @@ public class GameOfLife extends Application {
     @Override
     public void start(Stage primaryStage) throws IOException {
 
-        gamescene = FXMLLoader.load(getClass().getResource("FXML/GoF.fxml"));
+        gamesceneLoader = new FXMLLoader( getClass().getResource("FXML/GoF.fxml") );
+        
+        gamescene = (AnchorPane) gamesceneLoader.load();//= FXMLLoader.load(getClass().getResource("FXML/GoF.fxml"));
         gamescene.setVisible( false );
         gamescene.prefWidthProperty().bind(stackpane.widthProperty());
         gamescene.prefHeightProperty().bind(stackpane.heightProperty());
+        
+        gamesceneController = gamesceneLoader.getController();
+        gamesceneController.setRootApplication(this);
         
         loginMaskLoader = new FXMLLoader( getClass().getResource("FXML/LoginMask.fxml") );
         
@@ -51,12 +56,22 @@ public class GameOfLife extends Application {
                 controller.setErrorText("User name or password empty!");
                 
             }
-            else {            
-                //error.setText("");
+            else {
+                
+                System.out.println("Password check");
+                
+                //TODO schauen ob username und passwort richtig sind!
+                
+                User.create( controller.getUserName(), controller.getPassword() );
+                
+                controller.clear();
+                
                 ObservableList<Node> children = stackpane.getChildren();
-                children.get(1).toFront();
-                children.get(1).setVisible(true);
                 children.get(0).setVisible( false );
+                children.get(1).setVisible(true);
+                children.get(1).toFront();
+                children.get(0).toBack();
+                
             }
         });
         
@@ -73,6 +88,19 @@ public class GameOfLife extends Application {
     public void stop() throws Exception {
         super.stop();
     }
+    
+    void logout() {
+    
+        assert stackpane != null ;
+        assert stackpane.getChildren().size() == 2;
+        
+        ObservableList<Node> children = stackpane.getChildren();
+        children.get(1).setVisible(false);
+        children.get(0).setVisible(true);
+        children.get(0).toFront();
+        children.get(1).toBack();
+    
+    }
 
     /**
      * @param args the command line arguments
@@ -82,3 +110,9 @@ public class GameOfLife extends Application {
     }
 
 }
+
+/**
+ * - Einige probleme mit der Stackpane der main app behoben
+ * - Zusätzliche funktionalität im GoFController hinzugefügt
+ * - User Klasse hinzugefügt
+ */

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane fx:id="pane" id="AnchorPane" prefHeight="97.0" prefWidth="303.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.gameoflife.application.NewGameController">
+   <children>
+      <Pane prefHeight="97.0" prefWidth="303.0" style="-fx-background-color: rgb(241, 241, 241);"  >
+         <children>
+            <Label layoutX="14.0" layoutY="6.0" text="Name" />
+            <TextField layoutX="13.0" layoutY="26.0" prefHeight="26.0" prefWidth="279.0" fx:id="gameName"  />
+            <Button layoutX="235.0" layoutY="63.0" mnemonicParsing="false" text="create" fx:id="create" />
+         </children>
+      </Pane>
+   </children>
+</AnchorPane>

@@ -8,7 +8,6 @@ import javafx.application.Application;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -31,7 +30,7 @@ public class GameOfLife extends Application {
     private final StackPane stackpane = new StackPane();
     private Stage primaryStage;
     private AnchorPane gamescene;
-    private AnchorPane newGame;
+    private Parent newGame;
     private Parent loginMask;
     private FXMLLoader loginMaskLoader;
     private FXMLLoader gamesceneLoader;
@@ -47,11 +46,11 @@ public class GameOfLife extends Application {
         
         newGameLoader = new FXMLLoader( getClass().getResource("FXML/NewGame.fxml") ); //FXMLLoader.load( getClass().getResource("FXML/NewGame.fxml") );
         
-        newGame = (AnchorPane) newGameLoader.load();
-        newGame.setStyle("-fx-background-color: rgba(71, 71, 71, 0.5)");
+        newGame = (Parent) newGameLoader.load();
+        newGame.setVisible(false);
+        //newGame.setStyle("-fx-background-color: rgba(71, 71, 71, 0.5)");
         
         newGameController = newGameLoader.getController();
-        newGameController.setOwner(primaryStage);
         
         gamesceneLoader = new FXMLLoader( getClass().getResource("FXML/GoF.fxml") );
         
@@ -66,6 +65,7 @@ public class GameOfLife extends Application {
         loginMaskLoader = new FXMLLoader( getClass().getResource("FXML/LoginMask.fxml") );
         
         loginMask = (Parent) loginMaskLoader.load();
+        //loginMask.setVisible(false);
         LoginMaskController controller = loginMaskLoader.getController();
         controller.loginOnActionEvent((ActionEvent event) -> {
             if( controller.getUserName().equals("") || controller.getPassword().equals("") ) {
@@ -94,15 +94,17 @@ public class GameOfLife extends Application {
                 //showLoginScreen();
                 
                 
+                
                 showGameScreen();
                 
             }
             
         });
         
-        stackpane.getChildren().addAll( loginMask, gamescene );
-
-        StackPane.setAlignment(newGame, Pos.CENTER);
+        stackpane.setStyle("-fx-background-color: rgba(71, 71, 71, 0.5);");
+        stackpane.getChildren().addAll( loginMask, gamescene, newGame );
+        
+        //StackPane.setAlignment(newGame, Pos.CENTER);
         
         
         Scene scene = new Scene( stackpane, 600, 400 );
@@ -116,58 +118,86 @@ public class GameOfLife extends Application {
     @Override
     public void stop() throws Exception {
         super.stop();
+        System.exit(0);
     }
     
     void showLoginScreen() {
         
         ObservableList<Node> children = stackpane.getChildren();
         
-        int game = children.indexOf( gamescene );
-        int login = children.indexOf( loginMask );
-        //int newGameDialog = children.indexOf( newGame );
+        int gamePosition = children.indexOf( gamescene );
+        int loginPosition = children.indexOf( loginMask );
+        int newGamePosition = children.indexOf( newGame );
         
-        children.get(game).setVisible(false);
-        children.get(login).setVisible(true);
-        //children.get(newGameDialog).setVisible(false);   
+       gamescene.setVisible(false);
+        loginMask.setVisible(true);
+        newGame.setVisible(false);     
         
-        children.get(game).toBack();
-        children.get(login).toFront();
-        //children.get(newGameDialog).toBack();  
+        children.get(gamePosition).toBack();
+        children.get(loginPosition).toFront();
+        children.get(newGamePosition).toBack();  
+        
     }
     
     void showGameScreen() {
         
-        ObservableList<Node> children = stackpane.getChildren();
+         ObservableList<Node> children = stackpane.getChildren();
         
-        int game = children.indexOf( gamescene );
-        int login = children.indexOf( loginMask );
-        //int newGameDialog = children.indexOf( newGame );
+        int gamePosition = children.indexOf( gamescene );
+        int loginPosition = children.indexOf( loginMask );
+        int newGamePosition = children.indexOf( newGame );
         
-        children.get(game).setVisible(true);
-        children.get(login).setVisible(false);
-        //children.get(newGameDialog).setVisible(false);   
+        gamescene.setVisible(true);
+        loginMask.setVisible(false);
+        newGame.setVisible(false);   
         
-        children.get(game).toFront();
-        children.get(login).toBack();
-        //children.get(newGameDialog).toBack(); 
+        children.get(gamePosition).toFront();
+        children.get(loginPosition).toBack();
+        children.get(newGamePosition).toBack();  
         
     }
 
     void newGame() {
         
+        ObservableList<Node> children = stackpane.getChildren();
+        
+        int gamePosition = children.indexOf( gamescene );
+        int loginPosition = children.indexOf( loginMask );
+        int newGamePosition = children.indexOf( newGame );
+        
+        gamescene.setVisible(true);
+        loginMask.setVisible(false);
+        newGame.setVisible(true);   
+        
+        children.get(gamePosition).toBack();
+        children.get(loginPosition).toBack();
+        children.get(newGamePosition).toFront();
+        
+        gamescene.setDisable(true);
+        
+        newGameController.setFocus();
+        
         newGameController.onActionEvent((ActionEvent event1) -> {
             
             try {
+                
                 gamesceneController.createTab( newGameController.getGameName() );
+                
+                newGameController.clearText();
+                newGame.setVisible(false);
+                newGame.toBack();
+                
+                gamescene.setDisable(false);
+                
             } catch (IOException ex) {
                 Logger.getLogger(GameOfLife.class.getName()).log(Level.SEVERE, null, ex);
             }
             
-            newGameController.hide();
+            //newGameController.hide();
             
         });
         
-        newGameController.showAndWait();
+        //newGameController.showAndWait();
         
     }
 

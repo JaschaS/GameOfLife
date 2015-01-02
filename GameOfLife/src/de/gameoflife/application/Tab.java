@@ -10,6 +10,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Slider;
 import javafx.scene.control.ToolBar;
 import javafx.scene.layout.AnchorPane;
@@ -28,6 +29,7 @@ public class Tab implements Initializable {
     @FXML private AnchorPane pane;
     @FXML private Button draw;
     @FXML private ToolBar toolBar;
+    @FXML private ScrollPane scrollpane;
 
     private GameCanvas canvas;
 
@@ -80,14 +82,15 @@ public class Tab implements Initializable {
             currentSpeed.setText(newValue.intValue() + "");
         });
         
-        canvas = new GameCanvas( 300, 300, 30 );
+        canvas = new GameCanvas( 900, 900, 30 );
         canvas.setLayoutX( GameOfLife.SCREEN_WIDTH / 2 - canvas.getWidth() / 2 );
         canvas.setLayoutY( GameOfLife.SCREEN_HEIGHT / 2 - 15 - canvas.getHeight() / 2 );
         
         //canvas.addListener();
         //canvas.removeListener();
         
-        pane.getChildren().add( canvas );
+        scrollpane.setContent(canvas);
+        
         /*
         canvas.setOnMouseClicked(new EventHandler<MouseEvent>() {
 

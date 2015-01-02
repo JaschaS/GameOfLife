@@ -6,14 +6,24 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane fx:id="pane" id="AnchorPane" prefHeight="97.0" prefWidth="303.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.gameoflife.application.NewGameController">
-   <children>
-      <Pane prefHeight="97.0" prefWidth="303.0" style="-fx-background-color: rgb(241, 241, 241);"  >
-         <children>
-            <Label layoutX="14.0" layoutY="6.0" text="Name" />
-            <TextField layoutX="13.0" layoutY="26.0" prefHeight="26.0" prefWidth="279.0" fx:id="gameName"  />
-            <Button layoutX="235.0" layoutY="63.0" mnemonicParsing="false" text="create" fx:id="create" />
-         </children>
-      </Pane>
-   </children>
-</AnchorPane>
+<GridPane style="-fx-background-color: rgb(241,241,241); -fx-effect: dropshadow(three-pass-box, grey, 30, 0.5, 0, 0); -fx-border-radius: 5 5 5 5;
+  -fx-background-radius: 5 5 5 5;" alignment="CENTER" hgap="10" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="135.0" prefWidth="375.0" vgap="12" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.gameoflife.application.NewGameController">
+    <columnConstraints>
+      <ColumnConstraints halignment="RIGHT" />
+      <ColumnConstraints halignment="LEFT" />
+    </columnConstraints>
+     <children>
+           
+        
+                <Label text="Name" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                <TextField fx:id="gameName" prefHeight="26.0" prefWidth="279.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                <Button fx:id="create" style="-fx-font-size: 15pt" text="create" GridPane.columnIndex="1" GridPane.rowIndex="2" />               
+                
+     </children>
+   <rowConstraints>
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+   </rowConstraints>
+</GridPane>

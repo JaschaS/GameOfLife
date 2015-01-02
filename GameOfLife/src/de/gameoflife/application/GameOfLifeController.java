@@ -9,6 +9,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.control.TabPane;
+import javafx.scene.layout.AnchorPane;
 
 /**
  * FXML Controller class
@@ -62,8 +63,22 @@ public final class GameOfLifeController {
         
         Tab newTab = new Tab();
         newTab.setText(tabname);
-        newTab.setContent( tabContent );
-    
+        
+        AnchorPane pane = new AnchorPane();
+        pane.minHeight(0.0);
+        pane.minHeight(0.0);
+        pane.prefHeight(180.0);
+        pane.prefWidth(200.0);
+        
+        pane.getChildren().add(tabContent);
+        
+        AnchorPane.setLeftAnchor(tabContent, 0.0);
+        AnchorPane.setRightAnchor(tabContent, 0.0);
+        AnchorPane.setBottomAnchor(tabContent, 0.0);
+        AnchorPane.setTopAnchor(tabContent, 0.0);
+        
+        newTab.setContent(pane);
+        
         tabPane.getTabs().add(newTab);
         
     }

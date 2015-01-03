@@ -6,18 +6,23 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<GridPane style="-fx-background-color: rgb(241,241,241); -fx-effect: dropshadow(three-pass-box, grey, 30, 0.5, 0, 0); -fx-border-radius: 5 5 5 5;
-  -fx-background-radius: 5 5 5 5;" alignment="CENTER" hgap="10" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="135.0" prefWidth="375.0" vgap="12" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.gameoflife.application.NewGameController">
+<GridPane alignment="CENTER" hgap="10" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="135.0" prefWidth="375.0" style="-fx-background-color: rgb(241,241,241); -fx-effect: dropshadow(three-pass-box, grey, 30, 0.5, 0, 0); -fx-border-radius: 5 5 5 5;   -fx-background-radius: 5 5 5 5;" vgap="12" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.gameoflife.application.NewGameController">
     <columnConstraints>
       <ColumnConstraints halignment="RIGHT" />
       <ColumnConstraints halignment="LEFT" />
+      <ColumnConstraints />
     </columnConstraints>
      <children>
            
-        
+                <Label fx:id="error"  style="-fx-text-fill: red;" text="" GridPane.columnIndex="1" />
                 <Label text="Name" GridPane.columnIndex="0" GridPane.rowIndex="1" />
                 <TextField fx:id="gameName" prefHeight="26.0" prefWidth="279.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                <Button fx:id="create" style="-fx-font-size: 15pt" text="create" GridPane.columnIndex="1" GridPane.rowIndex="2" />               
+            <HBox prefHeight="0.0" prefWidth="200.0" spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="2">
+               <children>
+                    <Button fx:id="create" style="-fx-font-size: 15pt" text="create" />
+                    <Button fx:id="cancel"  style="-fx-font-size: 15pt" text="cancel" />
+               </children>
+            </HBox>                
                 
      </children>
    <rowConstraints>

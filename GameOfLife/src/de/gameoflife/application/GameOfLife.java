@@ -1,10 +1,12 @@
 
 package de.gameoflife.application;
 
+import de.gameoflife.connection.rmi.GameHandler;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
+import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
@@ -17,16 +19,16 @@ import javafx.stage.Stage;
 
 /**
  *
- * @author Daniel
+ * @author JScholz
  * 
  * @version 2014-12-11-1 
  * 
  */
 public class GameOfLife extends Application {
 
-    public static final int SCREEN_WIDTH = 1280;
-    public static final int SCREEN_HEIGHT = 720;
-    
+    public static ReadOnlyDoubleProperty stageWidthProperty;
+    public static ReadOnlyDoubleProperty stageHeightProperty;
+       
     private final StackPane stackpane = new StackPane();
     private Stage primaryStage;
     private AnchorPane gamescene;
@@ -38,17 +40,22 @@ public class GameOfLife extends Application {
     private LoginMaskController loginMaskController;
     private GameOfLifeController gamesceneController;
     private NewGameController newGameController;
+    private GameHandler connection;
     
     @Override
     public void start(Stage primaryStage) throws IOException {
-
+        
+        stageWidthProperty = primaryStage.widthProperty();
+        stageHeightProperty = primaryStage.heightProperty();
+        
+        connection = new GameHandler();
+        
         this.primaryStage = primaryStage;
         
         newGameLoader = new FXMLLoader( getClass().getResource("FXML/NewGame.fxml") ); //FXMLLoader.load( getClass().getResource("FXML/NewGame.fxml") );
         
         newGame = (Parent) newGameLoader.load();
         newGame.setVisible(false);
-        //newGame.setStyle("-fx-background-color: rgba(71, 71, 71, 0.5)");
         
         newGameController = newGameLoader.getController();
         
@@ -65,7 +72,6 @@ public class GameOfLife extends Application {
         loginMaskLoader = new FXMLLoader( getClass().getResource("FXML/LoginMask.fxml") );
         
         loginMask = (Parent) loginMaskLoader.load();
-        //loginMask.setVisible(false);
         LoginMaskController controller = loginMaskLoader.getController();
         controller.loginOnActionEvent((ActionEvent event) -> {
             if( controller.getUserName().equals("") || controller.getPassword().equals("") ) {
@@ -83,18 +89,6 @@ public class GameOfLife extends Application {
                 
                 controller.clear();
                 
-                //ObservableList<Node> children = stackpane.getChildren();
-                /*children.get(0).setVisible( false );
-                children.get(1).setVisible(true);
-                children.get(2).setVisible( false );
-                children.get(2).toBack();
-                children.get(1).toFront();
-                children.get(0).toBack();
-                */
-                //showLoginScreen();
-                
-                
-                
                 showGameScreen();
                 
             }
@@ -103,9 +97,6 @@ public class GameOfLife extends Application {
         
         stackpane.setStyle("-fx-background-color: rgba(71, 71, 71, 0.5);");
         stackpane.getChildren().addAll( loginMask, gamescene, newGame );
-        
-        //StackPane.setAlignment(newGame, Pos.CENTER);
-        
         
         Scene scene = new Scene( stackpane, 600, 400 );
         
@@ -118,6 +109,9 @@ public class GameOfLife extends Application {
     @Override
     public void stop() throws Exception {
         super.stop();
+        
+        connection.closeConnection();
+        
         System.exit(0);
     }
     
@@ -128,10 +122,8 @@ public class GameOfLife extends Application {
         int gamePosition = children.indexOf( gamescene );
         int loginPosition = children.indexOf( loginMask );
         int newGamePosition = children.indexOf( newGame );
-        
-       gamescene.setVisible(false);
-        loginMask.setVisible(true);
-        newGame.setVisible(false);     
+         
+        setChildrenVisible(false, true, false);
         
         children.get(gamePosition).toBack();
         children.get(loginPosition).toFront();
@@ -147,9 +139,7 @@ public class GameOfLife extends Application {
         int loginPosition = children.indexOf( loginMask );
         int newGamePosition = children.indexOf( newGame );
         
-        gamescene.setVisible(true);
-        loginMask.setVisible(false);
-        newGame.setVisible(false);   
+        setChildrenVisible(true, false, false);
         
         children.get(gamePosition).toFront();
         children.get(loginPosition).toBack();
@@ -165,9 +155,7 @@ public class GameOfLife extends Application {
         int loginPosition = children.indexOf( loginMask );
         int newGamePosition = children.indexOf( newGame );
         
-        gamescene.setVisible(true);
-        loginMask.setVisible(false);
-        newGame.setVisible(true);   
+        setChildrenVisible(true, false, true);
         
         children.get(gamePosition).toBack();
         children.get(loginPosition).toBack();
@@ -177,28 +165,55 @@ public class GameOfLife extends Application {
         
         newGameController.setFocus();
         
-        newGameController.onActionEvent((ActionEvent event1) -> {
+        newGameController.createEvent((ActionEvent event1) -> {
             
             try {
                 
-                gamesceneController.createTab( newGameController.getGameName() );
-                
-                newGameController.clearText();
-                newGame.setVisible(false);
-                newGame.toBack();
-                
-                gamescene.setDisable(false);
-                
+                //TODO Check if name is Valid??? -nicht null, "", bereits vorhanden
+
+
+                    //boolean successful = connection.generateNewGame( 0, newGameController.getGameName() );
+                    
+                    //if( successful ) {
+                        
+                        gamesceneController.createTab( newGameController.getGameName() );
+                        
+                        closeNewGame();
+                    
+                    /*}
+                    else {
+                    
+                        newGameController.setErrorText("Es ist ein Fehler beim Erstellen aufgetretten.");
+                        
+                    }
+                */
             } catch (IOException ex) {
                 Logger.getLogger(GameOfLife.class.getName()).log(Level.SEVERE, null, ex);
             }
             
-            //newGameController.hide();
             
         });
         
-        //newGameController.showAndWait();
+        newGameController.cancelEvent( (ActionEvent event2) -> {
         
+            closeNewGame();
+            
+        });
+        
+        
+    }
+    
+    private void closeNewGame() {
+            newGameController.clearText();
+            newGame.setVisible(false);
+            newGame.toBack();
+            gamescene.setDisable(false);   
+    }
+    
+    private void setChildrenVisible( boolean gamesceneVisible, boolean loginVisible, boolean newGameVisible ) {
+        gamescene.setVisible(gamesceneVisible);
+        loginMask.setVisible(loginVisible);
+        newGame.setVisible(newGameVisible);      
     }
 
     /**

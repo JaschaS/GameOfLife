@@ -4,9 +4,10 @@ package de.gameoflife.application;
 import java.util.ArrayList;
 import java.util.Iterator;
 import javafx.event.EventHandler;
-import javafx.scene.Parent;
+import javafx.scene.Group;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 
@@ -17,7 +18,7 @@ import javafx.scene.paint.Color;
  * @version 2014-12-11-1 
  * 
  */
-public class GameCanvas extends Parent {
+public class GameCanvas extends Group {
     
     protected final Canvas grid;
     protected final Canvas elements;
@@ -32,29 +33,69 @@ public class GameCanvas extends Parent {
     }
     
     public GameCanvas(int width, int height, int cellWidth, int cellHeight) {
+        
         super();
+        
+        //setStyle("-fx-background-color: red;");
+        
+        double screenWidth = GameOfLife.stageWidthProperty.get();
+        double screenHeight = GameOfLife.stageHeightProperty.get();
+        
+        
+        //setLayoutX( screenWidth * 10 );
+        //setLayoutY( screenHeight * 2 );
+        
+        elements = new Canvas( width, height );
         
         this.width = width;
         this.height = height;
-        
-        grid = new Canvas( width, height );
-        elements = new Canvas( width, height );
-        
         this.cellWidth = cellWidth;
         this.cellHeight = cellHeight;
         
+
+        grid = new Canvas( width, height );
+        //grid.setLayoutX( screenWidth / 2 );
+        //grid.setLayoutY( screenHeight / 2 - height );
+        /*
+        GameOfLife.stageWidthProperty.addListener(observable -> {
+            //setLayoutX( GameOfLife.stageWidthProperty.get() * 10 );
+            grid.setLayoutX( GameOfLife.stageWidthProperty.get() / 2 - width / 2 );
+            drawGrid();
+        });
+        
+        GameOfLife.stageHeightProperty.addListener(observable -> {
+            //setLayoutY( GameOfLife.stageHeightProperty.get() * 2 );
+            grid.setLayoutY( GameOfLife.stageHeightProperty.get() / 2 - height / 2 );
+            drawGrid();
+        });
+        */
         drawGrid();
+        
+        //getChildren().addAll( grid, elements );
+        //setCenter(grid);
         
         getChildren().addAll( grid, elements );
         
     }
     
+    /*
     public void addListener() {
         setOnMouseClicked( new GameCanvasListener() );
     }
     
     public void removeListener() {
         setOnMouseClicked(null);
+    }
+    */
+    
+    public void gridPosition( ScrollPane scrollpane ) {
+    
+        double h = scrollpane.getContent().getBoundsInLocal().getHeight();
+        double y = (grid.getBoundsInParent().getMaxY() + 
+                grid.getBoundsInParent().getMinY()) / 2.0;
+        double v = scrollpane.getViewportBounds().getHeight();
+        scrollpane.setVvalue(scrollpane.getVmax() * ((y - 0.5 * v) / (h - v)));
+        
     }
     
     private void drawGrid() {
@@ -77,12 +118,20 @@ public class GameCanvas extends Parent {
     
     }
     
-    public int getWidth() {
+    public int getGridWidth() {
         return width;
     }
     
-    public int getHeight() {
+    public int getGridHeight() {
         return height;
+    }
+    
+    public Canvas getBackgroundCanvas() {
+        return grid;
+    }
+    
+    public Canvas getFrontendCanvas() {
+        return elements;
     }
     
     private class GameCanvasListener implements EventHandler<MouseEvent> {

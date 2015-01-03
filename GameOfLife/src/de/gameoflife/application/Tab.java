@@ -4,8 +4,6 @@ package de.gameoflife.application;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -14,6 +12,8 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Slider;
 import javafx.scene.control.ToolBar;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
 
 /**
  *
@@ -29,7 +29,9 @@ public class Tab implements Initializable {
     @FXML private AnchorPane pane;
     @FXML private Button draw;
     @FXML private ToolBar toolBar;
-    @FXML private ScrollPane scrollpane;
+    @FXML private ToolBar editorToolBar;
+    @FXML private BorderPane contentPane;
+    @FXML private StackPane stackpane;
 
     private GameCanvas canvas;
 
@@ -64,7 +66,14 @@ public class Tab implements Initializable {
         assert( draw == null);
         assert( currentSpeed == null );
         assert( pane == null );
-
+        
+        toolBar.setVisible(false);
+        toolBar.toBack();
+        
+        editorToolBar.getItems().add(3, new NumberTextField( 100, "3" ) );
+        editorToolBar.getItems().add(5, new NumberTextField( 100, "3" ) );
+        editorToolBar.toFront();
+        /*
         draw.setOnAction( new EventHandler<ActionEvent>() {
             
             private boolean clicked = false;
@@ -77,19 +86,35 @@ public class Tab implements Initializable {
                 clicked ^= true;
             }
         });
-        
+        */
         speedSlider.valueProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
             currentSpeed.setText(newValue.intValue() + "");
         });
         
+        //AnchorPane gameCanvasPane = new AnchorPane();
+        //gameCanvasPane.setStyle("-fx-background-color: red;");
+        
         canvas = new GameCanvas( 900, 900, 30 );
-        canvas.setLayoutX( GameOfLife.SCREEN_WIDTH / 2 - canvas.getWidth() / 2 );
-        canvas.setLayoutY( GameOfLife.SCREEN_HEIGHT / 2 - 15 - canvas.getHeight() / 2 );
+        
+        contentPane.setCenter(canvas);
+        
+        //canvas.setLayoutX( gameCanvasPane.getWidth() / 2 - canvas.getWidth() / 2 );
+        //canvas.setLayoutY( gameCanvasPane.getHeight() / 2 );
+        /*
+        AnchorPane.setLeftAnchor(gameCanvasPane, 0.0);
+        AnchorPane.setRightAnchor(gameCanvasPane, 0.0);
+        AnchorPane.setTopAnchor(gameCanvasPane, 0.0);
+        AnchorPane.setBottomAnchor(gameCanvasPane, 0.0);
+        */
+        //gameCanvasPane.getChildren().add(canvas);
         
         //canvas.addListener();
         //canvas.removeListener();
+
         
-        scrollpane.setContent(canvas);
+        //scrollpane.setContent( canvas );
+        
+        
         
         /*
         canvas.setOnMouseClicked(new EventHandler<MouseEvent>() {

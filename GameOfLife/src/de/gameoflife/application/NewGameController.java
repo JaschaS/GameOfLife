@@ -7,6 +7,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 
@@ -20,7 +21,9 @@ public class NewGameController implements Initializable {
     @FXML private AnchorPane pane;
     @FXML private TextField gameName;
     @FXML private Button create;
-  
+    @FXML private Button cancel;
+    @FXML private Label error;
+    
     /*
     private Stage stage;
     private Scene scene;
@@ -62,6 +65,7 @@ public class NewGameController implements Initializable {
     public void clearText() {
         
         gameName.setText("");
+        error.setText("");
         
     }
     
@@ -71,9 +75,21 @@ public class NewGameController implements Initializable {
         
     }
     
-    public void onActionEvent( EventHandler<ActionEvent> event ) {
+    public void setErrorText( String errorText ) {
+    
+        error.setText(errorText);
+        
+    }
+    
+    public void createEvent( EventHandler<ActionEvent> event ) {
         
         create.setOnAction(event);
+        
+    }
+    
+    public void cancelEvent( EventHandler<ActionEvent> event ) {
+    
+        cancel.setOnAction(event);
         
     }
     

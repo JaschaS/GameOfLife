@@ -34,9 +34,19 @@ public class NumberTextField extends TextField {
         
         if( validate(text) ) {
             
-            int i = Integer.parseInt(text);
-            
-            if( i >= 3) super.replaceText(start, end, text);
+            try {
+                
+              int i  = Integer.parseInt(text);
+                
+              if( i >= 3) super.replaceText(start, end, text);
+              
+            }
+            catch( NumberFormatException ex ) {
+                
+                text = "" + Integer.MAX_VALUE;
+                super.replaceText(start, end, text);
+                
+            }
             
         }
         
@@ -53,7 +63,7 @@ public class NumberTextField extends TextField {
 
     private boolean validate(String text) {
         
-        return (text.equals("") || text.matches("[0-9]"));
+        return text.matches("[0-9]");
         
     }
     

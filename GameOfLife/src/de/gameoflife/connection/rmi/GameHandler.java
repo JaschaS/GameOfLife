@@ -5,6 +5,7 @@
  */
 package de.gameoflife.connection.rmi;
 
+import de.gameoflife.application.GameOfLife;
 import de.gameoflife.connection.rmi.persistence.GameUI;
 import de.gameoflife.connection.rmi.rules.Evaluable;
 import de.gameoflife.connection.rmi.services.IRemoteRuleEditor;
@@ -14,6 +15,8 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 /**
@@ -42,6 +45,8 @@ public class GameHandler implements IGameConfiguration, IConnectionRMI{
             ruleEditor = (IRemoteRuleEditor) Naming.lookup("rmi://143.93.91.72/RuleEditor");
         } catch (NotBoundException | MalformedURLException | RemoteException ex) {
             //TODO
+            Logger.getLogger(GameHandler.class.getName()).log(Level.SEVERE, null, ex);
+            
             return false;
         }
         return true;
@@ -62,6 +67,7 @@ public class GameHandler implements IGameConfiguration, IConnectionRMI{
                 gameList.put(game.getGameId(), game);
             } else {
                 //TODO: throw error that the connection must be established first
+                
                 return false;
             }
         } catch (RemoteException ex) {

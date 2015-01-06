@@ -8,18 +8,24 @@ public final class User {
     
     private static User instance;
     private final String username;
-    private final String password;
+    private final int id;
     
-    private User( String username, String password ) {
+    private User( String username, int id ) {
     
         this.username = username;
-        this.password = password;
+        this.id = id;
     
     }
     
-    public static void create( String username, String password ) {
+    public static void create( String username, int id ) {
     
-        instance = new User( username, password );
+        instance = new User( username, id );
+        
+    }
+    
+    public static void removeInstance() {
+    
+        instance = null;
         
     }
     
@@ -30,9 +36,9 @@ public final class User {
     public String getUsername() {
         return username;
     }
-
-    public String getPassword() {
-        return password;
+    
+    public int getId() {
+        return id;
     }
     
 }

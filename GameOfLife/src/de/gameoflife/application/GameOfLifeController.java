@@ -8,6 +8,7 @@ import javafx.scene.control.Tab;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
+import javafx.scene.control.SingleSelectionModel;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.AnchorPane;
 
@@ -41,7 +42,7 @@ public final class GameOfLifeController {
     
     @FXML
     public void loadGame(ActionEvent event) throws IOException {
-        
+        application.loadGame();
     }
         
     @FXML
@@ -80,6 +81,9 @@ public final class GameOfLifeController {
         newTab.setContent(pane);
         
         tabPane.getTabs().add(newTab);
+        
+        SingleSelectionModel<Tab> selectionModel = tabPane.getSelectionModel();
+        selectionModel.select(newTab);
         
     }
     

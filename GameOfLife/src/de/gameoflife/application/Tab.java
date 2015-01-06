@@ -8,7 +8,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Slider;
 import javafx.scene.control.ToolBar;
 import javafx.scene.layout.AnchorPane;
@@ -94,7 +93,7 @@ public class Tab implements Initializable {
         //AnchorPane gameCanvasPane = new AnchorPane();
         //gameCanvasPane.setStyle("-fx-background-color: red;");
         
-        canvas = new GameCanvas( 900, 900, 30 );
+        canvas = new GameCanvas( 800, 800, 20 );
         
         contentPane.setCenter(canvas);
         

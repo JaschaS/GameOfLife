@@ -71,10 +71,8 @@ public class GameCanvas extends Group {
         */
         drawGrid();
         
-        //getChildren().addAll( grid, elements );
-        //setCenter(grid);
-        
         getChildren().addAll( grid, elements );
+        //setCenter(grid);
         
     }
     
@@ -102,9 +100,9 @@ public class GameCanvas extends Group {
     
         GraphicsContext gc = grid.getGraphicsContext2D();
         
-        for( int y=0; y < grid.getHeight(); y += 30 ) {
+        for( int y=0; y < grid.getHeight(); y += cellHeight ) {
         
-            for( int x=0; x < grid.getWidth(); x += 30 ) {
+            for( int x=0; x < grid.getWidth(); x += cellWidth ) {
                 
                 gc.setFill(Color.WHITE);
                 gc.setStroke(Color.BLACK);

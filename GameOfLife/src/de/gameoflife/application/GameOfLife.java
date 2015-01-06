@@ -1,7 +1,9 @@
 
 package de.gameoflife.application;
 
+import com.goebl.david.Webb;
 import de.gameoflife.connection.rmi.GameHandler;
+import de.gameoflife.connection.rmi.GameHandlerSingleton;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -16,6 +18,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import org.json.JSONObject;
 
 /**
  *
@@ -34,13 +37,12 @@ public class GameOfLife extends Application {
     private AnchorPane gamescene;
     private Parent newGame;
     private Parent loginMask;
-    private FXMLLoader loginMaskLoader;
-    private FXMLLoader gamesceneLoader;
-    private FXMLLoader newGameLoader;
+    private Parent loadingScreen;
     private LoginMaskController loginMaskController;
     private GameOfLifeController gamesceneController;
     private NewGameController newGameController;
-    private GameHandler connection;
+    private LoadGameController loadingScreenController;
+    private Node currentNodeInFront;
     
     @Override
     public void start(Stage primaryStage) throws IOException {
@@ -48,55 +50,19 @@ public class GameOfLife extends Application {
         stageWidthProperty = primaryStage.widthProperty();
         stageHeightProperty = primaryStage.heightProperty();
         
-        connection = new GameHandler();
+        GameHandlerSingleton.init();
         
         this.primaryStage = primaryStage;
         
-        newGameLoader = new FXMLLoader( getClass().getResource("FXML/NewGame.fxml") ); //FXMLLoader.load( getClass().getResource("FXML/NewGame.fxml") );
+        initLoginScreen();
+        initGameScreen();
+        initLoadingsScreen();
+        initNewGameScreen();
         
-        newGame = (Parent) newGameLoader.load();
-        newGame.setVisible(false);
+        ObservableList<Node> children = stackpane.getChildren();
+        children.addAll( loginMask, gamescene, newGame, loadingScreen );
         
-        newGameController = newGameLoader.getController();
-        
-        gamesceneLoader = new FXMLLoader( getClass().getResource("FXML/GoF.fxml") );
-        
-        gamescene = (AnchorPane) gamesceneLoader.load();
-        gamescene.setVisible( false );
-        gamescene.prefWidthProperty().bind(stackpane.widthProperty());
-        gamescene.prefHeightProperty().bind(stackpane.heightProperty());
-        
-        gamesceneController = gamesceneLoader.getController();
-        gamesceneController.setRootApplication(this);
-        
-        loginMaskLoader = new FXMLLoader( getClass().getResource("FXML/LoginMask.fxml") );
-        
-        loginMask = (Parent) loginMaskLoader.load();
-        LoginMaskController controller = loginMaskLoader.getController();
-        controller.loginOnActionEvent((ActionEvent event) -> {
-            if( controller.getUserName().equals("") || controller.getPassword().equals("") ) {
-                
-                controller.setErrorText("User name or password empty!");
-                
-            }
-            else {
-                
-                //TODO schauen ob username und passwort richtig sind!
-                
-                User.create( controller.getUserName(), controller.getPassword() );
-                
-                gamesceneController.setUsername( controller.getUserName() );
-                
-                controller.clear();
-                
-                showGameScreen();
-                
-            }
-            
-        });
-        
-        stackpane.setStyle("-fx-background-color: rgba(71, 71, 71, 0.5);");
-        stackpane.getChildren().addAll( loginMask, gamescene, newGame );
+        currentNodeInFront = loginMask;
         
         Scene scene = new Scene( stackpane, 600, 400 );
         
@@ -110,61 +76,81 @@ public class GameOfLife extends Application {
     public void stop() throws Exception {
         super.stop();
         
-        connection.closeConnection();
+        GameHandlerSingleton.closeConnection();
         
         System.exit(0);
     }
     
     void showLoginScreen() {
         
-        ObservableList<Node> children = stackpane.getChildren();
+        currentNodeToBack();
         
-        int gamePosition = children.indexOf( gamescene );
-        int loginPosition = children.indexOf( loginMask );
-        int newGamePosition = children.indexOf( newGame );
-         
-        setChildrenVisible(false, true, false);
+        currentNodeInFront = loginMask;
+        loginMask.setVisible(true);
+        loginMask.toFront();
         
-        children.get(gamePosition).toBack();
-        children.get(loginPosition).toFront();
-        children.get(newGamePosition).toBack();  
+        User.removeInstance();
         
     }
     
     void showGameScreen() {
         
-         ObservableList<Node> children = stackpane.getChildren();
+        currentNodeToBack();
         
-        int gamePosition = children.indexOf( gamescene );
-        int loginPosition = children.indexOf( loginMask );
-        int newGamePosition = children.indexOf( newGame );
-        
-        setChildrenVisible(true, false, false);
-        
-        children.get(gamePosition).toFront();
-        children.get(loginPosition).toBack();
-        children.get(newGamePosition).toBack();  
+        currentNodeInFront = gamescene;
+        gamescene.toFront();
+        gamescene.setVisible(true);
         
     }
 
     void newGame() {
         
-        ObservableList<Node> children = stackpane.getChildren();
-        
-        int gamePosition = children.indexOf( gamescene );
-        int loginPosition = children.indexOf( loginMask );
-        int newGamePosition = children.indexOf( newGame );
-        
-        setChildrenVisible(true, false, true);
-        
-        children.get(gamePosition).toBack();
-        children.get(loginPosition).toBack();
-        children.get(newGamePosition).toFront();
+        newGame.toFront();
+        newGame.setVisible(true);
         
         gamescene.setDisable(true);
         
         newGameController.setFocus();
         
+    }
+    
+    void loadGame() {
+    
+        loadingScreen.toFront();
+        loadingScreen.setVisible(true);
+        
+        gamescene.setDisable(true);
+        
+        loadingScreen.requestFocus();
+        
+    }
+    
+    private void closeLoadScreen() {
+    
+        loadingScreen.setVisible(false);
+        loadingScreen.toBack();
+        gamescene.setDisable(false);
+            
+    }
+    
+    private void closeNewGame() {
+            newGameController.clearText();
+            newGame.setVisible(false);
+            newGame.toBack();
+            gamescene.setDisable(false);   
+    }
+    
+    private void currentNodeToBack() {
+        currentNodeInFront.setVisible(false);
+        currentNodeInFront.toBack();       
+    }
+    
+    private void initNewGameScreen() throws IOException {
+        FXMLLoader newGameLoader = new FXMLLoader( getClass().getResource("FXML/NewGame.fxml") ); //FXMLLoader.load( getClass().getResource("FXML/NewGame.fxml") );
+        
+        newGame = (Parent) newGameLoader.load();
+        newGame.setVisible(false);
+        newGameController = newGameLoader.getController();
         newGameController.createEvent((ActionEvent event1) -> {
             
             try {
@@ -172,21 +158,23 @@ public class GameOfLife extends Application {
                 //TODO Check if name is Valid??? -nicht null, "", bereits vorhanden
 
 
-                    //boolean successful = connection.generateNewGame( 0, newGameController.getGameName() );
+                //boolean successful = connection.generateNewGame( User.getInstance().getId(), newGameController.getGameName() );
                     
-                    //if( successful ) {
+                //System.out.println( successful );
+                
+                //if( successful ) {
                         
                         gamesceneController.createTab( newGameController.getGameName() );
                         
                         closeNewGame();
                     
-                    /*}
-                    else {
+                //}
+                //else {
                     
-                        newGameController.setErrorText("Es ist ein Fehler beim Erstellen aufgetretten.");
-                        
-                    }
-                */
+                //    newGameController.setErrorText("Es ist ein Fehler beim Erstellen aufgetretten.");
+                    
+               //}
+                
             } catch (IOException ex) {
                 Logger.getLogger(GameOfLife.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -199,23 +187,98 @@ public class GameOfLife extends Application {
             closeNewGame();
             
         });
-        
-        
+    
     }
     
-    private void closeNewGame() {
-            newGameController.clearText();
-            newGame.setVisible(false);
-            newGame.toBack();
-            gamescene.setDisable(false);   
-    }
-    
-    private void setChildrenVisible( boolean gamesceneVisible, boolean loginVisible, boolean newGameVisible ) {
-        gamescene.setVisible(gamesceneVisible);
-        loginMask.setVisible(loginVisible);
-        newGame.setVisible(newGameVisible);      
-    }
+    private void initLoginScreen() throws IOException {
+        FXMLLoader loginMaskLoader = new FXMLLoader( getClass().getResource("FXML/LoginMask.fxml") );
+        
+        loginMask = (Parent) loginMaskLoader.load();
+        LoginMaskController controller = loginMaskLoader.getController();
+        controller.loginOnActionEvent((ActionEvent event) -> {
+            
+            if( controller.getUserName().equals("") || controller.getPassword().equals("") ) {
+                
+                controller.setErrorText("Benutzername und Passwort leer!");
+                
+            }
+            else {
+                
+                Webb webb = Webb.create();        
+                webb.setBaseUri("http://143.93.91.71/Ajax");
 
+                JSONObject result = webb.get("/login")
+                    .param("loginname", controller.getUserName() )
+                    .param("password", controller.getPassword() )
+                    .ensureSuccess()
+                    .asJsonObject()
+                    .getBody();
+
+                boolean error = result.getBoolean("error");
+
+                if( error ) {
+
+                    controller.setErrorText( result.getString("message") );
+
+                }
+                else {
+                
+                    JSONObject user = result.getJSONObject("callback");
+                    
+                    String username = user.getString("vorname");
+                    int id = Integer.parseInt( user.getString("id") );
+                    
+                    User.create( username, id );
+                    
+                    gamesceneController.setUsername( "Willkommen, " + username );
+                    
+                    controller.clear();
+                    
+                    showGameScreen();
+                    
+                }
+                
+            }
+            
+        });
+        
+        stackpane.setStyle("-fx-background-color: rgba(71, 71, 71, 0.5);");
+    }
+    
+    private void initGameScreen() throws IOException {
+        FXMLLoader gamesceneLoader = new FXMLLoader( getClass().getResource("FXML/GoF.fxml") );
+        
+        gamescene = (AnchorPane) gamesceneLoader.load();
+        gamescene.setVisible( false );
+        gamescene.prefWidthProperty().bind(stackpane.widthProperty());
+        gamescene.prefHeightProperty().bind(stackpane.heightProperty());
+        
+        gamesceneController = gamesceneLoader.getController();
+        gamesceneController.setRootApplication(this);
+    }
+    
+    private void initLoadingsScreen() throws IOException {
+        FXMLLoader loadingScreenLoader = new FXMLLoader( getClass().getResource("FXML/LoadGame.fxml") );
+        
+        loadingScreen = (Parent) loadingScreenLoader.load();
+        loadingScreen.setVisible( false );
+        
+        loadingScreenController = loadingScreenLoader.getController();
+        
+        loadingScreenController.loadEvent( (ActionEvent event) -> {
+        
+            closeLoadScreen();
+        
+        });
+        
+        loadingScreenController.cancelEvent( (ActionEvent event) -> {
+        
+            closeLoadScreen();
+        
+        });
+        
+    }
+    
     /**
      * @param args the command line arguments
      */
@@ -224,9 +287,3 @@ public class GameOfLife extends Application {
     }
 
 }
-
-/**
- * - Einige probleme mit der Stackpane der main app behoben
- * - Zusätzliche funktionalität im GoFController hinzugefügt
- * - User Klasse hinzugefügt
- */

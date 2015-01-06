@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<GridPane alignment="CENTER" hgap="5.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="250.0" prefWidth="350" style="-fx-background-color: rgb(241,241,241); -fx-effect: dropshadow(three-pass-box, grey, 30, 0.5, 0, 0); -fx-border-radius: 5 5 5 5;   -fx-background-radius: 5 5 5 5;" vgap="5.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.gameoflife.application.LoadGameController">
+    <columnConstraints>
+      <ColumnConstraints halignment="RIGHT" />
+      <ColumnConstraints halignment="LEFT" />
+    </columnConstraints>
+     <children>
+         
+        <TableView fx:id="gameList"  prefHeight="175.0" prefWidth="300.0" GridPane.columnIndex="0" GridPane.rowIndex="0">
+         <columns>
+            <TableColumn fx:id="name"  editable="false" prefWidth="75.0" sortable="false" text="Name" />
+            <TableColumn fx:id="date"  editable="false" prefWidth="75.0" sortable="false" text="Datum" />
+            <TableColumn fx:id="analysis"  editable="false" prefWidth="75.0" sortable="false" text="Analyse" />
+            <TableColumn fx:id="history"  editable="false" prefWidth="75.0" sortable="false" text="Historie" />
+         </columns>
+         <GridPane.margin>
+            <Insets />
+         </GridPane.margin>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+        </TableView>
+            <HBox prefHeight="0.0" prefWidth="300.0" spacing="10" GridPane.columnIndex="0" GridPane.rowIndex="1">
+               <children>
+                    <Button fx:id="load" style="-fx-font-size: 15pt" text="load" />
+                    <Button fx:id="cancel" style="-fx-font-size: 15pt" text="cancel" />
+               </children>
+            </HBox>  
+
+     </children>
+   <rowConstraints>
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+   </rowConstraints>
+</GridPane>

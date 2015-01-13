@@ -6,6 +6,8 @@
 package de.gameoflife.application;
 
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 
 /**
  *
@@ -13,19 +15,61 @@ import javafx.scene.control.TextField;
  */
 public class NumberTextField extends TextField {
 
-    public NumberTextField( double width ) {
+    private NumberTextListener listener;  
+    private final int min;
+    private final int max;
+
+    public NumberTextField( double width, int min, int max, String startValue ) {
     
-        super();
+        super( startValue + "" );
         
         setPrefWidth( width );
         
-    }
-    
-    public NumberTextField( double width, String startValue ) {
-    
-        super( startValue );
+        this.min = min;
+        this.max = max;
         
-        setPrefWidth( width );
+        setOnKeyPressed( (KeyEvent event) -> {
+            if( event.getCode() == KeyCode.ENTER ) {
+                
+                setFocused( false );
+                getParent().requestFocus();
+                
+                int value = 0;
+                
+                if( getText().equals("") ) {
+                    
+                    setText( min + "" );
+                    
+                    value = min;
+                    
+                }
+                else {                
+                    
+                    value = Integer.parseInt( getText() );
+                    
+                    if( value > max ) {
+                        
+                        setText( max + "" );
+                        value = max;
+                        
+                    }
+                    else {
+                        
+                        if( value < min ) {
+                            
+                            setText( min + "" );
+                            value = min;
+                            
+                        }
+                        
+                    }
+                    
+                }
+                
+                if( listener != null ) listener.inputHasChanged( value );
+                
+            }
+        });
         
     }
     
@@ -34,16 +78,16 @@ public class NumberTextField extends TextField {
         
         if( validate(text) ) {
             
-            try {
+            //Text equals "" means the user used the backspace
+            if( text.equals("") ) {
                 
-              int i  = Integer.parseInt(text);
+                text = getText(0, getText().length() - 1);
+               
+                super.setText(text);
                 
-              if( i >= 3) super.replaceText(start, end, text);
-              
             }
-            catch( NumberFormatException ex ) {
+            else {
                 
-                text = "" + Integer.MAX_VALUE;
                 super.replaceText(start, end, text);
                 
             }
@@ -60,10 +104,28 @@ public class NumberTextField extends TextField {
         }
         
     }
+    
+    public void setListener( NumberTextListener listener ) {
 
+        this.listener = listener;
+
+    }
+    
+    public void removeListener() {
+    
+        this.listener = null;
+        
+    }
+    
     private boolean validate(String text) {
         
-        return text.matches("[0-9]");
+        return text.equals("") || text.matches("[0-9]");
+        
+    }
+    
+    public interface NumberTextListener {
+    
+        public void inputHasChanged( int value );
         
     }
     

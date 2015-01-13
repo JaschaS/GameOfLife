@@ -22,18 +22,13 @@ public class GameCanvas extends Group {
     
     protected final Canvas grid;
     protected final Canvas elements;
-    protected final int cellWidth;
-    protected final int cellHeight;
+    protected int cellSize;
     protected int width;
     protected int height;
     protected ArrayList<Cell> cells = new ArrayList<>();
    
     public GameCanvas(int width, int height, int cellSize) {
-        this(width, height, cellSize, cellSize);
-    }
-    
-    public GameCanvas(int width, int height, int cellWidth, int cellHeight) {
-        
+
         super();
         
         //setStyle("-fx-background-color: red;");
@@ -45,15 +40,13 @@ public class GameCanvas extends Group {
         //setLayoutX( screenWidth * 10 );
         //setLayoutY( screenHeight * 2 );
         
-        elements = new Canvas( width, height );
-        
-        this.width = width;
-        this.height = height;
-        this.cellWidth = cellWidth;
-        this.cellHeight = cellHeight;
+        this.width = width * cellSize;
+        this.height = height * cellSize;
+        this.cellSize = cellSize;
         
 
-        grid = new Canvas( width, height );
+        elements = new Canvas( this.width, this.height );
+        grid = new Canvas( this.width, this.height );
         //grid.setLayoutX( screenWidth / 2 );
         //grid.setLayoutY( screenHeight / 2 - height );
         /*
@@ -75,7 +68,7 @@ public class GameCanvas extends Group {
         //setCenter(grid);
         
     }
-    
+
     /*
     public void addListener() {
         setOnMouseClicked( new GameCanvasListener() );
@@ -100,13 +93,13 @@ public class GameCanvas extends Group {
     
         GraphicsContext gc = grid.getGraphicsContext2D();
         
-        for( int y=0; y < grid.getHeight(); y += cellHeight ) {
+        for( int y=0; y < grid.getHeight(); y += cellSize ) {
         
-            for( int x=0; x < grid.getWidth(); x += cellWidth ) {
+            for( int x=0; x < grid.getWidth(); x += cellSize ) {
                 
                 gc.setFill(Color.WHITE);
                 gc.setStroke(Color.BLACK);
-                gc.strokeRect(x, y, cellWidth, cellHeight);
+                gc.strokeRect(x, y, cellSize, cellSize);
                 
                 cells.add( new Cell( x, y ) );
                 
@@ -114,6 +107,43 @@ public class GameCanvas extends Group {
         
         }     
     
+    }
+    
+    private void clearGrid() {
+    
+        GraphicsContext gc = grid.getGraphicsContext2D();
+        
+        gc.clearRect( 0, 0, width, height );
+    
+    }
+    
+    public void setGridWidth( int newWidth ) {
+        
+        width = newWidth * cellSize;
+        grid.setWidth(width);
+        drawGrid();
+        
+    }
+    
+    public void setGridHeight( int newHeight ) {
+    
+        height = newHeight * cellSize;
+        grid.setHeight(height);
+        drawGrid();
+    
+    }
+    
+    public void setCellSize( int size ) {
+    
+        width = ( width / cellSize ) * size;
+        height = ( height / cellSize ) * size;
+        grid.setHeight(height);
+        grid.setWidth(width);
+        
+        this.cellSize = size;
+        clearGrid();
+        drawGrid();
+        
     }
     
     public int getGridWidth() {
@@ -164,7 +194,7 @@ public class GameCanvas extends Group {
                 
                 gc.setFill(Color.RED);
                 gc.setStroke(Color.RED);
-                gc.fillRect(c.getX(), c.getY(), cellWidth, cellHeight);
+                gc.fillRect(c.getX(), c.getY(), cellSize, cellSize);
                 
                 //System.out.println( c.getX() + " " + c.getY() );
             }
@@ -195,7 +225,7 @@ public class GameCanvas extends Group {
         
         boolean hit( int x, int y ) {
         
-            return this.x <= x && x < (this.x + cellWidth) && this.y <= y && y < ( this.y + cellHeight );
+            return this.x <= x && x < (this.x + cellSize) && this.y <= y && y < ( this.y + cellSize );
             
         }
         

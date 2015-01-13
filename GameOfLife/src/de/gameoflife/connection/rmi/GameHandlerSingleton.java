@@ -26,13 +26,11 @@ public final class GameHandlerSingleton {
         
     }
     
-    public static void init() {
+    public static void init( String url ) {
         if( instance == null ) instance = new GameHandlerSingleton();
     }
     
     public static GameHandlerSingleton getInstance() {
-        
-        if( instance == null ) init();
         
         return instance;
         

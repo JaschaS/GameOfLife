@@ -7,34 +7,9 @@
 
 <AnchorPane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.gameoflife.application.Tab">
    <children>
-      <BorderPane fx:id="contentPane" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="36.0" />
-      <StackPane AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <BorderPane fx:id="content" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="36.0" />
+      <StackPane fx:id="barpane" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <ToolBar fx:id="toolBar">
-              <items>
-                <Button mnemonicParsing="false" onAction="#play" text="Play" />
-                  <Button mnemonicParsing="false" onAction="#next" text="Next" />
-                  <Label text="Speed:" />
-                  <Slider fx:id="speedSlider" min="1.0" />
-                  <Label fx:id="currentSpeed" text="1" />
-                  <Separator orientation="VERTICAL" prefHeight="0.0" prefWidth="0.0" />
-                  <Button mnemonicParsing="false" onAction="#gridOptions" text="Grid" />
-                  <Button mnemonicParsing="false" onAction="#rules" text="Rules" />
-                  <Button mnemonicParsing="false" onAction="#wraps" text="Wraps" />
-                  <Button fx:id="draw" mnemonicParsing="false" onAction="#draw" text="Draw" />
-              </items>
-            </ToolBar>
-            <ToolBar fx:id="editorToolBar">
-              <items>
-                <Button mnemonicParsing="false" text="Finish" />
-                  <Separator orientation="VERTICAL" />
-                  <Label text="Width" />
-                  <Label text="Height" />
-                  <Separator orientation="VERTICAL" />
-                  <Button mnemonicParsing="false" text="Draw" />
-                  <Button mnemonicParsing="false" text="Rules" />
-              </items>
-            </ToolBar>
          </children>
       </StackPane>
    </children>

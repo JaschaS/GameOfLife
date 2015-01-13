@@ -2,7 +2,6 @@
 package de.gameoflife.application;
 
 import com.goebl.david.Webb;
-import de.gameoflife.connection.rmi.GameHandler;
 import de.gameoflife.connection.rmi.GameHandlerSingleton;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -50,7 +49,7 @@ public class GameOfLife extends Application {
         stageWidthProperty = primaryStage.widthProperty();
         stageHeightProperty = primaryStage.heightProperty();
         
-        GameHandlerSingleton.init();
+        GameHandlerSingleton.init( "rmi://143.93.91.72/RuleEditor" );
         
         this.primaryStage = primaryStage;
         

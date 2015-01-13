@@ -5,10 +5,7 @@
  */
 package de.gameoflife.connection.rmi;
 
-import de.gameoflife.application.GameOfLife;
-import de.gameoflife.connection.rmi.persistence.GameUI;
-import de.gameoflife.connection.rmi.rules.Evaluable;
-import de.gameoflife.connection.rmi.services.IRemoteRuleEditor;
+
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
@@ -17,13 +14,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import rmi.data.GameUI;
+import rmi.data.rules.Evaluable;
+import rmi.interfaces.IAnalysis;
+import rmi.interfaces.IGameEngineServer;
+import rmi.interfaces.IRemoteRuleEditor;
 
 
 /**
  *
  * @author Daniel
  */
-public class GameHandler implements IGameConfiguration, IConnectionRMI{
+public class GameHandler implements IGameConfiguration, IConnectionRuleEditor, 
+        IConnectionGameEngine, IConnectionAnalysis{
     /*
      * @param gameList Contains all games which the user has opened in his GUI. 
      * For performance it creates an index over the game ids.
@@ -31,9 +34,19 @@ public class GameHandler implements IGameConfiguration, IConnectionRMI{
     private HashMap<Integer,GameUI> gameList = null;
     
     /*
-     * @param ruleEditor Handles the communication between the RuleEditor and us.
+     * @param ruleEditor Handles the communication between the RuleEditor and UI.
      */
     private IRemoteRuleEditor ruleEditor = null;
+    
+    /*
+     * @param ruleEditor Handles the communication between the Engine and UI.
+     */
+    private IGameEngineServer gameEngine = null;
+    
+    /*
+     * @param ruleEditor Handles the communication between the Analyse and UI.
+     */
+    private IAnalysis analysis = null;
     
     public GameHandler(){
         gameList = new HashMap<>();
@@ -43,6 +56,7 @@ public class GameHandler implements IGameConfiguration, IConnectionRMI{
     public boolean establishConnection() {
         try {
             ruleEditor = (IRemoteRuleEditor) Naming.lookup("rmi://143.93.91.72/RuleEditor");
+            //TODO: verbindung zu analyse und engine aufbauen
         } catch (NotBoundException | MalformedURLException | RemoteException ex) {
             //TODO
             Logger.getLogger(GameHandler.class.getName()).log(Level.SEVERE, null, ex);
@@ -78,11 +92,11 @@ public class GameHandler implements IGameConfiguration, IConnectionRMI{
     }
     
     @Override
-    public boolean deleteExistingGame(final int gameId){
-        //TODO: noch keine methode dafür da
-        throw new UnsupportedOperationException("Not supported yet."); 
+    public GameUI copyGame(final int userId, final int gameId){
+        //TODO: muss noch implementiert werden... jascha soll nix mit dem objekt zu tun haben
+        return null;
     }
-
+    
     @Override
     public boolean saveGame(final int gameId) {
         try {
@@ -95,9 +109,9 @@ public class GameHandler implements IGameConfiguration, IConnectionRMI{
     }
 
     @Override
-    public boolean loadGame(final int gameId) {
+    public boolean loadGame(final int userId, final int gameId) {
         try {
-            gameList.put(gameId, ruleEditor.getGameObject(gameId));
+            gameList.put(gameId, ruleEditor.getGameObject(userId,gameId));
         } catch (RemoteException ex) {
             //TODO
             return false;
@@ -106,7 +120,8 @@ public class GameHandler implements IGameConfiguration, IConnectionRMI{
     }
 
     @Override
-    public List<Integer> getGameList(final int userId) {
+    public List<GameUI> getGameList(final int userId) {
+        //TODO: muss noch implementiert werden... jascha soll nix mit dem objekt zu tun haben
         throw new UnsupportedOperationException("Not supported yet."); 
     }
     

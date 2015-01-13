@@ -1,12 +1,14 @@
 package de.gameoflife.connection.rmi;
 
+import java.rmi.RemoteException;
 import java.util.List;
+import rmi.data.GameUI;
 
 /**
  * This interface handles the connection to the RuleEditor
  * @author Daniel
  */
-public interface IConnectionRMI {
+public interface IConnectionRuleEditor {
     
     /*
      * Establishs a connection to the RuleEditor.
@@ -29,12 +31,14 @@ public interface IConnectionRMI {
      */
     boolean generateNewGame(final int userId, final String name);
     
-    /*
-     * Deletes the given game.
-     * @param gameId The id of the game which should be deleted.
-     * @return true, if the game is deleted successfully, else false.
+    /**
+     * Copies an existing GameUI object and set the new gameId for the copied
+     * game. For an copy a gameId is registered in the database.
+     * @param userId The id of the user
+     * @param gameId The game which is copied
+     * @return The copied game object
      */
-    boolean deleteExistingGame(final int gameId);
+    GameUI copyGame(final int userId, final int gameId);
     
     /**
      * Saves the given game.
@@ -45,10 +49,11 @@ public interface IConnectionRMI {
 
     /**
      * Reloads a saved game.
+     * @param userId The id of the user
      * @param gameId The id of the game which should be load.
      * @return true, if the game can be load, else false.
      */
-    boolean loadGame(final int gameId);
+    boolean loadGame(final int userId, final int gameId);
     
     /*
      * Gets a list with all saved games for the given user.
@@ -56,5 +61,5 @@ public interface IConnectionRMI {
      * @return A list with all appropriate games.
      * TODO: Der teil ist noch nicht vom ruleeditor behandelt. fehler oder macht das engine?
      */
-    List<Integer> getGameList(final int userId);
+    List<GameUI> getGameList(final int userId);
 }

@@ -1,6 +1,7 @@
 package de.gameoflife.connection.rmi;
 
-import de.gameoflife.connection.rmi.rules.Evaluable;
+import rmi.data.rules.Evaluable;
+
 
 /**
  * This interface contains all methods to modify a specific game object

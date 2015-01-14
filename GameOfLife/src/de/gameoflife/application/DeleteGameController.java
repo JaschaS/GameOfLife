@@ -16,33 +16,25 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.cell.CheckBoxTableCell;
 
 /**
  * FXML Controller class
  *
  * @author JScholz
  */
-public class LoadGameController implements Initializable {
+public class DeleteGameController implements Initializable {
 
     @FXML private TableView<Game> gameList;
     @FXML private TableColumn<Game, String> name;
     @FXML private TableColumn<Game, String> date;
-    @FXML private TableColumn<Game, Boolean> history;
-    @FXML private TableColumn<Game, Boolean> analysis;
-    @FXML private Button load;
+    @FXML private Button delete;
     @FXML private Button cancel;
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+
         name.setCellValueFactory((TableColumn.CellDataFeatures<Game, String> param) -> param.getValue().getGameName());
         date.setCellValueFactory((TableColumn.CellDataFeatures<Game, String> param) -> param.getValue().getDate());
-            
-        history.setCellFactory( celldata -> new CheckBoxTableCell<>() );
-        history.setCellValueFactory( (TableColumn.CellDataFeatures<Game, Boolean> param) -> param.getValue().hasHistory() );
-        
-        analysis.setCellFactory( celldata -> new CheckBoxTableCell<>() );
-        analysis.setCellValueFactory( (TableColumn.CellDataFeatures<Game, Boolean> param) -> param.getValue().hasAnalysis() );
         
         ObservableList<Game> data = GameHandlerSingleton.getInstance().loadGame();
     
@@ -50,9 +42,9 @@ public class LoadGameController implements Initializable {
         
     }    
     
-    public void loadEvent( EventHandler<ActionEvent> event ) {
+    public void deleteEvent( EventHandler<ActionEvent> event ) {
         
-        load.setOnAction(event);
+        delete.setOnAction(event);
         
     }
     

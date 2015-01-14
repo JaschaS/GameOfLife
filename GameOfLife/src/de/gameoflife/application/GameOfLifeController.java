@@ -47,7 +47,7 @@ public final class GameOfLifeController {
         
     @FXML
     public void deleteGame(ActionEvent event) throws IOException {
-        
+        application.deleteGame();
     }
     
     public void setRootApplication( GameOfLife rootApp ) {

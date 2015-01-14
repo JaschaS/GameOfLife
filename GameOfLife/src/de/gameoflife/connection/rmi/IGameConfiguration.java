@@ -1,5 +1,7 @@
 package de.gameoflife.connection.rmi;
 
+import java.util.Date;
+import java.util.List;
 import rmi.data.rules.Evaluable;
 
 
@@ -46,4 +48,52 @@ public interface IGameConfiguration {
      * activated or not.
      */
     void setBorderOverflow(final int gameId, boolean borderOverflow);
+    
+    /*
+     * Marks the game as modified.
+     * @param gameId the if of the game which is modified
+     */
+    void setNowModified(final int gameId);
+    
+    /*
+     * @return Returns the id of the clients username.
+     */
+    int getUserId();
+    
+    /*
+     * TODO: für was ist das???
+     */
+    boolean[][] getGeneration(final int gameId);
+    
+    /*
+     * @return The date when the game was created
+     */
+    Date getCreationDate(final int gameId);
+    
+    /*
+     * @return the date when the game was modified
+     */
+    Date getModifiedDate(final int gameId);
+    
+    /*
+     * @return the name of the given game
+     */
+    String getName(final int gameId);
+ 
+    /*
+     * @return the start generation as an boolean array
+     */
+    boolean[][] getStartGen(final int gameId);
+            
+    List<Evaluable> getDeathRules(final int gameId);
+    
+    List<Evaluable> getBirthRules(final int gameId);
+            
+    boolean getBorderOverflow(final int gameId);
+    
+    boolean isHistoryAvailable(final int gameId);
+    
+    boolean isAnalysisAvailable(final int gameId);
+    
+    String toString(final int gameId);
 }

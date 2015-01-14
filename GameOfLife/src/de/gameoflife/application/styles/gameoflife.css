@@ -1,7 +1,7 @@
 /*
  * Empty Stylesheet file.
  */
-
+/*
 .cell {
     -fx-background-color: white; 
     -fx-border-color: black; 
@@ -46,12 +46,6 @@
     -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
 }
 
-
-.tab-pane *.tab-header-background {
-    -fx-background-color:  #CCCCCC;
-    
-}
-
 .tab-pane {
     -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
 }
@@ -68,8 +62,25 @@
     -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
 }
 
+
+
+.tab-pane *.tab-header-background {
+    -fx-background-color:  #CCCCCC;
+    
+}
+*/
+
+/*
+.tab-pane .tab-header-area .tab-header-background {
+    -fx-background-color: yellow;
+}
+*/
 /*
 #tabpane-panel {
     -fx-background-color:  #999999;
 }
 */
+
+.tab-pane .tab-header-area .tab-header-background {
+    -fx-background-color: transparent;
+}

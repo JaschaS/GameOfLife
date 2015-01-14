@@ -36,11 +36,13 @@ public class GameOfLife extends Application {
     private AnchorPane gamescene;
     private Parent newGame;
     private Parent loginMask;
-    private Parent loadingScreen;
+    private Parent loadGame;
+    private Parent deleteGame;
     private LoginMaskController loginMaskController;
     private GameOfLifeController gamesceneController;
     private NewGameController newGameController;
-    private LoadGameController loadingScreenController;
+    private LoadGameController loadGameController;
+    private DeleteGameController deleteGameController;
     private Node currentNodeInFront;
     
     @Override
@@ -55,11 +57,12 @@ public class GameOfLife extends Application {
         
         initLoginScreen();
         initGameScreen();
-        initLoadingsScreen();
+        initLoadGame();
+        initDeleteGame();
         initNewGameScreen();
         
         ObservableList<Node> children = stackpane.getChildren();
-        children.addAll( loginMask, gamescene, newGame, loadingScreen );
+        children.addAll(loginMask, gamescene, newGame, loadGame, deleteGame );
         
         currentNodeInFront = loginMask;
         
@@ -115,21 +118,40 @@ public class GameOfLife extends Application {
     
     void loadGame() {
     
-        loadingScreen.toFront();
-        loadingScreen.setVisible(true);
+        loadGame.toFront();
+        loadGame.setVisible(true);
         
         gamescene.setDisable(true);
         
-        loadingScreen.requestFocus();
+        loadGame.requestFocus();
         
+    }
+    
+    void deleteGame() {
+    
+        deleteGame.toFront();
+        deleteGame.setVisible(true);
+        
+        gamescene.setDisable(true);
+        
+        deleteGame.requestFocus();
+    
     }
     
     private void closeLoadScreen() {
     
-        loadingScreen.setVisible(false);
-        loadingScreen.toBack();
+        loadGame.setVisible(false);
+        loadGame.toBack();
         gamescene.setDisable(false);
             
+    }
+    
+    private void closeDeleteScreen() {
+    
+        deleteGame.setVisible(false);
+        deleteGame.toBack();
+        gamescene.setDisable(false);
+        
     }
     
     private void closeNewGame() {
@@ -229,7 +251,7 @@ public class GameOfLife extends Application {
                     
                     User.create( username, id );
                     
-                    gamesceneController.setUsername( "Willkommen, " + username );
+                    gamesceneController.setUsername( "Welcome, " + username );
                     
                     controller.clear();
                     
@@ -245,6 +267,7 @@ public class GameOfLife extends Application {
     }
     
     private void initGameScreen() throws IOException {
+        
         FXMLLoader gamesceneLoader = new FXMLLoader( getClass().getResource("FXML/GoF.fxml") );
         
         gamescene = (AnchorPane) gamesceneLoader.load();
@@ -256,23 +279,47 @@ public class GameOfLife extends Application {
         gamesceneController.setRootApplication(this);
     }
     
-    private void initLoadingsScreen() throws IOException {
+    private void initLoadGame() throws IOException {
+        
         FXMLLoader loadingScreenLoader = new FXMLLoader( getClass().getResource("FXML/LoadGame.fxml") );
         
-        loadingScreen = (Parent) loadingScreenLoader.load();
-        loadingScreen.setVisible( false );
+        loadGame = (Parent) loadingScreenLoader.load();
+        loadGame.setVisible( false );
         
-        loadingScreenController = loadingScreenLoader.getController();
+        loadGameController = loadingScreenLoader.getController();
         
-        loadingScreenController.loadEvent( (ActionEvent event) -> {
+        loadGameController.loadEvent( (ActionEvent event) -> {
         
             closeLoadScreen();
         
         });
         
-        loadingScreenController.cancelEvent( (ActionEvent event) -> {
+        loadGameController.cancelEvent( (ActionEvent event) -> {
         
             closeLoadScreen();
+        
+        });
+        
+    }
+    
+    private void initDeleteGame() throws IOException {
+        
+        FXMLLoader deleteGameLoader = new FXMLLoader( getClass().getResource("FXML/DeleteGame.fxml") );
+        
+        deleteGame = (Parent) deleteGameLoader.load();
+        deleteGame.setVisible( false );
+        
+        deleteGameController = deleteGameLoader.getController();
+        
+        deleteGameController.deleteEvent( (ActionEvent deleteEvent) -> {
+        
+            closeDeleteScreen();
+        
+        });
+        
+        deleteGameController.cancelEvent( (ActionEvent cancelEvent) -> {
+            
+            closeDeleteScreen();
         
         });
         

@@ -30,11 +30,13 @@ public class Tab implements Initializable {
     //@FXML private ToolBar toolBar;
     //@FXML private ToolBar editorToolBar;
     @FXML private BorderPane content;
+    //@FXML private ScrollPane scrollpane;
     @FXML private StackPane barpane;
 
     private GameCanvas canvas;
     private Parent editorBar;
     private EditorBarController editorController;
+    //private ScrollPane scrollPane;
 
     @FXML
     protected void play() {
@@ -83,7 +85,16 @@ public class Tab implements Initializable {
             
             canvas = new GameCanvas( 3, 3, 20 );
             
-            content.setCenter(canvas);
+            //scrollPane = new ScrollPane( canvas );
+            //scrollPane.setFitToHeight(true);
+            //scrollPane.setFitToWidth(true);
+            
+            //BorderPane content = new BorderPane();
+            
+            //content.setCenter( canvas );
+            
+            //scrollpane.setContent( content );
+            content.setCenter( canvas );
         } catch( IOException ex ) {
             Logger.getLogger(Tab.class.getName()).log(Level.SEVERE, null, ex);
         }

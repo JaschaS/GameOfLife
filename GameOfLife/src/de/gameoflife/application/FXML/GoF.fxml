@@ -16,6 +16,6 @@
             <Button mnemonicParsing="false" onAction="#deleteGame" text="Delete" />
         </items>
       </ToolBar>
-      <TabPane fx:id="tabPane" layoutY="40.0" prefHeight="364.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="36.0" />
+      <TabPane fx:id="tabPane" layoutY="40.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="36.0" />
    </children>
 </AnchorPane>

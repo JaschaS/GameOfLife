@@ -56,9 +56,9 @@ public class EditorBarController implements Initializable {
             }
         });
         
-        editorToolBar.getItems().add( 3, cellWidth  );
-        editorToolBar.getItems().add( 5, cellHeight  );
-        editorToolBar.getItems().add( 7, cellSize  );
+        editorToolBar.getItems().add( 4, cellWidth  );
+        editorToolBar.getItems().add( 6, cellHeight  );
+        editorToolBar.getItems().add( 8, cellSize  );
         
     }    
     

@@ -6,6 +6,8 @@
 package de.gameoflife.connection.rmi;
 
 import de.gameoflife.application.Game;
+import java.util.Iterator;
+import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -15,7 +17,7 @@ import javafx.collections.ObservableList;
  */
 public final class GameHandlerSingleton {
     
-    private GameHandler connection = null;
+    private final GameHandler connection;
     
     private static GameHandlerSingleton instance;
     
@@ -48,13 +50,54 @@ public final class GameHandlerSingleton {
         
     }
     
-    public ObservableList<Game> loadGame() {
+    public boolean newGame( int gameId, String gameName ) {
+    
+        return connection.generateNewGame(gameId, gameName);
+    
+    }
+    
+    public boolean saveGame( int gameId ) {
+    
+        return connection.saveGame(gameId);
+    
+    }
+    
+    public void deleteGame() {
+    
+        
+        
+    }
+    
+    public void loadGame() {
+    
+        
+        
+    }
+    
+    public ObservableList<Game> getGameList( int userId ) {
+        
+        List<Integer> gameIds = connection.getGameList(userId);
+        Iterator<Integer> it = gameIds.iterator();
         
         ObservableList<Game> data = FXCollections.observableArrayList();
         
-        data.add( new Game("MyGame", "2014-11-2", true, true ) );
-        data.add( new Game("MyGame2", "2014-11-3", true, false) );
-        data.add( new Game("MyGame3", "2014-11-4", false, true) );
+        int gameId;
+        Game g;
+        
+        while( it.hasNext() ) {
+        
+            gameId = it.next();
+            
+            g = new Game( 
+                    connection.getName(gameId),
+                    connection.getCreationDate(gameId).toString(),
+                    connection.isHistoryAvailable(gameId),
+                    connection.isAnalysisAvailable(gameId)
+            );
+            
+            data.add( g );
+        
+        }
         
         return data;
         

@@ -313,6 +313,8 @@ public class GameOfLife extends Application {
         
         deleteGameController.deleteEvent( (ActionEvent deleteEvent) -> {
         
+            GameHandlerSingleton.getInstance().deleteGame();
+            
             closeDeleteScreen();
         
         });

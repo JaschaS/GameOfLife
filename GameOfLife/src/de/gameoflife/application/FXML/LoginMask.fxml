@@ -15,7 +15,7 @@
         <Label fx:id="error" style="-fx-text-fill: red" text="" GridPane.columnIndex="1" GridPane.rowIndex="0" />
         <Label text="User name:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
         <TextField fx:id="username" maxWidth="190.0" prefWidth="190.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-        <Label text="Passwort:" GridPane.columnIndex="0" GridPane.rowIndex="2" />    
+        <Label text="Password:" GridPane.columnIndex="0" GridPane.rowIndex="2" />    
         <PasswordField fx:id="password" maxWidth="190.0" prefWidth="190.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
         <Button fx:id="login" style="-fx-font-size: 15pt" text="Login" GridPane.columnIndex="1" GridPane.rowIndex="3" />
 

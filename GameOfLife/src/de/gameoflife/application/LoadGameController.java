@@ -44,7 +44,7 @@ public class LoadGameController implements Initializable {
         analysis.setCellFactory( celldata -> new CheckBoxTableCell<>() );
         analysis.setCellValueFactory( (TableColumn.CellDataFeatures<Game, Boolean> param) -> param.getValue().hasAnalysis() );
         
-        ObservableList<Game> data = GameHandlerSingleton.getInstance().loadGame();
+        ObservableList<Game> data = GameHandlerSingleton.getInstance().getGameList( User.getInstance().getId() );
     
         gameList.setItems( data );
         

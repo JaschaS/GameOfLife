@@ -36,7 +36,7 @@ public class DeleteGameController implements Initializable {
         name.setCellValueFactory((TableColumn.CellDataFeatures<Game, String> param) -> param.getValue().getGameName());
         date.setCellValueFactory((TableColumn.CellDataFeatures<Game, String> param) -> param.getValue().getDate());
         
-        ObservableList<Game> data = GameHandlerSingleton.getInstance().loadGame();
+        ObservableList<Game> data = GameHandlerSingleton.getInstance().getGameList( User.getInstance().getId() );
     
         gameList.setItems( data );
         

@@ -1,73 +1,122 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package de.gameoflife.connection.rabbitmq;
-import com.rabbitmq.client.AMQP;
+import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
+import de.gof.communication.DeleteInfo;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.layout.StackPane;
-import javafx.stage.Stage;
+
 
 /**
  *
  * @author Daniel
  */
-public class RabbitMQConnection extends Application {
+public class RabbitMQConnection {
     
-    @Override
-    public void start(Stage primaryStage) {
-        
-        Button btn = new Button();
-        btn.setText("Connect to RabbitMQ");
-        btn.setOnAction(new EventHandler<ActionEvent>() {
-            
-            @Override
-            public void handle(ActionEvent event) {
-                ConnectionFactory factory= new ConnectionFactory();
-                factory.setUsername("vsys");
-                factory.setPassword("vsys");
-                factory.setVirtualHost("vsyshost");
-                factory.setHost("143.93.91.73");
-                factory.setPort(5672);
-                
-                try {
-                    Connection con= factory.newConnection();
-                    if(con.isOpen()){
-                        System.out.println("Connected");
-                    } else{
-                        System.out.println("Not Connected");
-                    }
-                } catch (IOException ex) {
-                    Logger.getLogger(RabbitMQConnection.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        });
-        
-        StackPane root = new StackPane();
-        root.getChildren().add(btn);
-        
-        Scene scene = new Scene(root, 300, 250);
-        
-        primaryStage.setTitle("Hello World!");
-        primaryStage.setScene(scene);
-        primaryStage.show();
-    }
+    private ConnectionFactory factory;
+    private Connection con;
+    private Channel channel;
+    
+    
+    public void init(){
+        factory= new ConnectionFactory();
+        factory.setUsername("vsys");
+        factory.setPassword("vsys");
+        factory.setVirtualHost("vsyshost");
+        factory.setHost("143.93.91.73");
+        factory.setPort(5672);
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        launch(args);
+        try {
+            con = factory.newConnection();
+            if(con.isOpen()){
+                System.out.println("Connected");
+            } else{
+                System.out.println("Not Connected");
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(RabbitMQConnection.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
+    
+    public void closeConnection(){
+        try {
+            channel.close();
+            con.close();
+        } catch (IOException ex) {
+            Logger.getLogger(RabbitMQConnection.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void deleteUser(final int userId){
+        try {
+            DeleteInfo delInfo = new DeleteInfo(userId);
+            
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            ObjectOutput out = null;
+            try {
+                out = new ObjectOutputStream(bos);   
+                out.writeObject(delInfo);
+                byte[] delInfo_byte = bos.toByteArray();
+              
+                channel = con.createChannel();
+                
+                channel.basicPublish( "VisuExchange", "", null, delInfo_byte);
+            } finally {
+              try {
+                if (out != null) {
+                  out.close();
+                }
+              } catch (IOException ex) {
+                // ignore close exception
+              }
+              try {
+                bos.close();
+              } catch (IOException ex) {
+                // ignore close exception
+              }
+            }
+            
+        } catch (IOException ex) {
+            Logger.getLogger(RabbitMQConnection.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void deleteGame(final int userId, final int gameId){        
+        try {
+            DeleteInfo delInfo = new DeleteInfo(userId, gameId);
+            
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            ObjectOutput out = null;
+            try {
+                out = new ObjectOutputStream(bos);   
+                out.writeObject(delInfo);
+                byte[] delInfo_byte = bos.toByteArray();
+              
+                channel = con.createChannel();
+                
+                channel.basicPublish( "VisuExchange", "", null, delInfo_byte);
+            } finally {
+              try {
+                if (out != null) {
+                  out.close();
+                }
+              } catch (IOException ex) {
+                // ignore close exception
+              }
+              try {
+                bos.close();
+              } catch (IOException ex) {
+                // ignore close exception
+              }
+            }
+            
+        } catch (IOException ex) {
+            Logger.getLogger(RabbitMQConnection.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }    
     
 }

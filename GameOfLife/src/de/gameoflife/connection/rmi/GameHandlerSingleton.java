@@ -24,7 +24,7 @@ public final class GameHandlerSingleton {
     private GameHandlerSingleton() {
     
         connection = new GameHandler();
-        //connection.establishConnection();
+        connection.establishConnectionRuleEditor();
         
     }
     

@@ -44,10 +44,6 @@ public class LoadGameController implements Initializable {
         analysis.setCellFactory( celldata -> new CheckBoxTableCell<>() );
         analysis.setCellValueFactory( (TableColumn.CellDataFeatures<Game, Boolean> param) -> param.getValue().hasAnalysis() );
         
-        ObservableList<Game> data = GameHandler.getInstance().getGameList( User.getInstance().getId() );
-    
-        gameList.setItems( data );
-        
     }    
     
     public void loadEvent( EventHandler<ActionEvent> event ) {
@@ -59,6 +55,14 @@ public class LoadGameController implements Initializable {
     public void cancelEvent( EventHandler<ActionEvent> event ) {
     
         cancel.setOnAction(event);
+        
+    }
+    
+    public void setItems() {
+    
+        ObservableList<Game> data = GameHandler.getInstance().getGameList( User.getInstance().getId() );
+    
+        gameList.setItems( data );
         
     }
     

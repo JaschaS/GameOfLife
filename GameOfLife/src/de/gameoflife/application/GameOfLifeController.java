@@ -1,6 +1,7 @@
 
 package de.gameoflife.application;
 
+import de.gameoflife.connection.rmi.GameHandler;
 import java.io.IOException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -11,6 +12,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.SingleSelectionModel;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.AnchorPane;
+import rmi.data.GameUI;
 
 /**
  * FXML Controller class
@@ -58,12 +60,29 @@ public final class GameOfLifeController {
         username.setText(name);
     }
     
-    public void createTab( String tabname ) throws IOException {
+    public void createTab( int gameId ) throws IOException {
         
-        Parent tabContent = (Parent) FXMLLoader.load( getClass().getResource("FXML/Tab.fxml") );
+        createTab( GameHandler.getInstance().getGame( gameId ) );
+        
+    }
+    
+    public void createTab( String gamename ) throws IOException {
+        
+        GameUI game = GameHandler.getInstance().getGame( gamename );
+        
+    }
+    
+    private void createTab( GameUI game ) throws IOException {
+    
+        FXMLLoader tabContentLoader = new FXMLLoader( getClass().getResource("FXML/Tab.fxml") );
+        
+        Parent tabContent = (Parent) tabContentLoader.load();
+        
+        GameTab tabController = tabContentLoader.getController();
+        tabController.initCanvas( game );
         
         Tab newTab = new Tab();
-        newTab.setText(tabname);
+        newTab.setText( game.getGameName() );
         
         AnchorPane pane = new AnchorPane();
         pane.minHeight(0.0);
@@ -83,7 +102,7 @@ public final class GameOfLifeController {
         tabPane.getTabs().add(newTab);
         
         SingleSelectionModel<Tab> selectionModel = tabPane.getSelectionModel();
-        selectionModel.select(newTab);
+        selectionModel.select(newTab);      
         
     }
     

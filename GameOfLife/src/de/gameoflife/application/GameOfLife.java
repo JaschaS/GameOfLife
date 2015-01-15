@@ -140,6 +140,8 @@ public class GameOfLife extends Application {
     
     private void closeLoadScreen() {
     
+        loadGameController.setItems();
+        
         loadGame.setVisible(false);
         loadGame.toBack();
         gamescene.setDisable(false);
@@ -179,22 +181,22 @@ public class GameOfLife extends Application {
                 //TODO Check if name is Valid??? -nicht null, "", bereits vorhanden
 
 
-                //boolean successful = connection.generateNewGame( User.getInstance().getId(), newGameController.getGameName() );
+                boolean successful = GameHandler.getInstance().generateNewGame( User.getInstance().getId(), newGameController.getGameName() );
                     
                 //System.out.println( successful );
                 
-                //if( successful ) {
+                if( successful ) {
                         
                         gamesceneController.createTab( newGameController.getGameName() );
                         
                         closeNewGame();
                     
-                //}
-                //else {
+                }
+                else {
                     
-                //    newGameController.setErrorText("Es ist ein Fehler beim Erstellen aufgetretten.");
+                    newGameController.setErrorText("An error occurred.");
                     
-               //}
+               }
                 
             } catch (IOException ex) {
                 Logger.getLogger(GameOfLife.class.getName()).log(Level.SEVERE, null, ex);
@@ -220,7 +222,7 @@ public class GameOfLife extends Application {
             
             if( controller.getUserName().equals("") || controller.getPassword().equals("") ) {
                 
-                controller.setErrorText("Benutzername und Passwort leer!");
+                controller.setErrorText("Username or password empty!");
                 
             }
             else {
@@ -290,11 +292,19 @@ public class GameOfLife extends Application {
         
         loadGameController.loadEvent( (ActionEvent event) -> {
         
-            Game g = loadGameController.getSelectedGame();
+            try {
+                
+                Game g = loadGameController.getSelectedGame();
             
-            GameHandler.getInstance().loadGame( User.getInstance().getId(), g.getGameId() );
+                GameHandler.getInstance().loadGame( User.getInstance().getId(), g.getGameId() );
             
-            closeLoadScreen();
+                gamesceneController.createTab( g.getGameId() );
+            
+                closeLoadScreen();
+                
+            } catch (IOException ex) {
+                Logger.getLogger(GameOfLife.class.getName()).log(Level.SEVERE, null, ex);
+            }
         
         });
         

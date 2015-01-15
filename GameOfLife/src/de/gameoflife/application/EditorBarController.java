@@ -20,7 +20,7 @@ public class EditorBarController implements Initializable {
 
     @FXML private ToolBar editorToolBar;
     
-    private Tab parent;
+    private GameTab parent;
     private NumberTextField cellWidth;
     private NumberTextField cellHeight;
     private NumberTextField cellSize;
@@ -62,7 +62,7 @@ public class EditorBarController implements Initializable {
         
     }    
     
-    public void setParent( Tab newParent ) {
+    public void setParent( GameTab newParent ) {
     
         parent = newParent;
         

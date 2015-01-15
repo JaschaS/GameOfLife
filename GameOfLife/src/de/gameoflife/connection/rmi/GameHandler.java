@@ -62,6 +62,8 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
             
             instance.establishConnection();  
         
+            //instance.establishConnectionRuleEditor();
+            
         }
             
     }
@@ -87,16 +89,40 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
     public boolean establishConnection(){
         //TODO fehler abfangen
         establishConnectionRuleEditor();
-        establishConnectionGameEngine();
-        establishConnectionAnalysis();
+        //establishConnectionGameEngine();
+        //establishConnectionAnalysis();
         return true;
     }
     
     public boolean closeConnection(){
         closeConnectionRuleEditor();
-        closeConnectionGameEngine();
-        closeConnectionAnalysis();
+        //closeConnectionGameEngine();
+        //closeConnectionAnalysis();
         return true;
+    }
+    
+    public GameUI getGame( int gameId ) {
+        
+        return gameList.get( gameId );
+        
+    }
+    
+    public GameUI getGame( String gamename ) {
+    
+        Iterator<GameUI> it = gameList.values().iterator();
+        
+        GameUI game;
+        
+        while( it.hasNext() ) {
+        
+            game = it.next();
+            
+            if( game.getGameName().equals(gamename) ) return game;
+            
+        }
+        
+        return null;
+        
     }
 
     /*
@@ -129,11 +155,12 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
                 gameList.put(game.getGameId(), game);
             } else {
                 //TODO: throw error that the connection must be established first
-                
+                System.out.println("rule editor null");
                 return false;
             }
         } catch (RemoteException ex) {
             //TODO
+            Logger.getLogger(GameHandler.class.getName()).log(Level.SEVERE, null, ex);
             return false;
         }
         return true;
@@ -216,7 +243,7 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
     public boolean establishConnectionGameEngine(){
          try {
             //TODO: Adresse anpassen
-            gameEngine = (IGameEngineServer) Naming.lookup("rmi://143.93.91.72111/" + IGameEngineServer.SERVICENAME);
+            gameEngine = (IGameEngineServer) Naming.lookup("rmi://143.93.91.72/" + IGameEngineServer.SERVICENAME);
         } catch (NotBoundException | MalformedURLException | RemoteException ex) {
             
             Logger.getLogger(GameHandler.class.getName()).log(Level.SEVERE, null, ex);

@@ -72,7 +72,7 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
     @Override
     public boolean establishConnectionRuleEditor() {
         try {
-            ruleEditor = (IRemoteRuleEditor) Naming.lookup("rmi://143.93.91.72/RuleEditor");
+            ruleEditor = (IRemoteRuleEditor) Naming.lookup("rmi://143.93.91.72/" + IRemoteRuleEditor.SERVICENAME);
         } catch (NotBoundException | MalformedURLException | RemoteException ex) {
             
             Logger.getLogger(GameHandler.class.getName()).log(Level.SEVERE, null, ex);
@@ -165,7 +165,7 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
     public boolean establishConnectionGameEngine(){
          try {
             //TODO: Adresse anpassen
-            gameEngine = (IGameEngineServer) Naming.lookup("rmi://143.93.91.72/Engine");
+            gameEngine = (IGameEngineServer) Naming.lookup("rmi://143.93.91.72111/" + IGameEngineServer.SERVICENAME);
         } catch (NotBoundException | MalformedURLException | RemoteException ex) {
             
             Logger.getLogger(GameHandler.class.getName()).log(Level.SEVERE, null, ex);
@@ -216,6 +216,7 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
     @Override
     public boolean establishConnectionAnalysis(){
         try {
+            //TODO: adresse anpassen
             analysis = (IAnalysis) Naming.lookup("rmi://143.93.91.72/RuleEditor");
         } catch (NotBoundException | MalformedURLException | RemoteException ex) {
             
@@ -283,11 +284,6 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
         } else {
             return -1;
         }
-    }
-    
-    @Override
-    public boolean[][] getGeneration(final int gameId){
-        return gameList.get(gameId).getGeneration();
     }
     
     @Override

@@ -61,11 +61,6 @@ public interface IGameConfiguration {
     int getUserId();
     
     /*
-     * TODO: für was ist das???
-     */
-    boolean[][] getGeneration(final int gameId);
-    
-    /*
      * @return The date when the game was created
      */
     Date getCreationDate(final int gameId);

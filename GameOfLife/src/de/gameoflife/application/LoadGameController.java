@@ -5,7 +5,7 @@
  */
 package de.gameoflife.application;
 
-import de.gameoflife.connection.rmi.GameHandlerSingleton;
+import de.gameoflife.connection.rmi.GameHandler;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.collections.ObservableList;
@@ -44,7 +44,7 @@ public class LoadGameController implements Initializable {
         analysis.setCellFactory( celldata -> new CheckBoxTableCell<>() );
         analysis.setCellValueFactory( (TableColumn.CellDataFeatures<Game, Boolean> param) -> param.getValue().hasAnalysis() );
         
-        ObservableList<Game> data = GameHandlerSingleton.getInstance().getGameList( User.getInstance().getId() );
+        ObservableList<Game> data = GameHandler.getInstance().getGameList( User.getInstance().getId() );
     
         gameList.setItems( data );
         
@@ -59,6 +59,12 @@ public class LoadGameController implements Initializable {
     public void cancelEvent( EventHandler<ActionEvent> event ) {
     
         cancel.setOnAction(event);
+        
+    }
+    
+    public Game getSelectedGame() {
+    
+        return gameList.getSelectionModel().getSelectedItem();
         
     }
     

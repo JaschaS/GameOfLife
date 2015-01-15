@@ -1,8 +1,8 @@
 package de.gameoflife.connection.rmi;
 
-import java.rmi.RemoteException;
+import de.gameoflife.application.Game;
 import java.util.List;
-import rmi.data.GameUI;
+import javafx.collections.ObservableList;
 
 /**
  * This interface handles the connection to the RuleEditor
@@ -59,5 +59,5 @@ public interface IConnectionRuleEditor {
      * @param userId The user from which the games should be shown.
      * @return A list with all ids of the appropriate games.
      */
-    List<Integer> getGameList(final int userId);
+    ObservableList<Game> getGameList(final int userId);
 }

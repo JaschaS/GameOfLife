@@ -20,8 +20,9 @@ public class Game {
         private final StringProperty date;
         private final BooleanProperty hasHistory;
         private final BooleanProperty hasAnalysis;
+        private final int gameId;
         
-        public Game( String gameName, String date, boolean hasHistory, boolean hasAnalysis ) {
+        public Game( int gameId, String gameName, String date, boolean hasHistory, boolean hasAnalysis ) {
             
             this.gameName = new SimpleStringProperty( gameName );
             this.date = new SimpleStringProperty( date );
@@ -29,6 +30,8 @@ public class Game {
             this.hasHistory = new SimpleBooleanProperty( hasHistory );
             
             this.hasAnalysis = new SimpleBooleanProperty( hasAnalysis );
+            
+            this.gameId = gameId;
             
         }
         
@@ -47,5 +50,11 @@ public class Game {
         public BooleanProperty hasAnalysis() {
             return hasAnalysis;
         }  
+        
+        public int getGameId() {
+        
+            return gameId;
+            
+        }
         
 }

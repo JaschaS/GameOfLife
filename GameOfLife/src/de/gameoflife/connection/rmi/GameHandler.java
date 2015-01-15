@@ -6,11 +6,11 @@
 package de.gameoflife.connection.rmi;
 
 
+import de.gameoflife.application.Game;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -18,6 +18,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import queue.data.Generation;
 import rmi.data.GameUI;
 import rmi.data.rules.Evaluable;
@@ -46,8 +48,40 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
     //Handles the communication between the Analyse and UI.
     private IAnalysis analysis = null;
     
-    public GameHandler(){
+    private static GameHandler instance;
+    
+    private GameHandler(){
         gameList = new HashMap<>();
+    }
+    
+    public static void init() {
+    
+        if( instance == null ) {
+            
+            instance = new GameHandler();
+            
+            instance.establishConnection();  
+        
+        }
+            
+    }
+    
+    public static GameHandler getInstance() {
+    
+        return instance;
+        
+    }
+    
+    public static void close() {
+        
+        if( instance != null ) {
+            
+            instance.closeConnection();
+            
+            instance = null;
+            
+        }
+        
     }
     
     public boolean establishConnection(){
@@ -140,17 +174,34 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
     }
 
     @Override
-    public List<Integer> getGameList(final int userId) {
+    public ObservableList<Game> getGameList(final int userId) {
         try {
-            List<Integer> gameIds = new ArrayList<>();
+            //List<Integer> gameIds = new ArrayList<>();
             List<GameUI> games = ruleEditor.getUserGames(userId);
             
             Iterator<GameUI> it = games.iterator();
+            
+            ObservableList<Game> data = FXCollections.observableArrayList();
+            GameUI game;
+            Game g;
+            
             while(it.hasNext()){
-                gameIds.add(it.next().getGameId());
+                
+                game = it.next();
+                
+                g = new Game( 
+                        game.getGameId(),
+                        game.getGameName(),
+                        game.getCreationDate().toString(),
+                        game.isHistoryAvailable(),
+                        game.isAnalysisAvailable()
+                );
+
+                data.add( g );
+                
             }
             
-            return gameIds;
+            return data;
         } catch (RemoteException ex) {
             Logger.getLogger(GameHandler.class.getName()).log(Level.SEVERE, null, ex);
             return null;

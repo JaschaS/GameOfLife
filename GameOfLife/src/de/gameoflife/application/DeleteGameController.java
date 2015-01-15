@@ -5,7 +5,7 @@
  */
 package de.gameoflife.application;
 
-import de.gameoflife.connection.rmi.GameHandlerSingleton;
+import de.gameoflife.connection.rmi.GameHandler;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.collections.ObservableList;
@@ -36,7 +36,7 @@ public class DeleteGameController implements Initializable {
         name.setCellValueFactory((TableColumn.CellDataFeatures<Game, String> param) -> param.getValue().getGameName());
         date.setCellValueFactory((TableColumn.CellDataFeatures<Game, String> param) -> param.getValue().getDate());
         
-        ObservableList<Game> data = GameHandlerSingleton.getInstance().getGameList( User.getInstance().getId() );
+        ObservableList<Game> data = GameHandler.getInstance().getGameList( User.getInstance().getId() );
     
         gameList.setItems( data );
         

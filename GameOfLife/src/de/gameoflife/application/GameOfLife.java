@@ -2,7 +2,7 @@
 package de.gameoflife.application;
 
 import com.goebl.david.Webb;
-import de.gameoflife.connection.rmi.GameHandlerSingleton;
+import de.gameoflife.connection.rmi.GameHandler;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -51,7 +51,7 @@ public class GameOfLife extends Application {
         stageWidthProperty = primaryStage.widthProperty();
         stageHeightProperty = primaryStage.heightProperty();
         
-        GameHandlerSingleton.init( "rmi://143.93.91.72/RuleEditor" );
+        GameHandler.init();
         
         this.primaryStage = primaryStage;
         
@@ -78,7 +78,7 @@ public class GameOfLife extends Application {
     public void stop() throws Exception {
         super.stop();
         
-        GameHandlerSingleton.closeConnection();
+        GameHandler.getInstance().closeConnection();
         
         System.exit(0);
     }
@@ -290,6 +290,10 @@ public class GameOfLife extends Application {
         
         loadGameController.loadEvent( (ActionEvent event) -> {
         
+            Game g = loadGameController.getSelectedGame();
+            
+            GameHandler.getInstance().loadGame( User.getInstance().getId(), g.getGameId() );
+            
             closeLoadScreen();
         
         });
@@ -313,8 +317,6 @@ public class GameOfLife extends Application {
         
         deleteGameController.deleteEvent( (ActionEvent deleteEvent) -> {
         
-            GameHandlerSingleton.getInstance().deleteGame();
-            
             closeDeleteScreen();
         
         });

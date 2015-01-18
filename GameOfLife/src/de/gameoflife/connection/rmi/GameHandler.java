@@ -26,6 +26,7 @@ import rmi.data.rules.Evaluable;
 import rmi.interfaces.IAnalysis;
 import rmi.interfaces.IGameEngineServer;
 import rmi.interfaces.IRemoteRuleEditor;
+import rmi.interfaces.IRemoteUI_Server;
 
 
 /**
@@ -33,7 +34,7 @@ import rmi.interfaces.IRemoteRuleEditor;
  * @author Daniel
  */
 public class GameHandler implements IGameConfiguration, IConnectionRuleEditor, 
-        IConnectionGameEngine, IConnectionAnalysis{
+        IConnectionGameEngine, IConnectionAnalysis, IRemoteUI_Server{
     
     //Contains all games which the user has opened in his GUI. 
     //For performance it creates an index over the game ids.
@@ -47,6 +48,8 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
     
     //Handles the communication between the Analyse and UI.
     private IAnalysis analysis = null;
+    
+    private IRemoteUI_Server uiServer = null;
     
     private static GameHandler instance;
     
@@ -91,6 +94,7 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
         establishConnectionRuleEditor();
         //establishConnectionGameEngine();
         //establishConnectionAnalysis();
+        //establishConnectionUIServer();
         return true;
     }
     
@@ -98,6 +102,7 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
         closeConnectionRuleEditor();
         //closeConnectionGameEngine();
         //closeConnectionAnalysis();
+        //closeConnectionUIServer();
         return true;
     }
     
@@ -317,6 +322,35 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
         } catch (RemoteException ex) {
             Logger.getLogger(GameHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    /*
+     * <-----------------------UI Server part ------------------------->
+     */
+    
+    public boolean establishConnectionUIServer() {
+        try {
+            uiServer = (IRemoteUI_Server) Naming.lookup("rmi://143.93.91.71/" + "RemoteUIBackend");
+        } catch (NotBoundException | MalformedURLException | RemoteException ex) {
+            
+            Logger.getLogger(GameHandler.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+        return true;
+    }
+    
+    public void closeConnectionUIServer() {
+        uiServer = null;
+    }
+    
+    @Override
+    public Generation getNextGeneration(final int userId, final int gameId){
+        try {
+            return uiServer.getNextGeneration(userId, gameId);
+        } catch (RemoteException ex) {
+            Logger.getLogger(GameHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
     }
     
     /*

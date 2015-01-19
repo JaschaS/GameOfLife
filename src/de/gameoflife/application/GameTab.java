@@ -51,11 +51,7 @@ public class GameTab implements Initializable {
     @FXML
     protected void gridOptions() {
     }
-
-    @FXML
-    protected void draw() {
-    }
-
+    
     @FXML
     protected void rules() {
     }
@@ -104,6 +100,10 @@ public class GameTab implements Initializable {
     
     public int getGameId() {
         return game.getGameId();
+    }
+    
+    public GameCanvas getCanvas() {
+        return canvas;
     }
 
     public void setCanvasWidth( int width ) {

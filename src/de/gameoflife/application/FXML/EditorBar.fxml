@@ -39,7 +39,7 @@
         <Button mnemonicParsing="false" text="Rules" />
         <Button mnemonicParsing="false" text="Wrap" />
         <Separator orientation="VERTICAL" />
-        <Button mnemonicParsing="false" text="Draw" />
+        <Button mnemonicParsing="false" text="Draw" onAction="#draw"  />
         <ColorPicker />
     </items>
 </ToolBar>

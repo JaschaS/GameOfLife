@@ -17,6 +17,9 @@ import javafx.scene.paint.Color;
  * 
  * @version 2014-12-11-1 
  * 
+ * TODO: Draw Color auswahl
+ * TODO: Draw zeichnen rückgaengig machen
+ * TODO: Draw mouse press und draw
  */
 public class GameCanvas extends Group {
     
@@ -46,9 +49,10 @@ public class GameCanvas extends Group {
         
         getChildren().addAll( grid, elements );
         
+        
     }
 
-    /*
+    
     public void addListener() {
         setOnMouseClicked( new GameCanvasListener() );
     }
@@ -56,7 +60,7 @@ public class GameCanvas extends Group {
     public void removeListener() {
         setOnMouseClicked(null);
     }
-    */
+    
     
     public void gridPosition( ScrollPane scrollpane ) {
     
@@ -84,13 +88,19 @@ public class GameCanvas extends Group {
                 
             } 
         
-        }     
-    
+        }  
+        
     }
     
     private void clearGrid() {
     
+        cells.clear();
+        
         GraphicsContext gc = grid.getGraphicsContext2D();
+        
+        gc.clearRect( 0, 0, width, height );
+        
+        gc = elements.getGraphicsContext2D();
         
         gc.clearRect( 0, 0, width, height );
     
@@ -100,6 +110,7 @@ public class GameCanvas extends Group {
         
         width = newWidth * cellSize;
         grid.setWidth(width);
+        elements.setWidth(width);
         drawGrid();
         
     }
@@ -108,6 +119,7 @@ public class GameCanvas extends Group {
     
         height = newHeight * cellSize;
         grid.setHeight(height);
+        elements.setHeight(height);
         drawGrid();
     
     }
@@ -118,6 +130,8 @@ public class GameCanvas extends Group {
         height = ( height / cellSize ) * size;
         grid.setHeight(height);
         grid.setWidth(width);
+        elements.setWidth(width);
+        elements.setHeight(height);
         
         this.cellSize = size;
         clearGrid();
@@ -146,6 +160,9 @@ public class GameCanvas extends Group {
         @Override
         public void handle(MouseEvent event) {
             
+            
+            
+            System.out.println("Hit");
             Iterator<Cell> it = cells.iterator();
             boolean found = false;
             Cell c = null;
@@ -174,8 +191,7 @@ public class GameCanvas extends Group {
                 gc.setFill(Color.RED);
                 gc.setStroke(Color.RED);
                 gc.fillRect(c.getX(), c.getY(), cellSize, cellSize);
-                
-                //System.out.println( c.getX() + " " + c.getY() );
+                System.out.println("hit: x: " + c.getX() + " y: " + c.getY() );
             }
             
         }

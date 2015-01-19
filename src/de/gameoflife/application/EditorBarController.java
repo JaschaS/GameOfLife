@@ -27,6 +27,7 @@ public class EditorBarController implements Initializable {
     private NumberTextField cellWidth;
     private NumberTextField cellHeight;
     private NumberTextField cellSize;
+    private boolean userDraws = false;
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -69,6 +70,14 @@ public class EditorBarController implements Initializable {
     public void save(ActionEvent event) throws IOException {
         
         GameHandler.getInstance().saveGame( parent.getGameId() );
+        
+    }
+    
+    @FXML
+    public void draw(ActionEvent event) throws IOException {
+        
+        if( !userDraws ) parent.getCanvas().addListener();
+        else parent.getCanvas().removeListener();
         
     }
     

@@ -32,7 +32,7 @@
             <HBox prefHeight="0.0" prefWidth="300.0" spacing="10" GridPane.columnIndex="0" GridPane.rowIndex="1">
                <children>
                     <Button fx:id="delete" style="-fx-font-size: 15pt" text="delete" />
-                    <Button fx:id="cancel" style="-fx-font-size: 15pt" text="cancel" />
+                    <Button fx:id="cancel" style="-fx-font-size: 15pt" text="close" />
                </children>
             </HBox>  
 

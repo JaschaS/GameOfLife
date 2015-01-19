@@ -211,8 +211,6 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
             
             List<GameUI> games = ruleEditor.getUserGames(userId);
             
-            System.out.println( games.size() );
-            
             Iterator<GameUI> it = games.iterator();
             
             ObservableList<Game> data = FXCollections.observableArrayList();

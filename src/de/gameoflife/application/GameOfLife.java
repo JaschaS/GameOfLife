@@ -50,7 +50,7 @@ public class GameOfLife extends Application {
         
         stageWidthProperty = primaryStage.widthProperty();
         stageHeightProperty = primaryStage.heightProperty();
-        
+        //asdfsdf
         GameHandler.init();
         
         this.primaryStage = primaryStage;

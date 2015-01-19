@@ -3,7 +3,7 @@ package de.gameoflife.connection.rabbitmq;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
-import de.gof.communication.DeleteInfo;
+import queue.data.DeleteInfo;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutput;
@@ -32,6 +32,7 @@ public class RabbitMQConnection {
         try {
             con = factory.newConnection();
             if (con.isOpen()) {
+                channel = con.createChannel();
                 System.out.println("Connected");
             } else {
                 System.out.println("Not Connected");
@@ -48,6 +49,7 @@ public class RabbitMQConnection {
             }
             if (con != null) {
                 con.close();
+                
             }
         } catch (IOException ex) {
             Logger.getLogger(RabbitMQConnection.class.getName()).log(Level.SEVERE, null, ex);
@@ -65,7 +67,7 @@ public class RabbitMQConnection {
                 out.writeObject(delInfo);
                 byte[] delInfo_byte = bos.toByteArray();
 
-                channel = con.createChannel();
+               
 
                 channel.basicPublish("VisuExchange", "", null, delInfo_byte);
             } finally {
@@ -91,7 +93,7 @@ public class RabbitMQConnection {
     public void deleteGame(final int userId, final int gameId) {
         try {
             DeleteInfo delInfo = new DeleteInfo(userId, gameId);
-
+            System.out.println(delInfo.getClass().toString());
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             ObjectOutput out = null;
             try {
@@ -99,9 +101,10 @@ public class RabbitMQConnection {
                 out.writeObject(delInfo);
                 byte[] delInfo_byte = bos.toByteArray();
 
-                channel = con.createChannel();
+                
 
                 channel.basicPublish("VisuExchange", "", null, delInfo_byte);
+                System.out.println("objekt gesendet");
             } finally {
                 try {
                     if (out != null) {

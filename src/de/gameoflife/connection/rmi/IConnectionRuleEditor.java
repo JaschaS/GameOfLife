@@ -3,6 +3,7 @@ package de.gameoflife.connection.rmi;
 import de.gameoflife.application.Game;
 import java.util.List;
 import javafx.collections.ObservableList;
+import rmi.data.GameUI;
 
 /**
  * This interface handles the connection to the RuleEditor
@@ -59,5 +60,5 @@ public interface IConnectionRuleEditor {
      * @param userId The user from which the games should be shown.
      * @return A list with all ids of the appropriate games.
      */
-    ObservableList<Game> getGameList(final int userId);
+    ObservableList<GameUI> getGameList(final int userId);
 }

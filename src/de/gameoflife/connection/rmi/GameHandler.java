@@ -206,11 +206,13 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
     }
 
     @Override
-    public ObservableList<Game> getGameList(final int userId) {
+    public ObservableList<GameUI> getGameList(final int userId) {
         try {
             
             List<GameUI> games = ruleEditor.getUserGames(userId);
             
+            return FXCollections.observableArrayList( ruleEditor.getUserGames(userId));
+            /*
             Iterator<GameUI> it = games.iterator();
             
             ObservableList<Game> data = FXCollections.observableArrayList();
@@ -232,8 +234,8 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
                 data.add( g );
                 
             }
-            
-            return data;
+            */
+            //return data;
         } catch (RemoteException ex) {
             Logger.getLogger(GameHandler.class.getName()).log(Level.SEVERE, null, ex);
             return null;

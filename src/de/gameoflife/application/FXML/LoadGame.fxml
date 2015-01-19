@@ -33,7 +33,7 @@
         </TableView>
             <HBox prefHeight="0.0" prefWidth="300.0" spacing="10" GridPane.columnIndex="0" GridPane.rowIndex="1">
                <children>
-                    <Button fx:id="load" style="-fx-font-size: 15pt" text="load" />
+                    <Button fx:id="okButton" style="-fx-font-size: 15pt" text="load" />
                     <Button fx:id="cancel" style="-fx-font-size: 15pt" text="cancel" />
                </children>
             </HBox>  

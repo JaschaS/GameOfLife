@@ -14,11 +14,11 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import org.json.JSONObject;
+import rmi.data.GameUI;
 
 /**
  *
@@ -26,6 +26,9 @@ import org.json.JSONObject;
  *
  * @version 2014-12-11-1
  *
+ * TODO Wenn ein Spiel geladen/gelöscht worden ist und das Fenster erneut geoeffnet wird,
+ * kann das default selektierte element nicht geladen order geloescht werden.
+ * 
  */
 public class GameOfLife extends Application {
 
@@ -124,9 +127,8 @@ public class GameOfLife extends Application {
     void loadGame() {
 
         loadGameController.setItems();
-
-        //ObservableList list = GameHandler.getInstance().getGameList( User.getInstance().getId() );
-        //System.out.println( list.size() );
+        loadGameController.clearSelection();
+        
         loadGame.toFront();
         loadGame.setVisible(true);
 
@@ -294,16 +296,18 @@ public class GameOfLife extends Application {
 
         loadGameController = loadingScreenLoader.getController();
 
-        loadGameController.loadEvent((ActionEvent event) -> {
+        loadGameController.okButtonEvent((ActionEvent event) -> {
 
             try {
 
-                Game g = loadGameController.getSelectedGame();
+                GameUI g = loadGameController.getSelectedGame();
 
                 if (g != null) {
 
                     boolean successful = GameHandler.getInstance().loadGame(User.getInstance().getId(), g.getGameId());
 
+                    //System.out.println( successful );
+                    
                     if (successful) {
 
                         gamesceneController.createTab(g.getGameId());
@@ -337,20 +341,18 @@ public class GameOfLife extends Application {
 
         deleteGameController = deleteGameLoader.getController();
 
-        deleteGameController.deleteEvent((ActionEvent deleteEvent) -> {
+        deleteGameController.okButtonEvent((ActionEvent deleteEvent) -> {
 
-            Game g = loadGameController.getSelectedGame();
-
-            System.out.println(g == null);
+            GameUI g = deleteGameController.getSelectedGame();
 
             if (g != null) {
                 
-                deleteGameController.setItems();
+                //deleteGameController.setItems();
                 
                 queue.deleteGame(User.getInstance().getId(), g.getGameId());
 
                 //TODO Spiel Tab offen und loeschen soll das Tab schließen.
-                //closeDeleteScreen();
+                closeDeleteScreen();
             }
 
         });

@@ -318,6 +318,8 @@ public class GameTab implements Initializable {
     
         this.game = game;
         
+        System.out.println( game.getStartGen()[0].length + " h: " + game.getStartGen().length );
+        
         //3, 3, 20
         canvas = new GameCanvas(
                 game.getStartGen()[0].length,

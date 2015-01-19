@@ -30,7 +30,7 @@
 <ToolBar xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.gameoflife.application.EditorBarController" fx:id="editorToolBar" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
     <items>
         <Button mnemonicParsing="false" text="done" />
-        <Button mnemonicParsing="false" text="save" />
+        <Button mnemonicParsing="false" text="save" onAction="#save"  />
         <Separator orientation="VERTICAL" />
         <Label text="Breite:" />
         <Label text="Höhe:" />

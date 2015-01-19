@@ -26,9 +26,6 @@ import rmi.data.GameUI;
  *
  * @version 2014-12-11-1
  *
- * TODO Wenn ein Spiel geladen/gelöscht worden ist und das Fenster erneut geoeffnet wird,
- * kann das default selektierte element nicht geladen order geloescht werden.
- * 
  */
 public class GameOfLife extends Application {
 
@@ -128,7 +125,7 @@ public class GameOfLife extends Application {
 
         loadGameController.setItems();
         loadGameController.clearSelection();
-        
+
         loadGame.toFront();
         loadGame.setVisible(true);
 
@@ -307,8 +304,7 @@ public class GameOfLife extends Application {
                     boolean successful = GameHandler.getInstance().loadGame(User.getInstance().getId(), g.getGameId());
 
                     //System.out.println( successful );
-                    
-                    if (successful) {
+                    if (successful && !gamesceneController.gameIsOpen(g.getGameId())) {
 
                         gamesceneController.createTab(g.getGameId());
 
@@ -346,13 +342,15 @@ public class GameOfLife extends Application {
             GameUI g = deleteGameController.getSelectedGame();
 
             if (g != null) {
-                
-                //deleteGameController.setItems();
-                
+
+                if (gamesceneController.gameIsOpen(g.getGameId())) gamesceneController.closeTab(g.getGameId());
+
+                    //deleteGameController.setItems();
                 queue.deleteGame(User.getInstance().getId(), g.getGameId());
 
                 //TODO Spiel Tab offen und loeschen soll das Tab schließen.
                 closeDeleteScreen();
+
             }
 
         });

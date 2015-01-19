@@ -31,14 +31,8 @@ public class GameCanvas extends Group {
 
         super();
         
-        //setStyle("-fx-background-color: red;");
-        
         double screenWidth = GameOfLife.stageWidthProperty.get();
         double screenHeight = GameOfLife.stageHeightProperty.get();
-        
-        
-        //setLayoutX( screenWidth * 10 );
-        //setLayoutY( screenHeight * 2 );
         
         this.width = width * cellSize;
         this.height = height * cellSize;
@@ -47,25 +41,10 @@ public class GameCanvas extends Group {
 
         elements = new Canvas( this.width, this.height );
         grid = new Canvas( this.width, this.height );
-        //grid.setLayoutX( screenWidth / 2 );
-        //grid.setLayoutY( screenHeight / 2 - height );
-        /*
-        GameOfLife.stageWidthProperty.addListener(observable -> {
-            //setLayoutX( GameOfLife.stageWidthProperty.get() * 10 );
-            grid.setLayoutX( GameOfLife.stageWidthProperty.get() / 2 - width / 2 );
-            drawGrid();
-        });
         
-        GameOfLife.stageHeightProperty.addListener(observable -> {
-            //setLayoutY( GameOfLife.stageHeightProperty.get() * 2 );
-            grid.setLayoutY( GameOfLife.stageHeightProperty.get() / 2 - height / 2 );
-            drawGrid();
-        });
-        */
         drawGrid();
         
         getChildren().addAll( grid, elements );
-        //setCenter(grid);
         
     }
 

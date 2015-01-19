@@ -120,6 +120,10 @@ public class GameOfLife extends Application {
     
         //loadGameController.setItems();
         
+        //ObservableList list = GameHandler.getInstance().getGameList( User.getInstance().getId() );
+        
+        //System.out.println( list.size() );
+        
         loadGame.toFront();
         loadGame.setVisible(true);
         

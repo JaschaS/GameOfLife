@@ -208,8 +208,10 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
     @Override
     public ObservableList<Game> getGameList(final int userId) {
         try {
-            //List<Integer> gameIds = new ArrayList<>();
+            
             List<GameUI> games = ruleEditor.getUserGames(userId);
+            
+            System.out.println( games.size() );
             
             Iterator<GameUI> it = games.iterator();
             

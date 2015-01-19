@@ -2,6 +2,7 @@
 package de.gameoflife.application;
 
 import com.goebl.david.Webb;
+import de.gameoflife.connection.rabbitmq.RabbitMQConnection;
 import de.gameoflife.connection.rmi.GameHandler;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -45,16 +46,17 @@ public class GameOfLife extends Application {
     private LoadGameController loadGameController;
     private DeleteGameController deleteGameController;
     private Node currentNodeInFront;
+    private RabbitMQConnection queue;
     
     @Override
     public void start(Stage primaryStage) throws IOException {
         
         stageWidthProperty = primaryStage.widthProperty();
         stageHeightProperty = primaryStage.heightProperty();
-        //asdfsdf
-        GameHandler.init();
         
-        Button b = new Button("Daniel");
+        queue = new RabbitMQConnection();
+        
+        GameHandler.init();
         
         this.primaryStage = primaryStage;
         
@@ -81,6 +83,7 @@ public class GameOfLife extends Application {
     public void stop() throws Exception {
         super.stop();
         
+        queue.closeConnection();
         GameHandler.getInstance().closeConnection();
         
         System.exit(0);
@@ -121,7 +124,7 @@ public class GameOfLife extends Application {
     
     void loadGame() {
     
-        //loadGameController.setItems();
+        loadGameController.setItems();
         
         //ObservableList list = GameHandler.getInstance().getGameList( User.getInstance().getId() );
         
@@ -337,7 +340,13 @@ public class GameOfLife extends Application {
         deleteGameController = deleteGameLoader.getController();
         
         deleteGameController.deleteEvent( (ActionEvent deleteEvent) -> {
+            
+            Game g = loadGameController.getSelectedGame();
         
+            queue.deleteGame( User.getInstance().getId(), g.getGameId() );
+            
+            //TODO Spiel Tab offen und loeschen soll das Tab schließen.
+            
             closeDeleteScreen();
         
         });

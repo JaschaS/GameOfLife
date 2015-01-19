@@ -52,4 +52,10 @@ public class DeleteGameController implements Initializable {
         
     }
     
+    public Game getSelectedGame() {
+    
+        return gameList.getSelectionModel().getSelectedItem();
+        
+    }
+    
 }

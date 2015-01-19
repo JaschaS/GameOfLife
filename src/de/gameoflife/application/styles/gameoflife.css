@@ -1,0 +1,86 @@
+/*
+ * Empty Stylesheet file.
+ */
+/*
+.cell {
+    -fx-background-color: white; 
+    -fx-border-color: black; 
+    -fx-border-width: 0.1; 
+}
+
+.mainFxmlClass {
+    -fx-background-color:  #747474;
+}
+
+.loginScreen {
+    
+    -fx-background-color: lightgrey;
+    
+}
+
+.button {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+}
+
+.button:hover {
+    -fx-background-color: #0288D1;
+}
+
+.button:pressed, .button:default:hover:pressed  {
+    -fx-background-color: #01579B;
+    
+}
+
+.separator .line {
+    -fx-background-color: transparent;
+    -fx-border-style: solid;
+    -fx-border-width: 0.083333em;
+}
+
+#mainbar {
+}
+
+#tabpane-panel {
+    -fx-background-color:  #03A9F4;
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
+}
+
+.tab-pane {
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
+}
+
+.tab{
+    -fx-background-color:  white;
+}
+
+.tab .tab-label {
+    -fx-text-fill: black;
+}
+
+#panel {
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
+}
+
+
+
+.tab-pane *.tab-header-background {
+    -fx-background-color:  #CCCCCC;
+    
+}
+*/
+
+/*
+.tab-pane .tab-header-area .tab-header-background {
+    -fx-background-color: yellow;
+}
+*/
+/*
+#tabpane-panel {
+    -fx-background-color:  #999999;
+}
+*/
+
+.tab-pane .tab-header-area .tab-header-background {
+    -fx-background-color: transparent;
+}

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<GridPane alignment="CENTER" hgap="5.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="350.0" prefWidth="450.0" style="-fx-background-color: rgb(241,241,241); -fx-effect: dropshadow(three-pass-box, grey, 30, 0.5, 0, 0); -fx-border-radius: 5 5 5 5;   -fx-background-radius: 5 5 5 5;" vgap="5.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.gameoflife.application.RulesController">
+    <columnConstraints>
+      <ColumnConstraints halignment="RIGHT" />
+      <ColumnConstraints halignment="LEFT" />
+    </columnConstraints>
+     <children>
+            <HBox prefHeight="0.0" prefWidth="300.0" spacing="10" GridPane.columnIndex="0" GridPane.rowIndex="1">
+               <children>
+                    <Button fx:id="load" style="-fx-font-size: 15pt" text="close">
+               <HBox.margin>
+                  <Insets left="5.0" />
+               </HBox.margin></Button>
+               </children>
+            </HBox>
+      <TabPane prefHeight="300.0" prefWidth="425.0" stylesheets="@../styles/gameoflife.css" tabClosingPolicy="UNAVAILABLE">
+        <tabs>
+          <Tab text="Death rules">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: grey;">
+                     <children>
+                        <ListView prefWidth="150.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+          <Tab text="Born rules">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+            </content>
+          </Tab>
+        </tabs>
+         <GridPane.margin>
+            <Insets left="5.0" top="7.0" />
+         </GridPane.margin>
+      </TabPane>  
+
+     </children>
+   <rowConstraints>
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+   </rowConstraints>
+</GridPane>

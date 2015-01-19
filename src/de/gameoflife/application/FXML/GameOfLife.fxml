@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.effect.*?>
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: #CCCCCC;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.gameoflife.application.GameOfLifeController">
+    <stylesheets>
+        <URL value="@gameoflife.css" />
+    </stylesheets>
+   <children>
+      <ToolBar id="tabpane-panel" layoutY="170.0" orientation="VERTICAL" prefHeight="477.0" prefWidth="66.0" stylesheets="@gameoflife.css">
+        <items>
+          <Button mnemonicParsing="false" style="-fx-graphic: url('https://raw.githubusercontent.com/google/material-design-icons/master/image/2x_web/ic_grid_on_white_18dp.png');" />
+            <Button mnemonicParsing="false" style="-fx-graphic: url('https://raw.githubusercontent.com/google/material-design-icons/master/content/2x_web/ic_content_paste_white_18dp.png');" />
+            <Button mnemonicParsing="false" style="-fx-graphic: url('https://raw.githubusercontent.com/google/material-design-icons/master/action/2x_web/ic_open_with_white_18dp.png');" />
+            <Separator prefHeight="28.0" prefWidth="15.0" />
+            <Button mnemonicParsing="false" style="-fx-graphic: url('https://raw.githubusercontent.com/google/material-design-icons/master/image/2x_web/ic_brush_white_18dp.png');" />
+            <Button mnemonicParsing="false" style="-fx-graphic: url('https://raw.githubusercontent.com/google/material-design-icons/master/image/2x_web/ic_brush_white_18dp.png');" />
+            <Separator prefHeight="28.0" prefWidth="15.0" />
+            <Button mnemonicParsing="false" style="-fx-graphic: url('https://raw.githubusercontent.com/google/material-design-icons/master/av/2x_web/ic_play_arrow_white_18dp.png');" />
+            <Button mnemonicParsing="false" style="-fx-graphic: url('https://raw.githubusercontent.com/google/material-design-icons/master/av/2x_web/ic_stop_white_18dp.png');" />
+            <Button mnemonicParsing="false" style="-fx-graphic: url('https://raw.githubusercontent.com/google/material-design-icons/master/av/2x_web/ic_skip_next_white_18dp.png');" />
+        </items>
+      </ToolBar>
+      <ToolBar id="mainbar" prefHeight="62.0" prefWidth="1280.0" style="-fx-background-color: #03A9F4;" stylesheets="@gameoflife.css">
+        <items>
+            <Button mnemonicParsing="false" onAction="#login" style="-fx-graphic: url('https://raw.githubusercontent.com/google/material-design-icons/master/editor/2x_web/ic_insert_drive_file_white_18dp.png');" styleClass="bn" text="Login" textFill="WHITE" />
+            <Separator orientation="VERTICAL" prefHeight="28.0" prefWidth="15.0" stylesheets="@gameoflife.css" />
+            <Button mnemonicParsing="false" onAction="#newGame" style="-fx-graphic: url('https://raw.githubusercontent.com/google/material-design-icons/master/editor/2x_web/ic_insert_drive_file_white_18dp.png');" styleClass="bn" textFill="WHITE" />
+            <Button mnemonicParsing="false" style="-fx-graphic: url('https://raw.githubusercontent.com/google/material-design-icons/master/file/2x_web/ic_folder_white_18dp.png');" stylesheets="@gameoflife.css" textFill="WHITE" />
+            <Button mnemonicParsing="false" style="-fx-graphic: url('https://raw.githubusercontent.com/google/material-design-icons/master/content/2x_web/ic_save_white_18dp.png');" />
+            <Button mnemonicParsing="false" style="-fx-graphic: url('https://raw.githubusercontent.com/google/material-design-icons/master/action/2x_web/ic_delete_white_18dp.png');" styleClass="bn" textFill="WHITE" />
+        </items>
+      </ToolBar>
+      <TabPane id="tabPane" fx:id="tabPane" layoutX="83.0" layoutY="76.0" prefHeight="629.0" prefWidth="1176.0" style="-fx-background-color: white;" stylesheets="@gameoflife.css" tabClosingPolicy="UNAVAILABLE">
+        <tabs>
+          <Tab text="Game one">
+               <content>
+                  <SplitPane dividerPositions="0.7718120805369127" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0">
+                    <items>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0" />
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0" />
+                    </items>
+                  </SplitPane>
+               </content>
+          </Tab>
+          <Tab text="Game two">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+            </content>
+          </Tab>
+        </tabs>
+      </TabPane>
+   </children>
+</AnchorPane>

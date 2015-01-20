@@ -105,15 +105,31 @@ public class GameTab implements Initializable {
     public GameCanvas getCanvas() {
         return canvas;
     }
+    
+    public GameUI getGame() {
+        return game;
+    }
 
     public void setCanvasWidth( int width ) {
     
+        boolean[][] generation = game.getStartGen();
+        
+        generation = new boolean[ generation.length ][ width ];
+        
+        game.setStartGen(generation);
+        
         canvas.setGridWidth(width);
         
     }
     
     public void setCanvasHeight( int height ) {
     
+        boolean[][] generation = game.getStartGen();
+        
+        generation = new boolean[ height ][ generation[0].length ];
+        
+        game.setStartGen(generation);
+        
         canvas.setGridHeight(height);
         
     }
@@ -128,12 +144,17 @@ public class GameTab implements Initializable {
     
         this.game = game;
         
+        editorController.setCellHeight( game.getStartGen().length );
+        editorController.setCellWidth( game.getStartGen()[0].length );
+        
         //3, 3, 20
         canvas = new GameCanvas(
                 game.getStartGen()[0].length,
                 game.getStartGen().length,
                 20
         );
+        
+        canvas.setGeneration(game.getStartGen());
         
         content.setCenter( canvas );
     

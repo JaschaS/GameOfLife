@@ -1,8 +1,6 @@
-
 package de.gameoflife.application;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.canvas.Canvas;
@@ -14,224 +12,307 @@ import javafx.scene.paint.Color;
 /**
  *
  * @author JScholz
- * 
- * @version 2014-12-11-1 
- * 
- * TODO: Draw Color auswahl
- * TODO: Draw zeichnen rückgaengig machen
- * TODO: Draw mouse press und draw
+ *
+ * @version 2014-12-11-1
+ *
+ * TODO: Draw Color auswahl TODO: Draw zeichnen rückgaengig machen TODO: Draw
+ * mouse press und draw
  */
 public class GameCanvas extends Group {
-    
+
     protected final Canvas grid;
     protected final Canvas elements;
     protected int cellSize;
     protected int width;
     protected int height;
-    protected ArrayList<Cell> cells = new ArrayList<>();
-   
+    protected boolean[][] generation;
+    //protected ArrayList<Cell> cells = new ArrayList<>();
+
     public GameCanvas(int width, int height, int cellSize) {
 
         super();
-        
+
         double screenWidth = GameOfLife.stageWidthProperty.get();
         double screenHeight = GameOfLife.stageHeightProperty.get();
-        
+
         this.width = width * cellSize;
         this.height = height * cellSize;
         this.cellSize = cellSize;
-        
 
-        elements = new Canvas( this.width, this.height );
-        grid = new Canvas( this.width, this.height );
-        
+        elements = new Canvas(this.width, this.height);
+        grid = new Canvas(this.width, this.height);
+
         drawGrid();
-        
-        getChildren().addAll( grid, elements );
-        
-        
+
+        getChildren().addAll(grid, elements);
+
+        generation = new boolean[height][width];
     }
 
-    
     public void addListener() {
-        setOnMouseClicked( new GameCanvasListener() );
+
+        GameCanvasClickListener listener = new GameCanvasClickListener();
+
+        setOnMouseClicked(listener);
+        setOnMouseDragged(listener);
     }
-    
+
     public void removeListener() {
         setOnMouseClicked(null);
+        setOnMouseDragged(null);
     }
-    
-    
-    public void gridPosition( ScrollPane scrollpane ) {
-    
+
+    public void gridPosition(ScrollPane scrollpane) {
+
         double h = scrollpane.getContent().getBoundsInLocal().getHeight();
-        double y = (grid.getBoundsInParent().getMaxY() + 
-                grid.getBoundsInParent().getMinY()) / 2.0;
+        double y = (grid.getBoundsInParent().getMaxY()
+                + grid.getBoundsInParent().getMinY()) / 2.0;
         double v = scrollpane.getViewportBounds().getHeight();
         scrollpane.setVvalue(scrollpane.getVmax() * ((y - 0.5 * v) / (h - v)));
-        
+
     }
-    
-    private void drawGrid() {
-    
+
+    private void drawCells() {
+
+        GraphicsContext gc = elements.getGraphicsContext2D();
+
+        for (int i = 0, y = 0; y < grid.getHeight(); y += cellSize) {
+
+            for (int j = 0, x = 0; x < grid.getWidth(); x += cellSize) {
+
+                if (generation[i][j] == true) {
+                    gc.setFill(Color.RED);
+                    gc.setStroke(Color.RED);
+                    gc.fillRect(x, y, cellSize, cellSize);
+                }
+
+                ++j;
+            }
+            ++i;
+        }
+
+    }
+
+    public void setGeneration(boolean[][] generation) {
+        //Flache kopie um späteres zuweisen zu vereinfachen
+        this.generation = generation;
+        drawCells();
+    }
+
+    public void drawGrid() {
+
         GraphicsContext gc = grid.getGraphicsContext2D();
-        
-        for( int y=0; y < grid.getHeight(); y += cellSize ) {
-        
-            for( int x=0; x < grid.getWidth(); x += cellSize ) {
-                
+
+        for (int y = 0; y < grid.getHeight(); y += cellSize) {
+
+            for (int x = 0; x < grid.getWidth(); x += cellSize) {
+
                 gc.setFill(Color.WHITE);
                 gc.setStroke(Color.BLACK);
                 gc.strokeRect(x, y, cellSize, cellSize);
-                
-                cells.add( new Cell( x, y ) );
-                
-            } 
-        
-        }  
-        
+
+                //cells.add(new Cell(x, y));
+            }
+
+        }
+
     }
-    
-    private void clearGrid() {
-    
-        cells.clear();
-        
+
+    public void clear(boolean deleteGeneration) {
+
         GraphicsContext gc = grid.getGraphicsContext2D();
-        
-        gc.clearRect( 0, 0, width, height );
-        
+
+        gc.clearRect(0, 0, width, height);
+
         gc = elements.getGraphicsContext2D();
+
+        gc.clearRect(0, 0, width, height);
+
+        if (deleteGeneration) {
+
+            for (int i = 0; i < generation.length; ++i) {
+
+                for (int j = 0; j < generation[0].length; ++j) {
+
+                    generation[i][j] = false;
+                }
+
+            }
+        }
         
-        gc.clearRect( 0, 0, width, height );
-    
     }
-    
-    public void setGridWidth( int newWidth ) {
-        
+
+    public void setGridWidth(int newWidth) {
+
+        generation = new boolean[generation.length][newWidth];
+
         width = newWidth * cellSize;
         grid.setWidth(width);
         elements.setWidth(width);
+        clear(true);
         drawGrid();
-        
+
     }
-    
-    public void setGridHeight( int newHeight ) {
-    
+
+    public void setGridHeight(int newHeight) {
+
+        generation = new boolean[newHeight][generation[0].length];
+
         height = newHeight * cellSize;
         grid.setHeight(height);
         elements.setHeight(height);
+        clear(true);
         drawGrid();
-    
+
     }
-    
-    public void setCellSize( int size ) {
-    
-        width = ( width / cellSize ) * size;
-        height = ( height / cellSize ) * size;
+
+    public void setCellSize(int size) {
+
+        width = (width / cellSize) * size;
+        height = (height / cellSize) * size;
         grid.setHeight(height);
         grid.setWidth(width);
         elements.setWidth(width);
         elements.setHeight(height);
-        
+
         this.cellSize = size;
-        clearGrid();
+        clear(false);
         drawGrid();
-        
+        drawCells();
+
     }
-    
+
     public int getGridWidth() {
         return width;
     }
-    
+
     public int getGridHeight() {
         return height;
     }
-    
+
     public Canvas getBackgroundCanvas() {
         return grid;
     }
-    
+
     public Canvas getFrontendCanvas() {
         return elements;
     }
-    
-    private class GameCanvasListener implements EventHandler<MouseEvent> {
+
+    protected class GameCanvasClickListener implements EventHandler<MouseEvent> {
 
         @Override
         public void handle(MouseEvent event) {
-            
-            
-            
-            System.out.println("Hit");
-            Iterator<Cell> it = cells.iterator();
+
             boolean found = false;
-            Cell c = null;
-            
-            while( it.hasNext() && !found ) {
-            
-                c = it.next();
-                
-                if( c.hit( (int)event.getX(), (int)event.getY() ) ) {
-                    
-                    //Wenn bereits ein Cell schon befüllt werden ist,
-                    //soll nichts passieren, daher c = null setzen.
-                    if( !c.hasDrawing() ) c.setDrawing( true );
-                    else c = null;
-                    
-                    found = true;
-                    
+            int i = 0;
+            int j = 0;
+            int x;
+            int y;
+
+            while (i < generation.length && !found) {
+
+                y = i * cellSize;
+
+                while (j < generation[i].length && !found) {
+
+                    x = j * cellSize;
+
+                    if (x <= (int) event.getX() && (int) event.getX() < (x + cellSize)
+                            && y <= (int) event.getY() && (int) event.getY() < (y + cellSize)) {
+
+                        if (generation[i][j] == false) {
+
+                            GraphicsContext gc = elements.getGraphicsContext2D();
+
+                            gc.setFill(Color.RED);
+                            gc.setStroke(Color.RED);
+                            gc.fillRect(x, y, cellSize, cellSize);
+
+                            generation[i][j] = true;
+
+                        }
+
+                        found = true;
+
+                    }
+
+                    ++j;
+
                 }
-                
+
+                j = 0;
+                ++i;
+
             }
-            
-            if( found && c != null ) {
-                
-                GraphicsContext gc = elements.getGraphicsContext2D();
-                
-                gc.setFill(Color.RED);
-                gc.setStroke(Color.RED);
-                gc.fillRect(c.getX(), c.getY(), cellSize, cellSize);
-                System.out.println("hit: x: " + c.getX() + " y: " + c.getY() );
-            }
-            
+
+            /*
+             while (it.hasNext() && !found) {
+
+             c = it.next();
+
+             if (c.hit((int) event.getX(), (int) event.getY())) {
+
+             //Wenn bereits ein Cell schon befüllt werden ist,
+             //soll nichts passieren, daher c = null setzen.
+             if (!c.hasDrawing()) {
+             c.setDrawing(true);
+             } else {
+             c = null;
+             }
+
+             found = true;
+
+             }
+
+             }
+
+             if (found && c != null) {
+
+             GraphicsContext gc = elements.getGraphicsContext2D();
+
+             gc.setFill(Color.RED);
+             gc.setStroke(Color.RED);
+             gc.fillRect(c.getX(), c.getY(), cellSize, cellSize);
+             //System.out.println("hit: x: " + c.getX() + " y: " + c.getY() );
+             }
+             */
         }
 
-
     }
-    
-    private class Cell {
-        
+
+    protected class Cell {
+
         private final int x;
         private final int y;
         private boolean drawing = false;
-        
-        Cell( int x, int y ) {
+
+        Cell(int x, int y) {
             this.x = x;
             this.y = y;
         }
-        
+
         int getX() {
             return x;
         }
-        
+
         int getY() {
             return y;
         }
-        
-        boolean hit( int x, int y ) {
-        
-            return this.x <= x && x < (this.x + cellSize) && this.y <= y && y < ( this.y + cellSize );
-            
+
+        boolean hit(int x, int y) {
+
+            return this.x <= x && x < (this.x + cellSize) && this.y <= y && y < (this.y + cellSize);
+
         }
-        
-        void setDrawing( boolean b ) {
+
+        void setDrawing(boolean b) {
             this.drawing = b;
         }
-    
+
         boolean hasDrawing() {
             return drawing;
         }
-        
+
     }
-    
+
 }

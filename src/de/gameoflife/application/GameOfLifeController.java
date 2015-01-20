@@ -2,12 +2,10 @@ package de.gameoflife.application;
 
 import de.gameoflife.connection.rmi.GameHandler;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Tab;
 import javafx.fxml.FXMLLoader;

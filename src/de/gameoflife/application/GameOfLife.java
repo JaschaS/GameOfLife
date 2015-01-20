@@ -138,6 +138,7 @@ public class GameOfLife extends Application {
     void deleteGame() {
 
         deleteGameController.setItems();
+        deleteGameController.clearSelection();
 
         deleteGame.toFront();
         deleteGame.setVisible(true);

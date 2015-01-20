@@ -29,6 +29,7 @@ public final class LoginMaskController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        login.defaultButtonProperty().bind(login.focusedProperty());
     }
 
     public void loginOnActionEvent( EventHandler<ActionEvent> event ) {

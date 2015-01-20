@@ -27,10 +27,10 @@
    </children>   
 </AnchorPane> -->
 
-<ToolBar xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.gameoflife.application.EditorBarController" fx:id="editorToolBar" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+<ToolBar fx:id="editorToolBar" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.gameoflife.application.EditorBarController">
     <items>
         <Button mnemonicParsing="false" text="done" />
-        <Button mnemonicParsing="false" text="save" onAction="#save"  />
+        <Button mnemonicParsing="false" onAction="#save" text="save" />
         <Separator orientation="VERTICAL" />
         <Label text="Breite:" />
         <Label text="Höhe:" />
@@ -39,7 +39,8 @@
         <Button mnemonicParsing="false" text="Rules" />
         <Button mnemonicParsing="false" text="Wrap" />
         <Separator orientation="VERTICAL" />
-        <Button mnemonicParsing="false" text="Draw" onAction="#draw"  />
+        <Button mnemonicParsing="false" onAction="#draw" text="Draw" />
+      <Button mnemonicParsing="false" text="Clear" onAction="#clear"  />
         <ColorPicker />
     </items>
 </ToolBar>

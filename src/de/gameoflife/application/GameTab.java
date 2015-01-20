@@ -1,11 +1,13 @@
 
 package de.gameoflife.application;
 
+import de.gameoflife.connection.rmi.GameHandler;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -24,48 +26,21 @@ import rmi.data.GameUI;
  */
 public class GameTab implements Initializable {
 
-    //@FXML private Slider speedSlider;
-    //@FXML private Label currentSpeed;
     @FXML private AnchorPane pane;
-    //@FXML private Button draw;
-    //@FXML private ToolBar toolBar;
-    //@FXML private ToolBar editorToolBar;
     @FXML private BorderPane content;
-    //@FXML private ScrollPane scrollpane;
     @FXML private StackPane barpane;
 
     private GameCanvas canvas;
     private Parent editorBar;
+    private Parent playBar;
     private EditorBarController editorController;
+    private PlayBarController playController;
     private GameUI game;
-    //private ScrollPane scrollPane;
-
-    @FXML
-    protected void play() {
-    }
-
-    @FXML
-    protected void next() {
-    }
-
-    @FXML
-    protected void gridOptions() {
-    }
-    
-    @FXML
-    protected void rules() {
-    }
-
-    @FXML
-    protected void wraps() {
-    }
+    private GameOfLifeController parentcontroller;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
-        //assert( speedSlider == null );
-        //assert( draw == null);
-        //assert( currentSpeed == null );
         assert( pane == null );
         assert( content == null );
         assert( barpane == null );
@@ -78,20 +53,41 @@ public class GameTab implements Initializable {
             
             editorController = editorBarLoader.getController();
             editorController.setParent( this );
+            editorController.doneActionEvent((ActionEvent event) -> {
+                
+                playBar.toFront();
+                editorBar.toBack();
+                
+            });
             
-            barpane.getChildren().add( editorBar );
+            FXMLLoader playBarLoader = new FXMLLoader( getClass().getResource("FXML/PlayBar.fxml"));
             
-            //canvas = new GameCanvas( 3, 3, 20 );
+            playBar = playBarLoader.load();
             
-            //scrollPane = new ScrollPane( canvas );
-            //scrollPane.setFitToHeight(true);
-            //scrollPane.setFitToWidth(true);
+            playController = playBarLoader.getController();
+            playController.setParent(this);
+            playController.editorActionEvent((ActionEvent event) -> {
             
-            //BorderPane content = new BorderPane();
+                if( game.isHistoryAvailable() ) {
+                
+                    int copyGameId = GameHandler.getInstance().copyGame(game.getGameId());
+                    
+                    try {
+                        parentcontroller.createTab(copyGameId);
+                    } catch (IOException ex) {
+                        Logger.getLogger(GameTab.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    
+                }
+                else {
+                    playBar.toBack();
+                    editorBar.toFront();
+                }
+                
+            });
             
-            //content.setCenter( canvas );
+            barpane.getChildren().addAll( playBar, editorBar );
             
-            //scrollpane.setContent( content );
         } catch( IOException ex ) {
             Logger.getLogger(GameTab.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -157,7 +153,24 @@ public class GameTab implements Initializable {
         canvas.setGeneration(game.getStartGen());
         
         content.setCenter( canvas );
+        
+        if( game.isHistoryAvailable() ) {
+            
+            playBar.toFront();
+            editorBar.toBack();
+            
+        }
+        else {
+            
+            playBar.toBack();
+            editorBar.toFront();
+            
+        }
     
+    }
+    
+    public void parentController(GameOfLifeController controller) {
+        parentcontroller = controller;
     }
     
     

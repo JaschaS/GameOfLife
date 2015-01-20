@@ -6,35 +6,14 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<!-- <AnchorPane id="AnchorPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.gameoflife.application.EditorBarController">
-   <children>
-               <ToolBar fx:id="editorToolBar" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                 <items>
-                   <Button mnemonicParsing="false" text="done" />
-            <Button mnemonicParsing="false" text="save" />
-                     <Separator orientation="VERTICAL" />
-                     <Label text="Breite:" />
-                     <Label text="Höhe:" />
-            <Label text="Zellengröße:" />
-                     <Separator orientation="VERTICAL" />
-                     <Button mnemonicParsing="false" text="Rules" />
-            <Button mnemonicParsing="false" text="Wrap" />
-            <Separator orientation="VERTICAL" />
-                     <Button mnemonicParsing="false" text="Draw" />
-            <ColorPicker />
-                 </items>
-               </ToolBar>
-   </children>   
-</AnchorPane> -->
-
 <ToolBar fx:id="editorToolBar" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.gameoflife.application.EditorBarController">
     <items>
-        <Button mnemonicParsing="false" text="done" />
-        <Button mnemonicParsing="false" onAction="#save" text="save" />
+        <Button mnemonicParsing="false" text="Done" fx:id="done"  />
+        <Button mnemonicParsing="false" onAction="#save" text="Save" />
         <Separator orientation="VERTICAL" />
-        <Label text="Breite:" />
-        <Label text="Höhe:" />
-        <Label text="Zellengröße:" />
+        <Label text="Width:" />
+        <Label text="Height:" />
+        <Label text="Cellsize:" />
         <Separator orientation="VERTICAL" />
         <Button mnemonicParsing="false" text="Rules" />
         <Button mnemonicParsing="false" text="Wrap" />

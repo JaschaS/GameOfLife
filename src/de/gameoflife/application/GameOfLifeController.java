@@ -111,6 +111,7 @@ public final class GameOfLifeController {
 
         GameTab tabController = tabContentLoader.getController();
         tabController.initCanvas(game);
+        tabController.parentController(this);
 
         //Parent tabContent = FXMLLoader.load( getClass().getResource("FXML/NewGame.fxml") );
         Tab newTab = new Tab();

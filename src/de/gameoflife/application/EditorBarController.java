@@ -10,8 +10,10 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.ToolBar;
 
 /**
@@ -23,6 +25,7 @@ public class EditorBarController implements Initializable {
 
     @FXML
     private ToolBar editorToolBar;
+    @FXML private Button done;
 
     private GameTab parent;
     private NumberTextField cellWidth;
@@ -95,6 +98,10 @@ public class EditorBarController implements Initializable {
         canvas.clear(true);
         canvas.drawGrid();
         
+    }
+    
+    public void doneActionEvent(EventHandler<ActionEvent> event) {
+        done.setOnAction(event);
     }
 
     public void setParent(GameTab newParent) {

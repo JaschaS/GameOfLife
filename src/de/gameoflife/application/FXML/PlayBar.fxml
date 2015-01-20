@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<ToolBar fx:id="playToolBar" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.gameoflife.application.PlayBarController">
+    <items>
+        <Button mnemonicParsing="false" text="Play" />
+        <Button mnemonicParsing="false" text="Stop" />
+        <Button mnemonicParsing="false" text="Prev" />
+        <Button mnemonicParsing="false" text="Next" />
+        <Separator orientation="VERTICAL" />
+      <Label text="Speed:" />
+      <Slider blockIncrement="1.0" majorTickUnit="60.0" max="120.0" min="1.0" minorTickCount="10" value="60.0" fx:id="speedSlider"  />
+      <Label text="60 Gen/Min" fx:id="currentSpeed"  />
+        <Separator orientation="VERTICAL" />
+      <Button mnemonicParsing="false" text="Analysis" />
+        <Button mnemonicParsing="false" text="Editor" fx:id="editor"  />
+    </items>
+</ToolBar>

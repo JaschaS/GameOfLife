@@ -82,9 +82,9 @@ public final class GameOfLifeController {
     }
 
     public void closeTab(int gameId) {
-        
-        tabPane.getTabs().remove( gameOpen.get(gameId) );
-        
+
+        tabPane.getTabs().remove(gameOpen.get(gameId));
+
     }
 
     public boolean gameIsOpen(int gameId) {
@@ -105,6 +105,26 @@ public final class GameOfLifeController {
 
     private void createTab(GameUI game) throws IOException {
 
+       /* final RulePattern oneBirthrule = new RulePattern(new boolean[]{true, true, true, false, false, true, true, true});
+        final NumericRule oneDeathrule = new NumericRule();
+        oneDeathrule.setTriggerAtNumberOfNeighbours(5, true); //Death at 5 alive neigbours
+        oneDeathrule.setTriggerAtNumberOfNeighbours(4, true); //Death at 4 alive neigbours
+        game.addBirthRule(oneBirthrule);
+        game.addDeathRule(oneDeathrule);
+        
+        for (int i = 0; i < game.getStartGen().length; ++i) {
+
+            for (int j = 0; j < game.getStartGen()[i].length; ++j) {
+                System.out.print(game.getStartGen()[i][j] + " ");
+            }
+            System.out.println();
+
+        }
+               */
+        
+        
+        GameHandler.getInstance().saveGame(game.getGameId());
+
         FXMLLoader tabContentLoader = new FXMLLoader(getClass().getResource("FXML/Tab.fxml"));
 
         Parent tabContent = (Parent) tabContentLoader.load();
@@ -116,7 +136,7 @@ public final class GameOfLifeController {
         //Parent tabContent = FXMLLoader.load( getClass().getResource("FXML/NewGame.fxml") );
         Tab newTab = new Tab();
         newTab.setText(game.getGameName());
-        
+
         newTab.setOnCloseRequest((Event event) -> {
             gameOpen.remove(game.getGameId());
         });

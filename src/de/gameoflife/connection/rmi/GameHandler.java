@@ -64,8 +64,6 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
             instance = new GameHandler();
             
             instance.establishConnection();  
-        
-            //instance.establishConnectionRuleEditor();
             
         }
             
@@ -92,17 +90,17 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
     public boolean establishConnection(){
         //TODO fehler abfangen
         establishConnectionRuleEditor();
-        //establishConnectionGameEngine();
-        //establishConnectionAnalysis();
-        //establishConnectionUIServer();
+        establishConnectionGameEngine();
+        establishConnectionAnalysis();
+        establishConnectionUIServer();
         return true;
     }
     
     public boolean closeConnection(){
         closeConnectionRuleEditor();
-        //closeConnectionGameEngine();
-        //closeConnectionAnalysis();
-        //closeConnectionUIServer();
+        closeConnectionGameEngine();
+        closeConnectionAnalysis();
+        closeConnectionUIServer();
         return true;
     }
     

@@ -9,12 +9,18 @@ import de.gameoflife.connection.rmi.GameHandler;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ToolBar;
+import javafx.scene.paint.Color;
 
 /**
  * FXML Controller class
@@ -25,7 +31,12 @@ public class EditorBarController implements Initializable {
 
     @FXML
     private ToolBar editorToolBar;
-    @FXML private Button done;
+    @FXML
+    private Button done;
+    @FXML
+    private CheckBox borderOverflow;
+    @FXML
+    private ColorPicker colorPicker;
 
     private GameTab parent;
     private NumberTextField cellWidth;
@@ -68,11 +79,59 @@ public class EditorBarController implements Initializable {
         editorToolBar.getItems().add(6, cellHeight);
         editorToolBar.getItems().add(8, cellSize);
 
+        borderOverflow.selectedProperty().addListener((ObservableValue<? extends Boolean> ov, Boolean oldVal, Boolean newVal) -> {
+            parent.getGame().setBorderOverflow(newVal);
+
+            GameHandler.getInstance().saveGame(parent.getGameId());
+        });
+
+        colorPicker.setOnAction((ActionEvent event) -> {
+
+            parent.setCellColor(colorPicker.getValue());
+
+        });
+        
+        colorPicker.setValue(Color.RED);
+        
+        
+        ObservableList<Color> list = FXCollections.observableArrayList();
+        
+        list.addAll(
+         Color.web("D93E30"),
+         Color.web("FFB429"),
+         Color.web("51A64E"),
+         Color.web("0D6BA6"),
+         Color.web("FF4444"),
+         Color.web("FFBB33"),
+         Color.web("99CC00"),
+         Color.web("33B5E5"),
+         Color.web("AA66CC"),        
+         Color.web("CC0000"),
+         Color.web("FF8800"),
+         Color.web("669900"),
+         Color.web("9933CC"),
+         Color.web("0099CC")
+        );
+        
+        colorPicker.getCustomColors().addAll(list);
+        
+        colorPicker.setValue(colorPicker.getCustomColors().get(2));
+        
+        //colorPicker.setValue(new Color(81, 166, 78, 1));
+
+        //System.out.println(colorPicker.getCustomColors());
+        /*colorPicker.getCustomColors().addAll(
+         new Color(81, 166, 78, 1),
+         new Color(13, 107, 166, 1),
+         new Color(242, 171, 39, 1),
+         new Color(217, 62, 48, 1)
+         );
+         */
     }
 
     @FXML
     public void save(ActionEvent event) throws IOException {
-        
+
         GameHandler.getInstance().saveGame(parent.getGameId());
 
     }
@@ -89,17 +148,17 @@ public class EditorBarController implements Initializable {
         }
 
     }
-    
+
     @FXML
     public void clear(ActionEvent event) throws IOException {
-    
+
         GameCanvas canvas = parent.getCanvas();
-        
+
         canvas.clear(true);
         canvas.drawGrid();
-        
+
     }
-    
+
     public void doneActionEvent(EventHandler<ActionEvent> event) {
         done.setOnAction(event);
     }
@@ -110,14 +169,18 @@ public class EditorBarController implements Initializable {
 
     }
     
-    public void setCellWidth(int width ) {
+    public void setBorderOverflow(boolean overflow) {
+        borderOverflow.setSelected(overflow);
+    }
+
+    public void setCellWidth(int width) {
         cellWidth.setText(width + "");
     }
-    
+
     public void setCellHeight(int height) {
         cellHeight.setText(height + "");
     }
-    
+
     private void setCanvasWidth(int width) {
 
         if (parent != null) {
@@ -147,5 +210,6 @@ public class EditorBarController implements Initializable {
         }
 
     }
+    
 
 }

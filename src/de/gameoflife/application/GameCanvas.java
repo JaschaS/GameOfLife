@@ -1,6 +1,5 @@
 package de.gameoflife.application;
 
-import java.util.ArrayList;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.canvas.Canvas;
@@ -15,8 +14,7 @@ import javafx.scene.paint.Color;
  *
  * @version 2014-12-11-1
  *
- * TODO: Draw Color auswahl TODO: Draw zeichnen rückgaengig machen TODO: Draw
- * mouse press und draw
+ * TODO: Draw Color auswahl TODO: Draw zeichnen rückgaengig machen 
  */
 public class GameCanvas extends Group {
 
@@ -26,12 +24,14 @@ public class GameCanvas extends Group {
     protected int width;
     protected int height;
     protected boolean[][] generation;
-    //protected ArrayList<Cell> cells = new ArrayList<>();
+    private Color cellColor;
 
     public GameCanvas(int width, int height, int cellSize) {
 
         super();
 
+        cellColor = Color.web("51A64E");
+        
         double screenWidth = GameOfLife.stageWidthProperty.get();
         double screenHeight = GameOfLife.stageHeightProperty.get();
 
@@ -41,8 +41,6 @@ public class GameCanvas extends Group {
 
         elements = new Canvas(this.width, this.height);
         grid = new Canvas(this.width, this.height);
-
-        drawGrid();
 
         getChildren().addAll(grid, elements);
 
@@ -81,8 +79,8 @@ public class GameCanvas extends Group {
             for (int j = 0, x = 0; x < grid.getWidth(); x += cellSize) {
 
                 if (generation[i][j] == true) {
-                    gc.setFill(Color.RED);
-                    gc.setStroke(Color.RED);
+                    gc.setFill(cellColor);
+                    gc.setStroke(cellColor);
                     gc.fillRect(x, y, cellSize, cellSize);
                 }
 
@@ -91,6 +89,13 @@ public class GameCanvas extends Group {
             ++i;
         }
 
+    }
+    
+    public void setCellColor(Color color) {
+    
+        cellColor = color;
+        drawCells();
+        
     }
 
     public void setGeneration(boolean[][] generation) {
@@ -224,8 +229,8 @@ public class GameCanvas extends Group {
 
                             GraphicsContext gc = elements.getGraphicsContext2D();
 
-                            gc.setFill(Color.RED);
-                            gc.setStroke(Color.RED);
+                            gc.setFill(cellColor);
+                            gc.setStroke(cellColor);
                             gc.fillRect(x, y, cellSize, cellSize);
 
                             generation[i][j] = true;
@@ -245,37 +250,6 @@ public class GameCanvas extends Group {
 
             }
 
-            /*
-             while (it.hasNext() && !found) {
-
-             c = it.next();
-
-             if (c.hit((int) event.getX(), (int) event.getY())) {
-
-             //Wenn bereits ein Cell schon befüllt werden ist,
-             //soll nichts passieren, daher c = null setzen.
-             if (!c.hasDrawing()) {
-             c.setDrawing(true);
-             } else {
-             c = null;
-             }
-
-             found = true;
-
-             }
-
-             }
-
-             if (found && c != null) {
-
-             GraphicsContext gc = elements.getGraphicsContext2D();
-
-             gc.setFill(Color.RED);
-             gc.setStroke(Color.RED);
-             gc.fillRect(c.getX(), c.getY(), cellSize, cellSize);
-             //System.out.println("hit: x: " + c.getX() + " y: " + c.getY() );
-             }
-             */
         }
 
     }

@@ -1,4 +1,3 @@
-
 package de.gameoflife.application;
 
 import de.gameoflife.connection.rmi.GameHandler;
@@ -15,20 +14,24 @@ import javafx.scene.Parent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 import rmi.data.GameUI;
 
 /**
  *
  * @author JScholz
- * 
- * @version 2014-12-11-1 
- * 
+ *
+ * @version 2014-12-11-1
+ *
  */
 public class GameTab implements Initializable {
 
-    @FXML private AnchorPane pane;
-    @FXML private BorderPane content;
-    @FXML private StackPane barpane;
+    @FXML
+    private AnchorPane pane;
+    @FXML
+    private BorderPane content;
+    @FXML
+    private StackPane barpane;
 
     private GameCanvas canvas;
     private Parent editorBar;
@@ -41,108 +44,114 @@ public class GameTab implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
-        assert( pane == null );
-        assert( content == null );
-        assert( barpane == null );
-        
+        assert (pane == null);
+        assert (content == null);
+        assert (barpane == null);
+
         try {
-            
-            FXMLLoader editorBarLoader = new FXMLLoader( getClass().getResource("FXML/EditorBar.fxml") );
-        
+
+            FXMLLoader editorBarLoader = new FXMLLoader(getClass().getResource("FXML/EditorBar.fxml"));
+
             editorBar = editorBarLoader.load();
-            
+
             editorController = editorBarLoader.getController();
-            editorController.setParent( this );
+            editorController.setParent(this);
             editorController.doneActionEvent((ActionEvent event) -> {
-                
+
                 playBar.toFront();
                 editorBar.toBack();
-                
+
             });
-            
-            FXMLLoader playBarLoader = new FXMLLoader( getClass().getResource("FXML/PlayBar.fxml"));
-            
+
+            FXMLLoader playBarLoader = new FXMLLoader(getClass().getResource("FXML/PlayBar.fxml"));
+
             playBar = playBarLoader.load();
-            
+
             playController = playBarLoader.getController();
             playController.setParent(this);
             playController.editorActionEvent((ActionEvent event) -> {
-            
-                if( game.isHistoryAvailable() ) {
-                
+
+                if (game.isHistoryAvailable()) {
+
                     int copyGameId = GameHandler.getInstance().copyGame(game.getGameId());
-                    
+
                     try {
                         parentcontroller.createTab(copyGameId);
                     } catch (IOException ex) {
                         Logger.getLogger(GameTab.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                    
-                }
-                else {
+
+                } else {
                     playBar.toBack();
                     editorBar.toFront();
                 }
-                
+
             });
-            
-            barpane.getChildren().addAll( playBar, editorBar );
-            
-        } catch( IOException ex ) {
+
+            barpane.getChildren().addAll(playBar, editorBar);
+
+        } catch (IOException ex) {
             Logger.getLogger(GameTab.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
     }
-    
+
     public int getGameId() {
         return game.getGameId();
     }
-    
+
     public GameCanvas getCanvas() {
         return canvas;
     }
-    
+
     public GameUI getGame() {
         return game;
     }
 
-    public void setCanvasWidth( int width ) {
-    
+    public void setCellColor(Color color) {
+
+        canvas.setCellColor(color);
+
+    }
+
+    public void setCanvasWidth(int width) {
+
         boolean[][] generation = game.getStartGen();
-        
-        generation = new boolean[ generation.length ][ width ];
-        
+
+        generation = new boolean[generation.length][width];
+
         game.setStartGen(generation);
-        
+
         canvas.setGridWidth(width);
-        
+
     }
-    
-    public void setCanvasHeight( int height ) {
-    
+
+    public void setCanvasHeight(int height) {
+
         boolean[][] generation = game.getStartGen();
-        
-        generation = new boolean[ height ][ generation[0].length ];
-        
+
+        generation = new boolean[height][generation[0].length];
+
         game.setStartGen(generation);
-        
+
         canvas.setGridHeight(height);
-        
+
     }
-        
-    public void setCanvasCellSize( int size ) {
-    
+
+    public void setCanvasCellSize(int size) {
+
         canvas.setCellSize(size);
-        
+
     }
-    
-    public void initCanvas( GameUI game ) {
-    
+
+    public void initCanvas(GameUI game) {
+        
         this.game = game;
         
-        editorController.setCellHeight( game.getStartGen().length );
-        editorController.setCellWidth( game.getStartGen()[0].length );
-        
+        editorController.setBorderOverflow(game.getBorderOverflow());
+        editorController.setCellHeight(game.getStartGen().length);
+        editorController.setCellWidth(game.getStartGen()[0].length);
+
         //3, 3, 20
         canvas = new GameCanvas(
                 game.getStartGen()[0].length,
@@ -150,28 +159,27 @@ public class GameTab implements Initializable {
                 20
         );
         
+        canvas.drawGrid();
         canvas.setGeneration(game.getStartGen());
-        
-        content.setCenter( canvas );
-        
-        if( game.isHistoryAvailable() ) {
-            
+
+        content.setCenter(canvas);
+
+        if (game.isHistoryAvailable()) {
+
             playBar.toFront();
             editorBar.toBack();
-            
-        }
-        else {
-            
+
+        } else {
+
             playBar.toBack();
             editorBar.toFront();
-            
+
         }
-    
+
     }
-    
+
     public void parentController(GameOfLifeController controller) {
         parentcontroller = controller;
     }
-    
-    
+
 }

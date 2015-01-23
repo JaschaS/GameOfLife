@@ -15,6 +15,8 @@ import javafx.scene.control.SingleSelectionModel;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.AnchorPane;
 import rmi.data.GameUI;
+import rmi.data.rules.NumericRule;
+import rmi.data.rules.RulePattern;
 
 /**
  * FXML Controller class
@@ -105,25 +107,17 @@ public final class GameOfLifeController {
 
     private void createTab(GameUI game) throws IOException {
 
-       /* final RulePattern oneBirthrule = new RulePattern(new boolean[]{true, true, true, false, false, true, true, true});
+        final RulePattern oneBirthrule = new RulePattern(new boolean[]{true, true, true, false, false, true, true, true});
         final NumericRule oneDeathrule = new NumericRule();
         oneDeathrule.setTriggerAtNumberOfNeighbours(5, true); //Death at 5 alive neigbours
         oneDeathrule.setTriggerAtNumberOfNeighbours(4, true); //Death at 4 alive neigbours
         game.addBirthRule(oneBirthrule);
         game.addDeathRule(oneDeathrule);
+       
+        //System.out.println( game.getBirthRules() );
+        //System.out.println( game.getDeathRules() );
         
-        for (int i = 0; i < game.getStartGen().length; ++i) {
-
-            for (int j = 0; j < game.getStartGen()[i].length; ++j) {
-                System.out.print(game.getStartGen()[i][j] + " ");
-            }
-            System.out.println();
-
-        }
-               */
-        
-        
-        GameHandler.getInstance().saveGame(game.getGameId());
+        //GameHandler.getInstance().saveGame(game.getGameId());
 
         FXMLLoader tabContentLoader = new FXMLLoader(getClass().getResource("FXML/Tab.fxml"));
 

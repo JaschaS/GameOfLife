@@ -61,32 +61,49 @@ public class PlayBarController implements Initializable {
     @FXML
     public void play(ActionEvent event) throws IOException {
 
-        
-        connection.startEngine(User.getInstance().getId(), parent.getGameId());
+        boolean successful = connection.startEngine(User.getInstance().getId(), parent.getGameId());
+
+        if (successful) {
+
+            Generation gen = connection.getNextGeneration(User.getInstance().getId(), parent.getGameId());
+
+            if (gen == null) {
+                return;
+            }
+
+            for (int i = 0; i < gen.getConfig().length; ++i) {
+
+                for (int j = 0; j < gen.getConfig()[i].length; ++j) {
+                    System.out.print(gen.getConfig()[i][j] + " ");
+                }
+                System.out.println();
+
+            }
+
+            System.out.println();
+
+        }
+
         //if (updateTask != null && !updateTask.isRunning()) {
-
-            connection.startEngine(User.getInstance().getId(), parent.getGameId());
-
+            //connection.startEngine(User.getInstance().getId(), parent.getGameId());
             //updateTask = new UpdateTask();
-
             //Thread th = new Thread(updateTask);
-            //th.start();
-
+        //th.start();
         //}
+        System.out.println("Start successful: " + successful);
 
     }
 
     @FXML
     public void stop(ActionEvent event) throws IOException {
 
-        connection.stopEngine(User.getInstance().getId(), parent.getGameId());
+        boolean successful = connection.stopEngine(User.getInstance().getId(), parent.getGameId());
         //if (updateTask != null && updateTask.isRunning()) {
 
           //  connection.stopEngine(User.getInstance().getId(), parent.getGameId());
-
           //  updateTask.cancel();
-
         //}
+        System.out.println("Stop successful: " + successful);
 
     }
 
@@ -94,6 +111,10 @@ public class PlayBarController implements Initializable {
     public void next(ActionEvent event) throws IOException {
 
         Generation gen = connection.getGeneration(User.getInstance().getId(), parent.getGameId(), ++currentGeneration);
+
+        if (gen == null) {
+            return;
+        }
 
         //TODO Wie funktioniert Generation
         //parent.getCanvas().setGeneration(null);
@@ -107,7 +128,7 @@ public class PlayBarController implements Initializable {
         }
 
         System.out.println();
-        
+
     }
 
     @FXML
@@ -118,6 +139,10 @@ public class PlayBarController implements Initializable {
             Generation gen = connection.getGeneration(User.getInstance().getId(), parent.getGameId(), --currentGeneration);
             //TODO Prev Generation????
 
+            if (gen == null) {
+                return;
+            }
+
             for (int i = 0; i < gen.getConfig().length; ++i) {
 
                 for (int j = 0; j < gen.getConfig()[i].length; ++j) {
@@ -126,7 +151,7 @@ public class PlayBarController implements Initializable {
                 System.out.println();
 
             }
-            
+
             System.out.println();
 
         }

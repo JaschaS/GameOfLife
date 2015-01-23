@@ -24,7 +24,7 @@ public class GameCanvas extends Group {
     protected int width;
     protected int height;
     protected boolean[][] generation;
-    private Color cellColor;
+    protected Color cellColor;
 
     public GameCanvas(int width, int height, int cellSize) {
 

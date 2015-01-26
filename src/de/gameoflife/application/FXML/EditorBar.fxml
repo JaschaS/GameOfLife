@@ -15,6 +15,7 @@
         <Label text="Height:" />
         <Label text="Cellsize:" />
         <Separator orientation="VERTICAL" />
+      <Button  mnemonicParsing="false" text="Death Rules" onAction="#deathRules"  />
         <Button mnemonicParsing="false" text="Rules" />
       <CheckBox fx:id="borderOverflow" mnemonicParsing="false" text="Border Overflow" />
         <Separator orientation="VERTICAL" />

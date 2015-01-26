@@ -8,6 +8,8 @@ package de.gameoflife.application;
 import de.gameoflife.connection.rmi.GameHandler;
 import java.io.IOException;
 import java.net.URL;
+import java.rmi.Naming;
+import java.rmi.NotBoundException;
 import java.util.ResourceBundle;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
@@ -19,6 +21,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import queue.data.Generation;
+import rmi.interfaces.IGameEngineServer;
+import rmi.interfaces.IRemoteUI_Server;
 
 /**
  * FXML Controller class
@@ -59,38 +63,24 @@ public class PlayBarController implements Initializable {
     }
 
     @FXML
-    public void play(ActionEvent event) throws IOException {
+    public void play(ActionEvent event) throws IOException, NotBoundException {
 
-        boolean successful = connection.startEngine(User.getInstance().getId(), parent.getGameId());
+        System.out.println( parent.getGame().getUserId() + " " + parent.getGameId());
+        
+        IGameEngineServer gameEngine = (IGameEngineServer) Naming.lookup(IGameEngineServer.FULLSERVICEIDENTIFIER);
+        IRemoteUI_Server uiServer = (IRemoteUI_Server) Naming.lookup("rmi://143.93.91.71/" + "RemoteUIBackend");
 
-        if (successful) {
+        gameEngine.sendIDsToEngine(parent.getGame().getUserId(), parent.getGame().getGameId());
 
-            Generation gen = connection.getNextGeneration(User.getInstance().getId(), parent.getGameId());
+        Generation gen = uiServer.getNextGeneration(parent.getGame().getUserId(), parent.getGame().getGameId());
 
-            if (gen == null) {
-                return;
-            }
-
-            for (int i = 0; i < gen.getConfig().length; ++i) {
-
-                for (int j = 0; j < gen.getConfig()[i].length; ++j) {
-                    System.out.print(gen.getConfig()[i][j] + " ");
-                }
-                System.out.println();
-
-            }
-
-            System.out.println();
-
+        if (gen == null) {
+            System.out.println("null");
+        } else {
+            System.out.println("not null");
         }
 
-        //if (updateTask != null && !updateTask.isRunning()) {
-            //connection.startEngine(User.getInstance().getId(), parent.getGameId());
-            //updateTask = new UpdateTask();
-            //Thread th = new Thread(updateTask);
-        //th.start();
-        //}
-        System.out.println("Start successful: " + successful);
+        gameEngine.stop( parent.getGame().getUserId(), parent.getGame().getGameId() );
 
     }
 
@@ -100,8 +90,8 @@ public class PlayBarController implements Initializable {
         boolean successful = connection.stopEngine(User.getInstance().getId(), parent.getGameId());
         //if (updateTask != null && updateTask.isRunning()) {
 
-          //  connection.stopEngine(User.getInstance().getId(), parent.getGameId());
-          //  updateTask.cancel();
+        //  connection.stopEngine(User.getInstance().getId(), parent.getGameId());
+        //  updateTask.cancel();
         //}
         System.out.println("Stop successful: " + successful);
 
@@ -110,9 +100,10 @@ public class PlayBarController implements Initializable {
     @FXML
     public void next(ActionEvent event) throws IOException {
 
-        Generation gen = connection.getGeneration(User.getInstance().getId(), parent.getGameId(), ++currentGeneration);
-
+        //Generation gen = connection.getGeneration(User.getInstance().getId(), parent.getGameId(), ++currentGeneration);
+        Generation gen = connection.getNextGeneration(parent.getGame().getUserId(), parent.getGameId());
         if (gen == null) {
+            System.out.println("gen null");
             return;
         }
 

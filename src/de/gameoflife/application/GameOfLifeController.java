@@ -106,13 +106,6 @@ public final class GameOfLifeController {
     }
 
     private void createTab(GameUI game) throws IOException {
-
-        final RulePattern oneBirthrule = new RulePattern(new boolean[]{true, true, true, false, false, true, true, true});
-        final NumericRule oneDeathrule = new NumericRule();
-        oneDeathrule.setTriggerAtNumberOfNeighbours(5, true); //Death at 5 alive neigbours
-        oneDeathrule.setTriggerAtNumberOfNeighbours(4, true); //Death at 4 alive neigbours
-        game.addBirthRule(oneBirthrule);
-        game.addDeathRule(oneDeathrule);
        
         //System.out.println( game.getBirthRules() );
         //System.out.println( game.getDeathRules() );

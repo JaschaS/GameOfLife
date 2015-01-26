@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<GridPane alignment="CENTER" hgap="5.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="350.0" prefWidth="450.0" style="-fx-background-color: rgb(241,241,241); -fx-effect: dropshadow(three-pass-box, grey, 30, 0.5, 0, 0); -fx-border-radius: 5 5 5 5;   -fx-background-radius: 5 5 5 5;" vgap="5.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.gameoflife.application.DeathRulesController">
+    <columnConstraints>
+        <ColumnConstraints halignment="RIGHT" />
+        <ColumnConstraints halignment="LEFT" />
+    </columnConstraints>
+    <children>
+        <HBox prefHeight="0.0" prefWidth="300.0" spacing="10" GridPane.rowIndex="1">
+            <children>
+                <Button fx:id="numeric" mnemonicParsing="false" onAction="#numericRule" text="Numeric Rule">
+               <HBox.margin>
+                  <Insets left="5.0" />
+               </HBox.margin></Button>
+                <Button fx:id="pattern" mnemonicParsing="false" onAction="#patternRule" text="Pattern Rule" />
+                <Button fx:id="close" text="close">
+                    <HBox.margin>
+                    </HBox.margin>
+                </Button>
+            </children>
+        </HBox>
+      <HBox prefHeight="300.0" prefWidth="425.0">
+         <GridPane.margin>
+            <Insets left="5.0" top="20.0" />
+         </GridPane.margin>
+         <children>
+            <BorderPane prefHeight="279.0" prefWidth="23.0">
+               <center>
+                  <VBox alignment="CENTER" prefHeight="279.0" prefWidth="22.0" spacing="5.0" BorderPane.alignment="CENTER">
+                     <children>
+                        <Button fx:id="up" mnemonicParsing="false" text="+" VBox.vgrow="ALWAYS" onAction="#up" />
+                        <Button fx:id="down" minWidth="26.0" mnemonicParsing="false" text="-" VBox.vgrow="ALWAYS" onAction="#down"  />
+                     </children>
+                  </VBox>
+               </center>
+               <HBox.margin>
+                  <Insets right="5.0" />
+               </HBox.margin>
+            </BorderPane>
+            <ListView fx:id="rules" editable="true" prefWidth="135.0" />
+            <StackPane HBox.hgrow="SOMETIMES">
+               <children>
+                  <BorderPane prefHeight="274.0" prefWidth="172.0" StackPane.alignment="CENTER" visible="false" >
+                     <center>
+                        <GridPane alignment="CENTER" vgap="5.0" BorderPane.alignment="CENTER">
+                          <columnConstraints>
+                            <ColumnConstraints />
+                            <ColumnConstraints />
+                              <ColumnConstraints />
+                          </columnConstraints>
+                          <rowConstraints>
+                            <RowConstraints />
+                            <RowConstraints />
+                            <RowConstraints />
+                          </rowConstraints>
+                           <children>
+                              <CheckBox mnemonicParsing="false" GridPane.rowIndex="1" />
+                              <CheckBox mnemonicParsing="false" />
+                              <CheckBox mnemonicParsing="false" GridPane.columnIndex="1" />
+                              <CheckBox mnemonicParsing="false" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                              <CheckBox mnemonicParsing="false" GridPane.rowIndex="2" />
+                              <CheckBox mnemonicParsing="false" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                              <CheckBox mnemonicParsing="false" GridPane.columnIndex="2" />
+                              <CheckBox mnemonicParsing="false" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                              <CheckBox disable="true" style="-fx-opacity: 1;"   mnemonicParsing="false" selected="true" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                           </children>
+                        </GridPane>
+                     </center>
+                  </BorderPane>
+                  <BorderPane prefHeight="274.0" prefWidth="172.0" StackPane.alignment="CENTER">
+                     <center>
+                        <HBox fx:id="numericPatternField" alignment="CENTER" BorderPane.alignment="CENTER">
+                           <children>
+                              <Label fx:id="firstText" alignment="CENTER" contentDisplay="BOTTOM" text="Death at " textAlignment="CENTER" HBox.hgrow="ALWAYS">
+                                 <HBox.margin>
+                                    <Insets top="4.0" />
+                                 </HBox.margin>
+                              </Label>
+                              <Label text=" alive neigbours" HBox.hgrow="ALWAYS">
+                                 <HBox.margin>
+                                    <Insets top="4.0" />
+                                 </HBox.margin>
+                              </Label>
+                           </children>
+                        </HBox>
+                     </center>
+                  </BorderPane>
+               </children>
+            </StackPane>
+         </children>
+      </HBox>  
+
+    </children>
+    <rowConstraints>
+        <RowConstraints />
+        <RowConstraints />
+        <RowConstraints />
+        <RowConstraints />
+        <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+    </rowConstraints>    
+</GridPane>

@@ -27,15 +27,18 @@ import rmi.data.GameUI;
 public class GameTab implements Initializable {
 
     @FXML
-    private AnchorPane pane;
+    private StackPane pane;
     @FXML
     private BorderPane content;
     @FXML
     private StackPane barpane;
+    @FXML
+    private AnchorPane tabContent;
 
     private GameCanvas canvas;
     private Parent editorBar;
     private Parent playBar;
+    private Parent deathRulesParent;
     private EditorBarController editorController;
     private PlayBarController playController;
     private GameUI game;
@@ -47,8 +50,27 @@ public class GameTab implements Initializable {
         assert (pane == null);
         assert (content == null);
         assert (barpane == null);
+        assert (tabContent == null);
 
         try {
+
+            FXMLLoader deathRulesLoader = new FXMLLoader(getClass().getResource("FXML/DeathRules.fxml"));
+
+            deathRulesParent = (Parent) deathRulesLoader.load();
+            deathRulesParent.setVisible(false);
+
+            DeathRulesController deathRulesController = deathRulesLoader.getController();
+            deathRulesController.setParent(this);           
+            
+            deathRulesController.closeActionEvent((ActionEvent event) -> {
+
+                deathRulesParent.toBack();
+                deathRulesParent.setVisible(false);
+
+                tabContent.toFront();
+                tabContent.setDisable(false);
+
+            });
 
             FXMLLoader editorBarLoader = new FXMLLoader(getClass().getResource("FXML/EditorBar.fxml"));
 
@@ -58,6 +80,12 @@ public class GameTab implements Initializable {
             editorController.setParent(this);
             editorController.doneActionEvent((ActionEvent event) -> {
 
+                boolean successful = GameHandler.getInstance().saveGame(game.getGameId());
+
+                System.out.println("Save successful: " + successful);
+                System.out.println(game);
+                System.out.println(game.getBirthRules());
+                System.out.println(game.getDeathRules());
                 playBar.toFront();
                 editorBar.toBack();
 
@@ -89,6 +117,8 @@ public class GameTab implements Initializable {
             });
 
             barpane.getChildren().addAll(playBar, editorBar);
+
+            pane.getChildren().add(deathRulesParent);
 
         } catch (IOException ex) {
             Logger.getLogger(GameTab.class.getName()).log(Level.SEVERE, null, ex);
@@ -145,9 +175,9 @@ public class GameTab implements Initializable {
     }
 
     public void initCanvas(GameUI game) {
-        
+
         this.game = game;
-        
+
         editorController.setBorderOverflow(game.getBorderOverflow());
         editorController.setCellHeight(game.getStartGen().length);
         editorController.setCellWidth(game.getStartGen()[0].length);
@@ -158,7 +188,7 @@ public class GameTab implements Initializable {
                 game.getStartGen().length,
                 20
         );
-        
+
         canvas.drawGrid();
         canvas.setGeneration(game.getStartGen());
 
@@ -175,6 +205,16 @@ public class GameTab implements Initializable {
             editorBar.toFront();
 
         }
+
+    }
+
+    public void showDeathRules() {
+
+        tabContent.toBack();
+        tabContent.setDisable(true);
+
+        deathRulesParent.toFront();
+        deathRulesParent.setVisible(true);
 
     }
 

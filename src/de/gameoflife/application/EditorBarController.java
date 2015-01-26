@@ -21,6 +21,8 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ToolBar;
 import javafx.scene.paint.Color;
+import rmi.data.rules.NumericRule;
+import rmi.data.rules.RulePattern;
 
 /**
  * FXML Controller class
@@ -90,35 +92,33 @@ public class EditorBarController implements Initializable {
             parent.setCellColor(colorPicker.getValue());
 
         });
-        
-        colorPicker.setValue(Color.RED);
-        
-        
-        ObservableList<Color> list = FXCollections.observableArrayList();
-        
-        list.addAll(
-         Color.web("D93E30"),
-         Color.web("FFB429"),
-         Color.web("51A64E"),
-         Color.web("0D6BA6"),
-         Color.web("FF4444"),
-         Color.web("FFBB33"),
-         Color.web("99CC00"),
-         Color.web("33B5E5"),
-         Color.web("AA66CC"),        
-         Color.web("CC0000"),
-         Color.web("FF8800"),
-         Color.web("669900"),
-         Color.web("9933CC"),
-         Color.web("0099CC")
-        );
-        
-        colorPicker.getCustomColors().addAll(list);
-        
-        colorPicker.setValue(colorPicker.getCustomColors().get(2));
-        
-        //colorPicker.setValue(new Color(81, 166, 78, 1));
 
+        colorPicker.setValue(Color.RED);
+
+        ObservableList<Color> list = FXCollections.observableArrayList();
+
+        list.addAll(
+                Color.web("D93E30"),
+                Color.web("FFB429"),
+                Color.web("51A64E"),
+                Color.web("0D6BA6"),
+                Color.web("FF4444"),
+                Color.web("FFBB33"),
+                Color.web("99CC00"),
+                Color.web("33B5E5"),
+                Color.web("AA66CC"),
+                Color.web("CC0000"),
+                Color.web("FF8800"),
+                Color.web("669900"),
+                Color.web("9933CC"),
+                Color.web("0099CC")
+        );
+
+        colorPicker.getCustomColors().addAll(list);
+
+        colorPicker.setValue(colorPicker.getCustomColors().get(2));
+
+        //colorPicker.setValue(new Color(81, 166, 78, 1));
         //System.out.println(colorPicker.getCustomColors());
         /*colorPicker.getCustomColors().addAll(
          new Color(81, 166, 78, 1),
@@ -130,10 +130,27 @@ public class EditorBarController implements Initializable {
     }
 
     @FXML
+    public void deathRules(ActionEvent event) throws IOException {
+
+        parent.showDeathRules();
+        
+    }
+
+    @FXML
     public void save(ActionEvent event) throws IOException {
 
-        GameHandler.getInstance().saveGame(parent.getGameId());
+        final RulePattern oneBirthrule = new RulePattern(new boolean[]{true, true, true, false, false, true, true, true});
+        final NumericRule oneDeathrule = new NumericRule();
+        oneDeathrule.setTriggerAtNumberOfNeighbours(5, true); //Death at 5 alive neigbours
+        oneDeathrule.setTriggerAtNumberOfNeighbours(4, true); //Death at 4 alive neigbours
 
+        parent.getGame().addBirthRule(oneBirthrule);
+        parent.getGame().addDeathRule(oneDeathrule);
+
+        boolean successful = GameHandler.getInstance().saveGame(parent.getGameId());
+
+        System.out.println("Save successful: " + successful);
+        
     }
 
     @FXML
@@ -168,7 +185,7 @@ public class EditorBarController implements Initializable {
         parent = newParent;
 
     }
-    
+
     public void setBorderOverflow(boolean overflow) {
         borderOverflow.setSelected(overflow);
     }
@@ -210,6 +227,5 @@ public class EditorBarController implements Initializable {
         }
 
     }
-    
 
 }

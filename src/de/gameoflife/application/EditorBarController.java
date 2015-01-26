@@ -21,8 +21,6 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ToolBar;
 import javafx.scene.paint.Color;
-import rmi.data.rules.NumericRule;
-import rmi.data.rules.RulePattern;
 
 /**
  * FXML Controller class
@@ -139,17 +137,17 @@ public class EditorBarController implements Initializable {
     @FXML
     public void save(ActionEvent event) throws IOException {
 
-        final RulePattern oneBirthrule = new RulePattern(new boolean[]{true, true, true, false, false, true, true, true});
+        /*final RulePattern oneBirthrule = new RulePattern(new boolean[]{true, true, true, false, false, true, true, true});
         final NumericRule oneDeathrule = new NumericRule();
         oneDeathrule.setTriggerAtNumberOfNeighbours(5, true); //Death at 5 alive neigbours
         oneDeathrule.setTriggerAtNumberOfNeighbours(4, true); //Death at 4 alive neigbours
 
         parent.getGame().addBirthRule(oneBirthrule);
         parent.getGame().addDeathRule(oneDeathrule);
-
+        */
         boolean successful = GameHandler.getInstance().saveGame(parent.getGameId());
 
-        System.out.println("Save successful: " + successful);
+        //System.out.println("Save successful: " + successful);
         
     }
 

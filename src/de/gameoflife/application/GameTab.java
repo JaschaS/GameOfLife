@@ -3,6 +3,8 @@ package de.gameoflife.application;
 import de.gameoflife.connection.rmi.GameHandler;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Iterator;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -11,11 +13,14 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
+import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import rmi.data.GameUI;
+import rmi.data.rules.Evaluable;
+import rmi.data.rules.NumericRule;
 
 /**
  *
@@ -34,6 +39,8 @@ public class GameTab implements Initializable {
     private StackPane barpane;
     @FXML
     private AnchorPane tabContent;
+    @FXML
+    private AnchorPane analysisContent;
 
     private GameCanvas canvas;
     private Parent editorBar;
@@ -43,6 +50,7 @@ public class GameTab implements Initializable {
     private PlayBarController playController;
     private GameUI game;
     private GameOfLifeController parentcontroller;
+    private DeathRulesController deathRulesController;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -59,7 +67,7 @@ public class GameTab implements Initializable {
             deathRulesParent = (Parent) deathRulesLoader.load();
             deathRulesParent.setVisible(false);
 
-            DeathRulesController deathRulesController = deathRulesLoader.getController();
+            deathRulesController = deathRulesLoader.getController();
             deathRulesController.setParent(this);           
             
             deathRulesController.closeActionEvent((ActionEvent event) -> {
@@ -209,6 +217,8 @@ public class GameTab implements Initializable {
     }
 
     public void showDeathRules() {
+        
+        deathRulesController.addItems( game.getDeathRules() );
 
         tabContent.toBack();
         tabContent.setDisable(true);

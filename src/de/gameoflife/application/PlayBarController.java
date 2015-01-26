@@ -37,6 +37,10 @@ public class PlayBarController implements Initializable {
     private Label currentSpeed;
     @FXML
     private Slider speedSlider;
+    @FXML
+    private Button analysisStart;
+    @FXML
+    private Button analysisShow;    
 
     private Task<Void> updateTask;
     private GameTab parent;
@@ -46,6 +50,8 @@ public class PlayBarController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
+        analysisShow.setDisable(true);
+        
         speedSlider.valueProperty().addListener((ObservableValue<? extends Number> ov, Number oldValue, Number newValue) -> {
 
             currentSpeed.setText(newValue.intValue() + " Gen/Min");
@@ -70,9 +76,9 @@ public class PlayBarController implements Initializable {
         IGameEngineServer gameEngine = (IGameEngineServer) Naming.lookup(IGameEngineServer.FULLSERVICEIDENTIFIER);
         IRemoteUI_Server uiServer = (IRemoteUI_Server) Naming.lookup("rmi://143.93.91.71/" + "RemoteUIBackend");
 
-        gameEngine.sendIDsToEngine(parent.getGame().getUserId(), parent.getGame().getGameId());
+        gameEngine.sendIDsToEngine(1703, 3);
 
-        Generation gen = uiServer.getNextGeneration(parent.getGame().getUserId(), parent.getGame().getGameId());
+        Generation gen = uiServer.getNextGeneration(1703, 3);
 
         if (gen == null) {
             System.out.println("null");
@@ -80,7 +86,7 @@ public class PlayBarController implements Initializable {
             System.out.println("not null");
         }
 
-        gameEngine.stop( parent.getGame().getUserId(), parent.getGame().getGameId() );
+        gameEngine.stop( 1703, 3 );
 
     }
 
@@ -150,13 +156,24 @@ public class PlayBarController implements Initializable {
     }
 
     @FXML
-    public void analysis(ActionEvent event) throws IOException {
+    public void startAnalysis(ActionEvent event) throws IOException {
 
         connection.startAnalysis(parent.getGameId());
 
         //TODO Analysis abfangen...
+        //Task schreiben
+        
+        //Show button disable = false;
     }
+    
+    @FXML
+    public void showAnalysis(ActionEvent event) throws IOException {
 
+        //Daten holen sys out
+        System.out.println("");
+        
+    }
+    
     public void setParent(GameTab newParent) {
 
         parent = newParent;

@@ -15,8 +15,6 @@ import javafx.scene.control.SingleSelectionModel;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.AnchorPane;
 import rmi.data.GameUI;
-import rmi.data.rules.NumericRule;
-import rmi.data.rules.RulePattern;
 
 /**
  * FXML Controller class

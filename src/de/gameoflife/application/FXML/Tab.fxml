@@ -7,11 +7,11 @@
 
 <StackPane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.gameoflife.application.GameTab">
     <children>
-        <AnchorPane fx:id="tabContent"  >
+        <AnchorPane fx:id="tabContent">
             <children>
                 <BorderPane fx:id="content" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="36.0" /> 
       
-                <StackPane fx:id="barpane" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" >
+                <StackPane fx:id="barpane" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
                     <children>
                     </children>
                 </StackPane>

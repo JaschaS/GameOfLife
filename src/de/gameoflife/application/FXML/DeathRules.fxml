@@ -47,7 +47,7 @@
             <ListView fx:id="rules" editable="true" prefWidth="135.0" />
             <StackPane HBox.hgrow="SOMETIMES">
                <children>
-                  <BorderPane prefHeight="274.0" prefWidth="172.0" StackPane.alignment="CENTER" visible="false" >
+                  <BorderPane fx:id="rulePattern" prefHeight="274.0" prefWidth="172.0" StackPane.alignment="CENTER" visible="false" >
                      <center>
                         <GridPane alignment="CENTER" vgap="5.0" BorderPane.alignment="CENTER">
                           <columnConstraints>
@@ -74,7 +74,7 @@
                         </GridPane>
                      </center>
                   </BorderPane>
-                  <BorderPane prefHeight="274.0" prefWidth="172.0" StackPane.alignment="CENTER">
+                  <BorderPane fx:id="numericPattern" prefHeight="274.0" prefWidth="172.0" StackPane.alignment="CENTER">
                      <center>
                         <HBox fx:id="numericPatternField" alignment="CENTER" BorderPane.alignment="CENTER">
                            <children>
@@ -83,7 +83,7 @@
                                     <Insets top="4.0" />
                                  </HBox.margin>
                               </Label>
-                              <Label text=" alive neigbours" HBox.hgrow="ALWAYS">
+                              <Label fx:id="secondText" text=" alive neigbours" HBox.hgrow="ALWAYS">
                                  <HBox.margin>
                                     <Insets top="4.0" />
                                  </HBox.margin>

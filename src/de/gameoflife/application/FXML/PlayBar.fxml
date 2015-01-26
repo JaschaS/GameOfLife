@@ -8,16 +8,19 @@
 
 <ToolBar fx:id="playToolBar" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.gameoflife.application.PlayBarController">
     <items>
-        <Button mnemonicParsing="false" text="Play" onAction="#play"  />
-        <Button mnemonicParsing="false" text="Stop" onAction="#stop" />
+        <Button mnemonicParsing="false" onAction="#play" text="Play" />
+        <Button mnemonicParsing="false" onAction="#stop" text="Stop" />
         <Button mnemonicParsing="false" text="Prev" />
-        <Button mnemonicParsing="false" text="Next" onAction="#next"  />
+        <Button mnemonicParsing="false" onAction="#next" text="Next" />
         <Separator orientation="VERTICAL" />
       <Label text="Speed:" />
-      <Slider blockIncrement="1.0" majorTickUnit="60.0" max="120.0" min="1.0" minorTickCount="10" value="60.0" fx:id="speedSlider"  />
-      <Label text="60 Gen/Min" fx:id="currentSpeed"  />
+      <Slider fx:id="speedSlider" blockIncrement="1.0" majorTickUnit="60.0" max="120.0" min="1.0" minorTickCount="10" value="60.0" />
+      <Label fx:id="currentSpeed" text="60 Gen/Min" />
         <Separator orientation="VERTICAL" />
-      <Button mnemonicParsing="false" text="Analysis" />
-        <Button mnemonicParsing="false" text="Editor" fx:id="editor"  />
+      <Label text="Analysis:" />
+      <Button fx:id="analysisStart" onAction="#startAnalysis"  mnemonicParsing="false" text="Start" />
+      <Button fx:id="analysisShow" onAction="#showAnalysis"  mnemonicParsing="false" text="Show" />
+      <Separator orientation="VERTICAL" />
+        <Button fx:id="editor" mnemonicParsing="false" text="Editor" />
     </items>
 </ToolBar>

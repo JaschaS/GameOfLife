@@ -6,7 +6,6 @@
 package de.gameoflife.connection.rmi;
 
 
-import de.gameoflife.application.Game;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;

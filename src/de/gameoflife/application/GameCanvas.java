@@ -14,7 +14,7 @@ import javafx.scene.paint.Color;
  *
  * @version 2014-12-11-1
  *
- * TODO: Draw Color auswahl TODO: Draw zeichnen rückgaengig machen 
+ * TODO: Draw zeichnen rückgaengig machen
  */
 public class GameCanvas extends Group {
 
@@ -31,7 +31,7 @@ public class GameCanvas extends Group {
         super();
 
         cellColor = Color.web("51A64E");
-        
+
         double screenWidth = GameOfLife.stageWidthProperty.get();
         double screenHeight = GameOfLife.stageHeightProperty.get();
 
@@ -47,9 +47,18 @@ public class GameCanvas extends Group {
         generation = new boolean[height][width];
     }
 
-    public void addListener() {
+    public void addEraserListener() {
 
-        GameCanvasClickListener listener = new GameCanvasClickListener();
+        GameCanvasEraserClickListener listener = new GameCanvasEraserClickListener();
+        
+        setOnMouseClicked(listener);
+        setOnMouseDragged(listener);
+        
+    }
+    
+    public void addDrawListener() {
+
+        GameCanvasDrawClickListener listener = new GameCanvasDrawClickListener();
 
         setOnMouseClicked(listener);
         setOnMouseDragged(listener);
@@ -60,13 +69,26 @@ public class GameCanvas extends Group {
         setOnMouseDragged(null);
     }
 
-    public void gridPosition(ScrollPane scrollpane) {
+    public void drawCells(int[][] grid) {
 
-        double h = scrollpane.getContent().getBoundsInLocal().getHeight();
-        double y = (grid.getBoundsInParent().getMaxY()
-                + grid.getBoundsInParent().getMinY()) / 2.0;
-        double v = scrollpane.getViewportBounds().getHeight();
-        scrollpane.setVvalue(scrollpane.getVmax() * ((y - 0.5 * v) / (h - v)));
+        GraphicsContext gc = elements.getGraphicsContext2D();
+
+        gc.clearRect(0, 0, width, height);
+
+        for (int i = 0, y = 0; y < this.grid.getHeight(); y += cellSize) {
+
+            for (int j = 0, x = 0; x < this.grid.getWidth(); x += cellSize) {
+
+                if (grid[i][j] > 0) {
+                    gc.setFill(cellColor);
+                    gc.setStroke(cellColor);
+                    gc.fillRect(x, y, cellSize, cellSize);
+                }
+
+                ++j;
+            }
+            ++i;
+        }
 
     }
 
@@ -90,12 +112,12 @@ public class GameCanvas extends Group {
         }
 
     }
-    
+
     public void setCellColor(Color color) {
-    
+
         cellColor = color;
         drawCells();
-        
+
     }
 
     public void setGeneration(boolean[][] generation) {
@@ -144,7 +166,7 @@ public class GameCanvas extends Group {
 
             }
         }
-        
+
     }
 
     public void setGridWidth(int newWidth) {
@@ -203,7 +225,55 @@ public class GameCanvas extends Group {
         return elements;
     }
 
-    protected class GameCanvasClickListener implements EventHandler<MouseEvent> {
+    protected class GameCanvasEraserClickListener implements EventHandler<MouseEvent> {
+
+        @Override
+        public void handle(MouseEvent event) {
+
+            boolean found = false;
+            int i = 0;
+            int j = 0;
+            int x;
+            int y;
+
+            while (i < generation.length && !found) {
+
+                y = i * cellSize;
+
+                while (j < generation[i].length && !found) {
+
+                    x = j * cellSize;
+
+                    if (x <= (int) event.getX() && (int) event.getX() < (x + cellSize)
+                            && y <= (int) event.getY() && (int) event.getY() < (y + cellSize)) {
+
+                        if (generation[i][j] == true) {
+
+                            GraphicsContext gc = elements.getGraphicsContext2D();
+                            gc.clearRect(x, y, cellSize, cellSize);
+
+                            generation[i][j] = false;
+
+                        }
+
+                        found = true;
+
+                    }
+
+                    ++j;
+
+                }
+
+                j = 0;
+                ++i;
+
+            }
+
+        }
+
+    }
+
+    protected class GameCanvasDrawClickListener implements EventHandler<MouseEvent> {
 
         @Override
         public void handle(MouseEvent event) {

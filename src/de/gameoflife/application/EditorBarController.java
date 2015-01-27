@@ -43,6 +43,7 @@ public class EditorBarController implements Initializable {
     private NumberTextField cellHeight;
     private NumberTextField cellSize;
     private boolean userDraws = false;
+    private boolean userErase = false;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -131,42 +132,66 @@ public class EditorBarController implements Initializable {
     public void deathRules(ActionEvent event) throws IOException {
 
         parent.showDeathRules();
-        
+
     }
-    
+
     @FXML
     public void birthRules(ActionEvent event) throws IOException {
 
         parent.showBirthRules();
-        
+
     }
 
     @FXML
     public void save(ActionEvent event) throws IOException {
 
         /*final RulePattern oneBirthrule = new RulePattern(new boolean[]{true, true, true, false, false, true, true, true});
-        final NumericRule oneDeathrule = new NumericRule();
-        oneDeathrule.setTriggerAtNumberOfNeighbours(5, true); //Death at 5 alive neigbours
-        oneDeathrule.setTriggerAtNumberOfNeighbours(4, true); //Death at 4 alive neigbours
+         final NumericRule oneDeathrule = new NumericRule();
+         oneDeathrule.setTriggerAtNumberOfNeighbours(5, true); //Death at 5 alive neigbours
+         oneDeathrule.setTriggerAtNumberOfNeighbours(4, true); //Death at 4 alive neigbours
 
-        parent.getGame().addBirthRule(oneBirthrule);
-        parent.getGame().addDeathRule(oneDeathrule);
-        */
+         parent.getGame().addBirthRule(oneBirthrule);
+         parent.getGame().addDeathRule(oneDeathrule);
+         */
         boolean successful = GameHandler.getInstance().saveGame(parent.getGameId());
 
         //System.out.println("Save successful: " + successful);
-        
     }
 
     @FXML
     public void draw(ActionEvent event) throws IOException {
 
         if (!userDraws) {
-            parent.getCanvas().addListener();
+
+            if (userErase) {
+                parent.getCanvas().removeListener();
+                userErase = false;
+            }
+
+            parent.getCanvas().addDrawListener();
             userDraws = true;
         } else {
             parent.getCanvas().removeListener();
             userDraws = false;
+        }
+
+    }
+
+    @FXML
+    public void erase(ActionEvent event) throws IOException {
+
+        if (!userErase) {
+
+            if (userDraws) {
+                parent.getCanvas().removeListener();
+                userDraws = false;
+            }
+
+            parent.getCanvas().addEraserListener();
+            userErase = true;
+        } else {
+            parent.getCanvas().removeListener();
+            userErase = false;
         }
 
     }

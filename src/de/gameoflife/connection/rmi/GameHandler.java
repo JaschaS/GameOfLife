@@ -206,7 +206,18 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
     public ObservableList<GameUI> getGameList(final int userId) {
         try {
             
-            List<GameUI> games = ruleEditor.getUserGames(userId);
+            /*List<GameUI> games = ruleEditor.getUserGames(userId);
+            
+            Iterator<GameUI> it = games.iterator();
+            GameUI game;
+            
+            while(it.hasNext()) {
+            
+                game = it.next();
+                
+                gameList.put(game.getGameId(), game);
+            
+            }*/
             
             return FXCollections.observableArrayList( ruleEditor.getUserGames(userId));
             /*
@@ -246,7 +257,6 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
     @Override
     public boolean establishConnectionGameEngine(){
          try {
-            //TODO: Adresse anpassen
             gameEngine = (IGameEngineServer) Naming.lookup(IGameEngineServer.FULLSERVICEIDENTIFIER);
         } catch (NotBoundException | MalformedURLException | RemoteException ex) {
             
@@ -298,7 +308,6 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
     @Override
     public boolean establishConnectionAnalysis(){
         try {
-            //TODO: adresse anpassen
             analysis = (IAnalysis) Naming.lookup(IAnalysis.RMI_ADDR);
         } catch (NotBoundException | MalformedURLException | RemoteException ex) {
             

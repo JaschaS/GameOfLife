@@ -187,7 +187,6 @@ public class GameOfLife extends Application {
 
             try {
 
-                //TODO Check if name is Valid??? -nicht null, "", bereits vorhanden
                 boolean successful = GameHandler.getInstance().generateNewGame(User.getInstance().getId(), newGameController.getGameName());
 
                 //System.out.println( successful );
@@ -307,7 +306,7 @@ public class GameOfLife extends Application {
                     //System.out.println( successful );
                     if (successful && !gamesceneController.gameIsOpen(g.getGameId())) {
 
-                        gamesceneController.createTab(g.getGameId());
+                        gamesceneController.createTab(g);
 
                         closeLoadScreen();
 

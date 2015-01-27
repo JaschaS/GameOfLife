@@ -103,7 +103,7 @@ public final class GameOfLifeController {
 
     }
 
-    private void createTab(GameUI game) throws IOException {
+    public void createTab(GameUI game) throws IOException {
        
         //System.out.println( game.getBirthRules() );
         //System.out.println( game.getDeathRules() );
@@ -117,6 +117,12 @@ public final class GameOfLifeController {
         GameTab tabController = tabContentLoader.getController();
         tabController.initCanvas(game);
         tabController.parentController(this);
+        
+        GameUI t = GameHandler.getInstance().getGameList(User.getInstance().getId()).get(0);
+        //System.out.println(t.isHistoryAvailable() + " name " + t.getGameName());
+        //System.out.println(game.isHistoryAvailable() + " name " + game.getGameName());
+        if(game.isHistoryAvailable()) tabController.showPlayBar();
+        else tabController.showEditorBar();
 
         //Parent tabContent = FXMLLoader.load( getClass().getResource("FXML/NewGame.fxml") );
         Tab newTab = new Tab();

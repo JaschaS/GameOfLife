@@ -28,7 +28,7 @@
                 <CheckBox onAction="#gridPos20" fx:id="checkBox20" mnemonicParsing="false" GridPane.rowIndex="2" />
                 <CheckBox onAction="#gridPos21" fx:id="checkBox21" mnemonicParsing="false" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                 <CheckBox onAction="#gridPos22" fx:id="checkBox22" mnemonicParsing="false" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-                <CheckBox disable="true" mnemonicParsing="false" style="-fx-opacity: 1;" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                <CheckBox disable="true" fx:id="checkBox11" mnemonicParsing="false" style="-fx-opacity: 1;" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             </children>
         </GridPane>
     </center>

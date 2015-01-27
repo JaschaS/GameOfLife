@@ -33,32 +33,36 @@ public class RulePatternController {
     protected CheckBox checkBox21;
     @FXML
     protected CheckBox checkBox22;
+    @FXML
+    protected CheckBox checkBox11;
 
     protected boolean[] values = new boolean[8];
 
     public boolean[] getGrid() {
-        boolean[] copy = new boolean[ values.length ];
-        
-        for(int i=0;i<values.length; ++i) copy[i] = values[i];
-        
+        boolean[] copy = new boolean[values.length];
+
+        for (int i = 0; i < values.length; ++i) {
+            copy[i] = values[i];
+        }
+
         return copy;
     }
 
     public void setGrid(boolean[] grid) {
-    
+
         values = grid;
-        
-        checkBox00.setSelected( grid[0] );
-        checkBox01.setSelected( grid[1] );
-        checkBox02.setSelected( grid[2] );
-        checkBox10.setSelected( grid[3] );
-        checkBox12.setSelected( grid[4] );
-        checkBox20.setSelected( grid[5] );
-        checkBox21.setSelected( grid[6] );
-        checkBox22.setSelected( grid[7] );
-        
+
+        checkBox00.setSelected(grid[0]);
+        checkBox01.setSelected(grid[1]);
+        checkBox02.setSelected(grid[2]);
+        checkBox10.setSelected(grid[3]);
+        checkBox12.setSelected(grid[4]);
+        checkBox20.setSelected(grid[5]);
+        checkBox21.setSelected(grid[6]);
+        checkBox22.setSelected(grid[7]);
+
     }
-    
+
     @FXML
     protected void gridPos00(ActionEvent event) throws IOException {
         values[0] = checkBox00.isSelected();
@@ -99,4 +103,8 @@ public class RulePatternController {
         values[7] = checkBox22.isSelected();
     }
 
+    public void selectCheckBox11(boolean value) {
+        checkBox11.setSelected(value);
+    }
+    
 }

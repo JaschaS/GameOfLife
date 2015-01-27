@@ -15,11 +15,12 @@
         <Label text="Height:" />
         <Label text="Cellsize:" />
         <Separator orientation="VERTICAL" />
-      <Button  mnemonicParsing="false" text="Death Rules" onAction="#deathRules"  />
-        <Button mnemonicParsing="false" text="Birth Rules" onAction="#birthRules"   />
+      <Button mnemonicParsing="false" onAction="#deathRules" text="Death Rules" />
+        <Button mnemonicParsing="false" onAction="#birthRules" text="Birth Rules" />
       <CheckBox fx:id="borderOverflow" mnemonicParsing="false" text="Border Overflow" />
         <Separator orientation="VERTICAL" />
         <Button mnemonicParsing="false" onAction="#draw" text="Draw" />
+      <Button mnemonicParsing="false" onAction="#erase"  text="Eraser" />
       <Button mnemonicParsing="false" onAction="#clear" text="Clear" />
        <ColorPicker fx:id="colorPicker" />
     </items>

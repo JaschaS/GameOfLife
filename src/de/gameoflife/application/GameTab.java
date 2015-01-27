@@ -104,15 +104,14 @@ public class GameTab implements Initializable {
             editorController = editorBarLoader.getController();
             editorController.setParent(this);
             editorController.doneActionEvent((ActionEvent event) -> {
+                
+                GameHandler.getInstance().saveGame(game.getGameId());
 
-                boolean successful = GameHandler.getInstance().saveGame(game.getGameId());
-
-                System.out.println("Save successful: " + successful);
-                System.out.println(game);
-                System.out.println(game.getBirthRules());
-                System.out.println(game.getDeathRules());
-                playBar.toFront();
-                editorBar.toBack();
+                //System.out.println("Save successful: " + successful);
+                //System.out.println(game);
+                //System.out.println(game.getBirthRules());
+                //System.out.println(game.getDeathRules());
+                showPlayBar();
 
             });
 
@@ -135,8 +134,7 @@ public class GameTab implements Initializable {
                     }
 
                 } else {
-                    playBar.toBack();
-                    editorBar.toFront();
+                    showEditorBar();
                 }
 
             });
@@ -199,6 +197,20 @@ public class GameTab implements Initializable {
 
     }
 
+    public void showPlayBar() {
+        playBar.toFront();
+        editorBar.toBack();
+        playBar.setVisible(true);
+        editorBar.setVisible(false);
+    }
+
+    public void showEditorBar() {
+        playBar.toBack();
+        editorBar.toFront();
+        playBar.setVisible(false);
+        editorBar.setVisible(true);
+    }
+
     public void initCanvas(GameUI game) {
 
         this.game = game;
@@ -219,18 +231,6 @@ public class GameTab implements Initializable {
 
         content.setCenter(canvas);
 
-        if (game.isHistoryAvailable()) {
-
-            playBar.toFront();
-            editorBar.toBack();
-
-        } else {
-
-            playBar.toBack();
-            editorBar.toFront();
-
-        }
-
     }
 
     public void showDeathRules() {
@@ -246,12 +246,12 @@ public class GameTab implements Initializable {
     }
 
     public void showBirthRules() {
-        
+
         birthRulesController.addItems(game.getBirthRules());
-        
+
         tabContent.toBack();
         tabContent.setDisable(true);
-        
+
         birthRulesParent.toFront();
         birthRulesParent.setVisible(true);
 

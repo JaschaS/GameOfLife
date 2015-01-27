@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package de.gameoflife.application;
 
 import de.gameoflife.connection.rmi.GameHandler;
@@ -105,9 +101,7 @@ public class PlayBarController implements Initializable {
             System.out.println("gen null");
             return;
         }
-
-        //TODO Wie funktioniert Generation
-        //parent.getCanvas().setGeneration(null);
+        /*
         for (int i = 0; i < gen.getConfig().length; ++i) {
 
             for (int j = 0; j < gen.getConfig()[i].length; ++j) {
@@ -118,7 +112,10 @@ public class PlayBarController implements Initializable {
         }
 
         System.out.println();
-
+        */
+        
+        parent.getCanvas().drawCells( gen.getConfig() );
+        
     }
 
     @FXML
@@ -127,13 +124,12 @@ public class PlayBarController implements Initializable {
         if (currentGeneration > 1) {
             
             Generation gen = connection.getGeneration(User.getInstance().getId(), parent.getGameId(), --currentGeneration);
-            //TODO Prev Generation????
 
             if (gen == null) {
                 System.out.println("gen null");
                 return;
             }
-
+            /*
             for (int i = 0; i < gen.getConfig().length; ++i) {
 
                 for (int j = 0; j < gen.getConfig()[i].length; ++j) {
@@ -144,7 +140,9 @@ public class PlayBarController implements Initializable {
             }
 
             System.out.println();
-
+                    */
+            
+            parent.getCanvas().drawCells( gen.getConfig() );
         }
         
     }
@@ -195,7 +193,6 @@ public class PlayBarController implements Initializable {
 
             gen = handler.getNextGeneration(userId, gameId);
 
-            //TODO Was ist get Config??
             return null;
 
         }

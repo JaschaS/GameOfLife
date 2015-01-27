@@ -28,6 +28,8 @@ public class BirthRulesController extends RulesController implements Initializab
 
         numericPatternController.setFirstText("Birth at ");
         
+        rulePatternController.selectCheckBox11(true);
+        
         rules.setItems(list);
 
         rules.setOnMouseClicked((MouseEvent event) -> {

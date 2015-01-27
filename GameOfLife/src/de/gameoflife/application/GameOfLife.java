@@ -24,7 +24,7 @@ import org.json.JSONObject;
  * @author JScholz
  * 
  * @version 2014-12-11-1 
- * 
+ * TODO close tab stop engine
  */
 public class GameOfLife extends Application {
 
@@ -178,9 +178,6 @@ public class GameOfLife extends Application {
             
             try {
                 
-                //TODO Check if name is Valid??? -nicht null, "", bereits vorhanden
-
-
                 boolean successful = GameHandler.getInstance().generateNewGame( User.getInstance().getId(), newGameController.getGameName() );
                     
                 //System.out.println( successful );

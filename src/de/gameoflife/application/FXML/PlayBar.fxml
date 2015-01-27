@@ -10,7 +10,7 @@
     <items>
         <Button fx:id="play" mnemonicParsing="false" onAction="#play" text="Play" />
         <Button fx:id="stop" mnemonicParsing="false" onAction="#stop" text="Stop" />
-        <Button fx:id="prev" mnemonicParsing="false" onAction="#previous"  text="Prev" />
+        <Button fx:id="prev" mnemonicParsing="false" onAction="#previous" text="Prev" />
         <Button mnemonicParsing="false" onAction="#next" text="Next" />
         <Separator orientation="VERTICAL" />
       <Label text="Speed:" />
@@ -18,9 +18,10 @@
       <Label fx:id="currentSpeed" text="60 Gen/Min" />
         <Separator orientation="VERTICAL" />
       <Label text="Analysis:" />
-      <Button fx:id="analysisStart" onAction="#startAnalysis"  mnemonicParsing="false" text="Start" />
-      <Button fx:id="analysisShow" onAction="#showAnalysis"  mnemonicParsing="false" text="Show" />
+      <Button fx:id="analysisStart" mnemonicParsing="false" onAction="#startAnalysis" text="Start" />
+      <Button fx:id="analysisShow" mnemonicParsing="false" onAction="#showAnalysis" text="Show" />
       <Separator orientation="VERTICAL" />
         <Button fx:id="editor" mnemonicParsing="false" text="Editor" />
+      <Label text="Cellsize:" />
     </items>
 </ToolBar>

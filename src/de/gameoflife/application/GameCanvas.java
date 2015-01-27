@@ -4,7 +4,6 @@ import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 
@@ -45,17 +44,18 @@ public class GameCanvas extends Group {
         getChildren().addAll(grid, elements);
 
         generation = new boolean[height][width];
+
     }
 
     public void addEraserListener() {
 
         GameCanvasEraserClickListener listener = new GameCanvasEraserClickListener();
-        
+
         setOnMouseClicked(listener);
         setOnMouseDragged(listener);
-        
+
     }
-    
+
     public void addDrawListener() {
 
         GameCanvasDrawClickListener listener = new GameCanvasDrawClickListener();

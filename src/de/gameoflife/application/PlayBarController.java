@@ -5,10 +5,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.rmi.NotBoundException;
 import java.util.ResourceBundle;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.SynchronousQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
@@ -19,6 +15,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
+import javafx.scene.control.ToolBar;
 import queue.data.Generation;
 
 /**
@@ -28,6 +25,8 @@ import queue.data.Generation;
  */
 public class PlayBarController implements Initializable {
 
+    @FXML
+    private ToolBar playToolBar;
     @FXML
     private Button editor;
     @FXML
@@ -45,15 +44,27 @@ public class PlayBarController implements Initializable {
     @FXML
     private Button play;
 
-    private Task<Void> updateTask;
+    private UpdateTask updateTask;
     private GameTab parent;
     private GameHandler connection;
     private int currentGeneration = 0;
     private boolean isRunning = false;
     private Thread updateThread;
+    private NumberTextField cellSize;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+
+        cellSize = new NumberTextField(100, 3, 100, "20");
+        cellSize.setListener((int value) -> {
+            if (parent != null) {
+
+                parent.setCanvasCellSize(value);
+
+            }
+        });
+
+        playToolBar.getItems().add(playToolBar.getItems().size(), cellSize);
 
         analysisShow.setDisable(true);
 
@@ -76,7 +87,14 @@ public class PlayBarController implements Initializable {
 
     }
 
+    /**
+     * Wird aufgerufen falls das Tab geschlossen wird!
+     */
     public void close() {
+        if (updateTask != null && updateTask.isRunning()) {
+            updateTask.cancel();
+        }
+        //TODO Analyse Task cancel!
         connection.stopEngine(User.getInstance().getId(), parent.getGameId());
     }
 
@@ -92,11 +110,14 @@ public class PlayBarController implements Initializable {
             stop.setDisable(!isRunning);
 
             if (isRunning) {
+
                 updateTask = new UpdateTask();
                 updateThread = new Thread(updateTask);
                 //updateThread.setDaemon(true);
                 updateThread.start();
 
+                //Wert an canvas binden, damit dieses beim aendern geupdatet wird?
+                //parent.getCanvas().setCanvasProperty(updateTask.valueProperty());
             }
         }
 
@@ -140,36 +161,38 @@ public class PlayBarController implements Initializable {
             isRunning = connection.startEngine(parent.getGame().getUserId(), parent.getGameId());
         }
 
-        Generation gen = connection.getGeneration(User.getInstance().getId(), parent.getGameId(), ++currentGeneration);
-        //Generation gen = connection.getNextGeneration(parent.getGame().getUserId(), parent.getGameId());
-        if (gen == null) {
-            //System.out.println("gen null");
-            return;
+        if (updateTask == null || !updateTask.isRunning()) {
+            Generation gen = connection.getGeneration(User.getInstance().getId(), parent.getGameId(), ++currentGeneration);
+            //Generation gen = connection.getNextGeneration(parent.getGame().getUserId(), parent.getGameId());
+            if (gen == null) {
+                //System.out.println("gen null");
+                return;
+            }
+            /*
+             for (int i = 0; i < gen.getConfig().length; ++i) {
+
+             for (int j = 0; j < gen.getConfig()[i].length; ++j) {
+             System.out.print(gen.getConfig()[i][j] + " ");
+             }
+             System.out.println();
+
+             }
+
+             System.out.println();
+             */
+            if (prev.isDisabled()) {
+                prev.setDisable(false);
+            }
+
+            parent.getCanvas().drawCells(gen.getConfig());
         }
-        /*
-         for (int i = 0; i < gen.getConfig().length; ++i) {
-
-         for (int j = 0; j < gen.getConfig()[i].length; ++j) {
-         System.out.print(gen.getConfig()[i][j] + " ");
-         }
-         System.out.println();
-
-         }
-
-         System.out.println();
-         */
-        if (prev.isDisabled()) {
-            prev.setDisable(false);
-        }
-
-        parent.getCanvas().drawCells(gen.getConfig());
 
     }
 
     @FXML
     public void previous(ActionEvent event) throws IOException {
 
-        if (currentGeneration > 1) {
+        if (currentGeneration > 1 && (updateTask == null || !updateTask.isRunning()) ) {
 
             Generation gen = connection.getGeneration(User.getInstance().getId(), parent.getGameId(), --currentGeneration);
 
@@ -189,8 +212,8 @@ public class PlayBarController implements Initializable {
 
              System.out.println();
              */
-            
-            System.out.println(currentGeneration);
+
+            //System.out.println(currentGeneration);
             if (currentGeneration <= 1) {
                 prev.setDisable(true);
                 isRunning = false;
@@ -208,14 +231,40 @@ public class PlayBarController implements Initializable {
 
         //TODO Analysis abfangen...
         //Task schreiben
-        //Show button disable = false;
+        //Task starten wie in play
+        //Task sollte ein boolean wert zurueckgeben, dann kann der show button wieder aktiviert werden mit setdisable(false)
+        //Oder so Etwas: bindet den wert den der task zurueck gibt an den disable des buttons
+        //analysisShow.disableProperty().bind( task.valueProperty);
+        //Diesen JSon string vorher im Task speichern. Also eine Variable in PlaybarController definieren und im task zuweisen?
     }
 
     @FXML
     public void showAnalysis(ActionEvent event) throws IOException {
 
+        //Wenn das gedrueckt wird, sollen der string ausgegeben werden...
         //Daten holen sys out
-        System.out.println("");
+        //System.out.println("");
+        //Variante neues Fenster erstellen
+        //Eventuell model setzen??
+        // man erhält nur das Parent FXMLLoader.load( getClass().getResource("FXML/NewGame.fxml") ); aber kein Controller!
+        /*
+         FXMLLoader analyseLoader = new FXMLLoader(getClass().getResource("FXML/Analyse.fxml")); 
+
+         Parent analyse = (Parent) analyseLoader.load();
+        
+         AnalyseController controller = analyseLoader.getController();
+         controller.setDaten(String s);
+        
+        
+         Scene s = new Scene( analyse );
+         Stage stage = new Stage();
+         stage.setScene(s);
+         stage.centerOnScreen();
+         stage.setTitle("Game of Life");
+         stage.show();
+         */
+        //Alternative koenntest du das Parent analyse auch der Stackpane zuweisen
+        analysisShow.setDisable(true);
 
     }
 
@@ -225,7 +274,7 @@ public class PlayBarController implements Initializable {
 
     }
 
-    protected class UpdateTask extends Task<Void> {
+    protected class UpdateTask extends Task<int[][]> {
 
         private final GameHandler handler;
         private final int userId;
@@ -240,41 +289,46 @@ public class PlayBarController implements Initializable {
         }
 
         @Override
-        protected Void call() throws Exception {
+        protected int[][] call() throws Exception {
 
-            Generation gen;
+            Generation gen = null;
             long time;
-            
+
             prev.setDisable(false);
-            
+
             while (!isCancelled()) {
-                
+
                 try {
-                    time = 60 * 1000 / ((long)speedSlider.getValue());
+                    time = 60 * 1000 / ((long) speedSlider.getValue());
                     Thread.sleep(time);
                 } catch (InterruptedException interrupted) {
-                    if (isCancelled()) {
-                        updateMessage("Cancelled");
-                        break;
-                    }
                 }
-                
+
                 gen = handler.getNextGeneration(userId, gameId);
-                
+
                 if (gen != null) {
                     
-                    currentGeneration = gen.getGenID();
-                        
-                    final int[][] config = gen.getConfig();
+                    final int tmp = gen.getGenID();
 
-                    Platform.runLater(() -> {
-                        canvas.drawCells(config);
+                    Platform.runLater(new Runnable() {
+
+                        final int value = tmp;
+
+                        @Override
+                        public void run() {
+                            Generation g = handler.getGeneration(userId, gameId, value);
+                            if (g != null) {
+                                canvas.drawCells(g.getConfig());
+                            }
+                        }
                     });
 
+                    //System.out.println("update");
+                    //updateValue(gen.getConfig());
                 } else {
                     System.out.println("gen ist null");
                 }
-                
+
             }
 
             return null;

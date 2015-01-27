@@ -66,6 +66,7 @@ public class PlayBarController implements Initializable {
         connection = GameHandler.getInstance();
 
         stop.setDisable(true);
+        prev.setDisable(true);
 
     }
 
@@ -114,7 +115,7 @@ public class PlayBarController implements Initializable {
     public void stop(ActionEvent event) throws IOException {
 
         if (isRunning) {
-            System.out.println(connection.stopEngine(User.getInstance().getId(), parent.getGameId()));
+            connection.stopEngine(User.getInstance().getId(), parent.getGameId());
 
             if (updateTask != null && updateTask.isRunning()) {
                 updateTask.cancel();
@@ -157,7 +158,6 @@ public class PlayBarController implements Initializable {
 
          System.out.println();
          */
-
         if (prev.isDisabled()) {
             prev.setDisable(false);
         }
@@ -174,7 +174,7 @@ public class PlayBarController implements Initializable {
             Generation gen = connection.getGeneration(User.getInstance().getId(), parent.getGameId(), --currentGeneration);
 
             if (gen == null) {
-                //System.out.println("gen null");
+                System.out.println("gen null");
                 return;
             }
             /*
@@ -189,7 +189,9 @@ public class PlayBarController implements Initializable {
 
              System.out.println();
              */
-            if (currentGeneration <= 0) {
+            
+            System.out.println(currentGeneration);
+            if (currentGeneration <= 1) {
                 prev.setDisable(true);
                 isRunning = false;
             }
@@ -243,10 +245,13 @@ public class PlayBarController implements Initializable {
             Generation gen;
             long time;
             
+            prev.setDisable(false);
+            
             while (!isCancelled()) {
                 
                 try {
-                    Thread.sleep(1000);
+                    time = 60 * 1000 / ((long)speedSlider.getValue());
+                    Thread.sleep(time);
                 } catch (InterruptedException interrupted) {
                     if (isCancelled()) {
                         updateMessage("Cancelled");
@@ -257,6 +262,8 @@ public class PlayBarController implements Initializable {
                 gen = handler.getNextGeneration(userId, gameId);
                 
                 if (gen != null) {
+                    
+                    currentGeneration = gen.getGenID();
                         
                     final int[][] config = gen.getConfig();
 

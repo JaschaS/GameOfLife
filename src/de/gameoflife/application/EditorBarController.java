@@ -133,6 +133,13 @@ public class EditorBarController implements Initializable {
         parent.showDeathRules();
         
     }
+    
+    @FXML
+    public void birthRules(ActionEvent event) throws IOException {
+
+        parent.showBirthRules();
+        
+    }
 
     @FXML
     public void save(ActionEvent event) throws IOException {

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+
+<HBox fx:id="numericPatternField" alignment="CENTER" BorderPane.alignment="CENTER" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.gameoflife.application.NumericPatternItemController">
+    <children>
+        <Label fx:id="firstText" alignment="CENTER" contentDisplay="BOTTOM" text="" textAlignment="CENTER" HBox.hgrow="ALWAYS">
+            <HBox.margin>
+                <Insets top="4.0" />
+            </HBox.margin>
+        </Label>
+        <Label fx:id="number" alignment="CENTER" contentDisplay="BOTTOM" text="" textAlignment="CENTER" HBox.hgrow="ALWAYS">
+            <HBox.margin>
+                <Insets top="4.0" />
+            </HBox.margin>
+        </Label>        
+        <Label text=" " HBox.hgrow="ALWAYS">
+            <HBox.margin>
+                <Insets top="4.0" />
+            </HBox.margin>
+        </Label>
+        <Label fx:id="secondText" text=" neigbours" HBox.hgrow="ALWAYS">
+            <HBox.margin>
+                <Insets top="4.0" />
+            </HBox.margin>
+        </Label>
+    </children>
+</HBox>

@@ -8,7 +8,6 @@ package de.gameoflife.application;
 import de.gameoflife.connection.rmi.GameHandler;
 import java.io.IOException;
 import java.net.URL;
-import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.util.ResourceBundle;
 import javafx.beans.value.ObservableValue;
@@ -21,8 +20,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import queue.data.Generation;
-import rmi.interfaces.IGameEngineServer;
-import rmi.interfaces.IRemoteUI_Server;
 
 /**
  * FXML Controller class
@@ -72,21 +69,17 @@ public class PlayBarController implements Initializable {
     public void play(ActionEvent event) throws IOException, NotBoundException {
 
         System.out.println( parent.getGame().getUserId() + " " + parent.getGameId());
+
+        connection.startEngine(parent.getGame().getUserId(), parent.getGameId());
         
-        IGameEngineServer gameEngine = (IGameEngineServer) Naming.lookup(IGameEngineServer.FULLSERVICEIDENTIFIER);
-        IRemoteUI_Server uiServer = (IRemoteUI_Server) Naming.lookup("rmi://143.93.91.71/" + "RemoteUIBackend");
-
-        gameEngine.sendIDsToEngine(1703, 3);
-
-        Generation gen = uiServer.getNextGeneration(1703, 3);
+        Generation gen = connection.getNextGeneration(parent.getGame().getUserId(), parent.getGameId());
 
         if (gen == null) {
             System.out.println("null");
         } else {
             System.out.println("not null");
+            System.out.println(gen.toString());
         }
-
-        gameEngine.stop( 1703, 3 );
 
     }
 
@@ -105,9 +98,9 @@ public class PlayBarController implements Initializable {
 
     @FXML
     public void next(ActionEvent event) throws IOException {
-
-        //Generation gen = connection.getGeneration(User.getInstance().getId(), parent.getGameId(), ++currentGeneration);
-        Generation gen = connection.getNextGeneration(parent.getGame().getUserId(), parent.getGameId());
+        
+        Generation gen = connection.getGeneration(User.getInstance().getId(), parent.getGameId(), ++currentGeneration);
+        //Generation gen = connection.getNextGeneration(parent.getGame().getUserId(), parent.getGameId());
         if (gen == null) {
             System.out.println("gen null");
             return;
@@ -131,12 +124,13 @@ public class PlayBarController implements Initializable {
     @FXML
     public void previous(ActionEvent event) throws IOException {
 
-        if (currentGeneration > 0) {
-
+        if (currentGeneration > 1) {
+            
             Generation gen = connection.getGeneration(User.getInstance().getId(), parent.getGameId(), --currentGeneration);
             //TODO Prev Generation????
 
             if (gen == null) {
+                System.out.println("gen null");
                 return;
             }
 
@@ -152,7 +146,7 @@ public class PlayBarController implements Initializable {
             System.out.println();
 
         }
-
+        
     }
 
     @FXML

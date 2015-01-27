@@ -19,26 +19,25 @@ import rmi.data.rules.RulePattern;
  * FXML Controller class
  *
  * @author JScholz
- *
  */
-public class DeathRulesController extends RulesController implements Initializable {
+public class BirthRulesController extends RulesController implements Initializable {
 
     @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        super.initialize(location, resources);
-      
-        numericPatternController.setFirstText("Death at ");
+    public void initialize(URL url, ResourceBundle rb) {
+        super.initialize(url, rb);
+
+        numericPatternController.setFirstText("Birth at ");
         
         rules.setItems(list);
 
         rules.setOnMouseClicked((MouseEvent event) -> {
-            
+
             MultipleSelectionModel selection = rules.getSelectionModel();
-            
+
             int index = selection.getSelectedIndex();
 
             if (index >= 0 && index < list.size()) {
-                
+
                 showPattern(list.get(index).getRule());
 
             }
@@ -50,16 +49,16 @@ public class DeathRulesController extends RulesController implements Initializab
     @Override
     public void numericRule(ActionEvent event) throws IOException {
 
-        parent.getGame().addDeathRule(new NumericRule());
-        addItems(parent.getGame().getDeathRules());
+        parent.getGame().addBirthRule(new NumericRule());
+        addItems(parent.getGame().getBirthRules());
 
     }
 
     @Override
     public void patternRule(ActionEvent event) throws IOException {
-
-        parent.getGame().addDeathRule(new RulePattern(new boolean[8]));
-        addItems(parent.getGame().getDeathRules());
+        
+        parent.getGame().addBirthRule(new RulePattern(new boolean[8]));
+        addItems(parent.getGame().getBirthRules());
 
     }
 

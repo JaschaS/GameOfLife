@@ -3,8 +3,6 @@ package de.gameoflife.application;
 import de.gameoflife.connection.rmi.GameHandler;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Iterator;
-import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -13,14 +11,11 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
-import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import rmi.data.GameUI;
-import rmi.data.rules.Evaluable;
-import rmi.data.rules.NumericRule;
 
 /**
  *
@@ -46,11 +41,13 @@ public class GameTab implements Initializable {
     private Parent editorBar;
     private Parent playBar;
     private Parent deathRulesParent;
+    private Parent birthRulesParent;
     private EditorBarController editorController;
     private PlayBarController playController;
     private GameUI game;
     private GameOfLifeController parentcontroller;
     private DeathRulesController deathRulesController;
+    private BirthRulesController birthRulesController;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -62,18 +59,38 @@ public class GameTab implements Initializable {
 
         try {
 
+            FXMLLoader birthRuleLoader = new FXMLLoader(getClass().getResource("FXML/BirthRules.fxml"));
+
+            birthRulesParent = (Parent) birthRuleLoader.load();
+            birthRulesParent.setVisible(false);
+
+            birthRulesController = birthRuleLoader.getController();
+            birthRulesController.setParent(this);
+
+            birthRulesController.closeActionEvent((ActionEvent event) -> {
+
+                birthRulesParent.toBack();
+                birthRulesParent.setVisible(false);
+                birthRulesController.hidePattern();
+
+                tabContent.toFront();
+                tabContent.setDisable(false);
+
+            });
+
             FXMLLoader deathRulesLoader = new FXMLLoader(getClass().getResource("FXML/DeathRules.fxml"));
 
             deathRulesParent = (Parent) deathRulesLoader.load();
             deathRulesParent.setVisible(false);
 
             deathRulesController = deathRulesLoader.getController();
-            deathRulesController.setParent(this);           
-            
+            deathRulesController.setParent(this);
+
             deathRulesController.closeActionEvent((ActionEvent event) -> {
 
                 deathRulesParent.toBack();
                 deathRulesParent.setVisible(false);
+                deathRulesController.hidePattern();
 
                 tabContent.toFront();
                 tabContent.setDisable(false);
@@ -126,7 +143,7 @@ public class GameTab implements Initializable {
 
             barpane.getChildren().addAll(playBar, editorBar);
 
-            pane.getChildren().add(deathRulesParent);
+            pane.getChildren().addAll(deathRulesParent, birthRulesParent);
 
         } catch (IOException ex) {
             Logger.getLogger(GameTab.class.getName()).log(Level.SEVERE, null, ex);
@@ -217,14 +234,26 @@ public class GameTab implements Initializable {
     }
 
     public void showDeathRules() {
-        
-        deathRulesController.addItems( game.getDeathRules() );
+
+        deathRulesController.addItems(game.getDeathRules());
 
         tabContent.toBack();
         tabContent.setDisable(true);
 
         deathRulesParent.toFront();
         deathRulesParent.setVisible(true);
+
+    }
+
+    public void showBirthRules() {
+        
+        birthRulesController.addItems(game.getBirthRules());
+        
+        tabContent.toBack();
+        tabContent.setDisable(true);
+        
+        birthRulesParent.toFront();
+        birthRulesParent.setVisible(true);
 
     }
 

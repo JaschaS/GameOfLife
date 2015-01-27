@@ -6,17 +6,25 @@
 package de.gameoflife.application;
 
 import java.io.IOException;
+import java.net.URL;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
+import javafx.scene.control.MultipleSelectionModel;
+import javafx.scene.layout.StackPane;
 import rmi.data.rules.Evaluable;
 import rmi.data.rules.NumericRule;
 import rmi.data.rules.RulePattern;
@@ -26,7 +34,7 @@ import rmi.data.rules.RulePattern;
  *
  * @author JScholz
  */
-public class RulesController {
+public abstract class RulesController implements Initializable {
 
     @FXML
     protected Button close;
@@ -35,38 +43,48 @@ public class RulesController {
     @FXML
     protected Button down;
     @FXML
-    protected Label firstText;
-    @FXML
-    protected Label secondText;
-    @FXML
-    protected HBox numericPatternField;
-    @FXML
     protected ListView rules;
     @FXML
-    protected BorderPane numericPattern;
-    @FXML
-    protected BorderPane rulePattern;
+    protected StackPane displayRules;
 
     protected final ObservableList<ListItems> list = FXCollections.observableArrayList();
     //protected List<Evaluable> items;
     protected GameTab parent;
-    protected NumberTextField text = new NumberTextField(25, 0, 8, "");
+    protected Parent numericPattern;
+    protected Parent rulePattern;
+    protected RulePatternController rulePatternController;
+    protected NumericPatternController numericPatternController;
 
-    @FXML
-    public void numericRule(ActionEvent event) throws IOException {
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
 
-        list.add(new ListItems("Numeric Rule", new NumericRule()));
-        
-        //TODO parent Item hinzufügen
+        try {
+
+            FXMLLoader rulePatternLoader = new FXMLLoader(getClass().getResource("FXML/RulePattern.fxml"));
+
+            rulePattern = (Parent) rulePatternLoader.load();
+            rulePatternController = rulePatternLoader.getController();
+            rulePattern.setVisible(false);
+
+            FXMLLoader numericPatternLoader = new FXMLLoader(getClass().getResource("FXML/NumericPattern.fxml"));
+
+            numericPattern = (Parent) numericPatternLoader.load();
+            numericPatternController = numericPatternLoader.getController();
+            numericPattern.setVisible(false);
+
+            displayRules.getChildren().addAll(rulePattern, numericPattern);
+
+        } catch (IOException ex) {
+            Logger.getLogger(RulesController.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
     }
 
     @FXML
-    public void patternRule(ActionEvent event) throws IOException {
+    public abstract void numericRule(ActionEvent event) throws IOException;
 
-        list.add( new ListItems("RulePattern", new RulePattern(new boolean[8])));
-
-    }
+    @FXML
+    public abstract void patternRule(ActionEvent event) throws IOException;
 
     public void showNumericPattern() {
 
@@ -75,7 +93,6 @@ public class RulesController {
 
         rulePattern.toBack();
         rulePattern.setVisible(false);
-
     }
 
     public void showRulePattern() {
@@ -85,7 +102,6 @@ public class RulesController {
 
         rulePattern.toFront();
         rulePattern.setVisible(true);
-
     }
 
     public void closeActionEvent(EventHandler<ActionEvent> event) {
@@ -111,10 +127,8 @@ public class RulesController {
 
             //Evaluable firstItem = items.remove(index);
             //Evaluable secondItem = items.remove(index - 1);
-
             //items.add(index - 1, firstItem);
             //items.add(index, secondItem);
-
             rules.getSelectionModel().select(index - 1);
 
         }
@@ -135,31 +149,109 @@ public class RulesController {
             //list.add(index, tmp);
 
             //Evaluable firstItem = items.remove(index);
-
             //items.add(index + 1, firstItem);
-
             rules.getSelectionModel().select(index + 1);
 
         }
 
     }
 
+    @FXML
+    protected void remove(ActionEvent event) throws IOException {
+
+        MultipleSelectionModel model = rules.getSelectionModel();
+
+        int index = model.getSelectedIndex();
+
+        if (index > -1) {
+
+            list.remove(index);
+
+            if (list.size() == 0) {
+                hidePattern();
+            } else {
+
+                index = model.getSelectedIndex();
+
+                if (index > -1) {
+                    showPattern(list.get(index).getRule());
+                }
+
+            }
+
+        }
+
+    }
+
+    public void hidePattern() {
+        numericPattern.setVisible(false);
+        rulePattern.setVisible(false);
+    }
+
+    public void addItems(List<Evaluable> items) {
+
+        if (items != null) {
+
+            list.clear();
+            //this.items = items;
+
+            Iterator<Evaluable> it = items.iterator();
+
+            while (it.hasNext()) {
+
+                Evaluable e = it.next();
+
+                if (e instanceof NumericRule) {
+                    list.add(new ListItems("Numeric Rule", e));
+                } else {
+                    if (e instanceof RulePattern) {
+                        list.add(new ListItems("Rule Pattern", e));
+                    }
+                }
+
+            }
+        }
+
+    }
+
+    protected void showPattern(Evaluable e) {
+  
+        if (e instanceof NumericRule) {
+
+            showNumericPattern();
+            try {
+                numericPatternController.setItems( ((NumericRule)e).getConfigurationAsArray() );
+            } catch (IOException ex) {
+                Logger.getLogger(RulesController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+        } else {
+            if (e instanceof RulePattern) {
+
+                showRulePattern();
+
+                rulePatternController.setGrid(((RulePattern) e).getPattern());
+
+            }
+        }
+    }
+
     class ListItems {
-    
+
         private final Evaluable rule;
         private final Label label;
-        
+
         public ListItems(String text, Evaluable rule) {
             this.rule = rule;
-            label = new Label(text);          
+            label = new Label(text);
         }
-        
+
         public String getText() {
-        
+
             return label.getText();
-            
+
         }
-        
+
         public Evaluable getRule() {
             return rule;
         }
@@ -168,7 +260,7 @@ public class RulesController {
         public String toString() {
             return label.getText();
         }
-    
+
     }
-    
+
 }

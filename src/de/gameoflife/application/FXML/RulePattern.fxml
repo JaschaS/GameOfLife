@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane fx:id="rulePattern" prefHeight="274.0" prefWidth="172.0" StackPane.alignment="CENTER"  xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.gameoflife.application.RulePatternController">
+    <center>
+        <GridPane alignment="CENTER" vgap="5.0" BorderPane.alignment="CENTER">
+            <columnConstraints>
+                <ColumnConstraints />
+                <ColumnConstraints />
+                <ColumnConstraints />
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints />
+                <RowConstraints />
+                <RowConstraints />
+            </rowConstraints>
+            <children>
+                <CheckBox onAction="#gridPos00" fx:id="checkBox00" mnemonicParsing="false" />
+                <CheckBox onAction="#gridPos01" fx:id="checkBox01" mnemonicParsing="false" GridPane.columnIndex="1" />
+                <CheckBox onAction="#gridPos02" fx:id="checkBox02" mnemonicParsing="false" GridPane.columnIndex="2" />
+                <CheckBox onAction="#gridPos10" fx:id="checkBox10" mnemonicParsing="false" GridPane.rowIndex="1" />
+                <CheckBox onAction="#gridPos12" fx:id="checkBox12" mnemonicParsing="false" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                <CheckBox onAction="#gridPos20" fx:id="checkBox20" mnemonicParsing="false" GridPane.rowIndex="2" />
+                <CheckBox onAction="#gridPos21" fx:id="checkBox21" mnemonicParsing="false" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                <CheckBox onAction="#gridPos22" fx:id="checkBox22" mnemonicParsing="false" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                <CheckBox disable="true" mnemonicParsing="false" style="-fx-opacity: 1;" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            </children>
+        </GridPane>
+    </center>
+</BorderPane> 

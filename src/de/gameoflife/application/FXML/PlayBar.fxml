@@ -10,7 +10,7 @@
     <items>
         <Button mnemonicParsing="false" onAction="#play" text="Play" />
         <Button mnemonicParsing="false" onAction="#stop" text="Stop" />
-        <Button mnemonicParsing="false" text="Prev" />
+        <Button mnemonicParsing="false" onAction="#previous"  text="Prev" />
         <Button mnemonicParsing="false" onAction="#next" text="Next" />
         <Separator orientation="VERTICAL" />
       <Label text="Speed:" />

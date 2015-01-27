@@ -16,7 +16,7 @@
         <Label text="Cellsize:" />
         <Separator orientation="VERTICAL" />
       <Button  mnemonicParsing="false" text="Death Rules" onAction="#deathRules"  />
-        <Button mnemonicParsing="false" text="Rules" />
+        <Button mnemonicParsing="false" text="Birth Rules" onAction="#birthRules"   />
       <CheckBox fx:id="borderOverflow" mnemonicParsing="false" text="Border Overflow" />
         <Separator orientation="VERTICAL" />
         <Button mnemonicParsing="false" onAction="#draw" text="Draw" />

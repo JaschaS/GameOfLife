@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.rmi.NotBoundException;
 import java.util.ResourceBundle;
+import java.util.concurrent.CountDownLatch;
 import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
@@ -291,10 +292,9 @@ public class PlayBarController implements Initializable {
         @Override
         protected int[][] call() throws Exception {
 
-            Generation gen = null;
+            Generation gen;
             long time;
-
-            prev.setDisable(false);
+            int currentGen = 0;
 
             while (!isCancelled()) {
 
@@ -308,8 +308,31 @@ public class PlayBarController implements Initializable {
 
                 if (gen != null) {
                     
-                    final int tmp = gen.getGenID();
+                    ++currentGen;
+                    
+                    //final int tmp = currentGen;
+                    ++currentGeneration;
+                    //System.out.println( gen.getGenID());
+                    final CountDownLatch doneLatch = new CountDownLatch(1);
+                    
+                    //final int[][] genConfig = gen.getConfig();
+                    //final int id = gen.getGenID();
+                    
+                    /*Platform.runLater( new Runnable() {
+                        
+                        final int[][] config = genConfig;
 
+                        @Override
+                        public void run() {
+                            //System.out.println("start drawing " + id );
+                            canvas.drawCells(config);
+                            //System.out.println("Done drawing");
+                            doneLatch.countDown();
+                        }
+                    });*/
+                    
+                    final int tmp = currentGen;
+                    
                     Platform.runLater(new Runnable() {
 
                         final int value = tmp;
@@ -318,12 +341,20 @@ public class PlayBarController implements Initializable {
                         public void run() {
                             Generation g = handler.getGeneration(userId, gameId, value);
                             if (g != null) {
+                                System.out.println(value);
                                 canvas.drawCells(g.getConfig());
+                                doneLatch.countDown();
                             }
+                            else System.out.println("null");
                         }
                     });
-
-                    //System.out.println("update");
+                    
+                    
+                    
+                    System.out.println("wait for update");
+                    doneLatch.await();
+                    //System.out.println(currentGeneration);
+                    System.out.println("Done");
                     //updateValue(gen.getConfig());
                 } else {
                     System.out.println("gen ist null");

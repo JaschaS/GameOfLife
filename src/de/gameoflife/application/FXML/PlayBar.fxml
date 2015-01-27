@@ -8,9 +8,9 @@
 
 <ToolBar fx:id="playToolBar" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.gameoflife.application.PlayBarController">
     <items>
-        <Button mnemonicParsing="false" onAction="#play" text="Play" />
-        <Button mnemonicParsing="false" onAction="#stop" text="Stop" />
-        <Button mnemonicParsing="false" onAction="#previous"  text="Prev" />
+        <Button fx:id="play" mnemonicParsing="false" onAction="#play" text="Play" />
+        <Button fx:id="stop" mnemonicParsing="false" onAction="#stop" text="Stop" />
+        <Button fx:id="prev" mnemonicParsing="false" onAction="#previous"  text="Prev" />
         <Button mnemonicParsing="false" onAction="#next" text="Next" />
         <Separator orientation="VERTICAL" />
       <Label text="Speed:" />

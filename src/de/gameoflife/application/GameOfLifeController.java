@@ -22,7 +22,7 @@ import rmi.data.GameUI;
  * @author JScholz
  *
  * @version 2014-12-11-1
- *
+ * TDOO Stop alle spiele, wenn sich ausgeloggt wird!
  */
 public final class GameOfLifeController {
 
@@ -118,7 +118,7 @@ public final class GameOfLifeController {
         tabController.initCanvas(game);
         tabController.parentController(this);
         
-        GameUI t = GameHandler.getInstance().getGameList(User.getInstance().getId()).get(0);
+        //GameUI t = GameHandler.getInstance().getGameList(User.getInstance().getId()).get(0);
         //System.out.println(t.isHistoryAvailable() + " name " + t.getGameName());
         //System.out.println(game.isHistoryAvailable() + " name " + game.getGameName());
         if(game.isHistoryAvailable()) tabController.showPlayBar();
@@ -127,11 +127,12 @@ public final class GameOfLifeController {
         //Parent tabContent = FXMLLoader.load( getClass().getResource("FXML/NewGame.fxml") );
         Tab newTab = new Tab();
         newTab.setText(game.getGameName());
-
+        
         newTab.setOnCloseRequest((Event event) -> {
+            tabController.closing();
             gameOpen.remove(game.getGameId());
         });
-
+        
         AnchorPane pane = new AnchorPane();
         pane.minHeight(0.0);
         pane.minHeight(0.0);

@@ -148,7 +148,7 @@ public class GameTab implements Initializable {
         }
 
     }
-
+    
     public int getGameId() {
         return game.getGameId();
     }
@@ -159,6 +159,10 @@ public class GameTab implements Initializable {
 
     public GameUI getGame() {
         return game;
+    }
+    
+    public void closing() {
+        playController.close();
     }
 
     public void setCellColor(Color color) {

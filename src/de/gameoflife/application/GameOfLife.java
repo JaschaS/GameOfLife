@@ -301,12 +301,12 @@ public class GameOfLife extends Application {
 
                 if (g != null) {
 
-                    boolean successful = GameHandler.getInstance().loadGame(User.getInstance().getId(), g.getGameId());
+                    //boolean successful = GameHandler.getInstance().loadGame(User.getInstance().getId(), g.getGameId());
 
                     //System.out.println( successful );
-                    if (successful && !gamesceneController.gameIsOpen(g.getGameId())) {
+                    if (!gamesceneController.gameIsOpen( g.getGameId() )) {
 
-                        gamesceneController.createTab(g);
+                        gamesceneController.createTab( g );
 
                         closeLoadScreen();
 

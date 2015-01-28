@@ -153,9 +153,13 @@ public class EditorBarController implements Initializable {
          parent.getGame().addBirthRule(oneBirthrule);
          parent.getGame().addDeathRule(oneDeathrule);
          */
-        boolean successful = GameHandler.getInstance().saveGame(parent.getGameId());
+        
+        //parent.getGame().setNowModified();
+        
+        //System.out.println( parent.getGame().getModifiedDate() );
+        boolean successful = GameHandler.getInstance().saveGame(parent.getGame());
 
-        //System.out.println("Save successful: " + successful);
+        System.out.println("Save successful: " + successful);
     }
 
     @FXML

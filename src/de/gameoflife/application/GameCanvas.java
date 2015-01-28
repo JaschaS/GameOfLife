@@ -13,7 +13,6 @@ import javafx.scene.paint.Color;
  *
  * @version 2014-12-11-1
  *
- * TODO: Draw zeichnen rückgaengig machen
  */
 public class GameCanvas extends Group {
 

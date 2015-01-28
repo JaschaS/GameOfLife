@@ -183,7 +183,20 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
     @Override
     public boolean saveGame(final int gameId) {
         try {
-            ruleEditor.saveGame(gameList.get(gameId));
+            GameUI g = gameList.get(gameId);
+            System.out.println( g.getStartGen().length);
+            ruleEditor.saveGame(g);
+            return true;
+        } catch (RemoteException ex) {
+            //TODO
+            return false;
+        }
+    }
+    
+    public boolean saveGame(final GameUI g) {
+        try {
+            System.out.println( g.getStartGen().length);
+            ruleEditor.saveGame(g);
             return true;
         } catch (RemoteException ex) {
             //TODO
@@ -206,7 +219,7 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
     public ObservableList<GameUI> getGameList(final int userId) {
         try {
             
-            /*List<GameUI> games = ruleEditor.getUserGames(userId);
+            List<GameUI> games = ruleEditor.getUserGames(userId);
             
             Iterator<GameUI> it = games.iterator();
             GameUI game;
@@ -217,9 +230,9 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
                 
                 gameList.put(game.getGameId(), game);
             
-            }*/
-            
-            return FXCollections.observableArrayList( ruleEditor.getUserGames(userId));
+            }
+          
+            return FXCollections.observableArrayList( gameList.values());
             /*
             Iterator<GameUI> it = games.iterator();
             

@@ -23,6 +23,17 @@ import queue.data.Generation;
  * FXML Controller class
  *
  * @author JScholz
+ * 
+ * TODO Bei Start Threshold hinzufügen
+ * TODO Prev und next sprung groesse hinzufuegen
+ * TODO Stop currentgame
+ * TODO Analyse anzeigen
+ * TODO Farbe setzen
+ * TODO Nur eine Numericrule?
+ * TODO Load nur ein Spiel von einer Spielid
+ * 
+ * Jar Datei schicken
+ * Schnittstellen an Marx schicken?
  */
 public class PlayBarController implements Initializable {
 

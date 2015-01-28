@@ -24,6 +24,7 @@ public class GameCanvas extends Group {
     protected int height;
     protected boolean[][] generation;
     protected Color cellColor;
+    protected int currentGeneration = 1;
 
     public GameCanvas(int width, int height, int cellSize) {
 
@@ -69,6 +70,14 @@ public class GameCanvas extends Group {
         setOnMouseDragged(null);
     }
 
+    public void setCurrentGeneration(int newGeneration) {
+        currentGeneration = newGeneration;
+    }
+    
+    public int getCurrentGeneration() {
+        return currentGeneration;
+    }
+    
     public void drawCells(int[][] grid) {
 
         GraphicsContext gc = elements.getGraphicsContext2D();

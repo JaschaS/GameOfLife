@@ -48,7 +48,7 @@ public class PlayBarController implements Initializable {
     private UpdateTask updateTask;
     private GameTab parent;
     private GameHandler connection;
-    private int currentGeneration = 1;
+    //private int currentGeneration = 1;
     private boolean isRunning = false;
     private Thread updateThread;
     private NumberTextField cellSize;
@@ -163,6 +163,9 @@ public class PlayBarController implements Initializable {
         //}
 
         if (updateTask == null || !updateTask.isRunning()) {
+            
+            int currentGeneration = parent.getCanvas().getCurrentGeneration();
+            
             Generation gen = connection.getGeneration(User.getInstance().getId(), parent.getGameId(), ++currentGeneration);
             //Generation gen = connection.getNextGeneration(parent.getGame().getUserId(), parent.getGameId());
             if (gen == null) {
@@ -185,6 +188,7 @@ public class PlayBarController implements Initializable {
                 prev.setDisable(false);
             }
 
+            parent.getCanvas().setCurrentGeneration(currentGeneration);
             parent.getCanvas().drawCells(gen.getConfig());
         }
 
@@ -193,6 +197,8 @@ public class PlayBarController implements Initializable {
     @FXML
     public void previous(ActionEvent event) throws IOException {
 
+        int currentGeneration = parent.getCanvas().getCurrentGeneration();
+        
         if (currentGeneration > 1 && (updateTask == null || !updateTask.isRunning()) ) {
 
             Generation gen = connection.getGeneration(User.getInstance().getId(), parent.getGameId(), --currentGeneration);
@@ -220,6 +226,7 @@ public class PlayBarController implements Initializable {
                 isRunning = false;
             }
 
+            parent.getCanvas().setCurrentGeneration(currentGeneration);
             parent.getCanvas().drawCells(gen.getConfig());
         }
 
@@ -311,7 +318,7 @@ public class PlayBarController implements Initializable {
                     ++currentGen;
                     
                     //final int tmp = currentGen;
-                    ++currentGeneration;
+                    //++currentGeneration;
                     //System.out.println( gen.getGenID());
                     final CountDownLatch doneLatch = new CountDownLatch(1);
                     
@@ -343,6 +350,7 @@ public class PlayBarController implements Initializable {
                             if (g != null) {
                                 System.out.println(value);
                                 canvas.drawCells(g.getConfig());
+                                canvas.setCurrentGeneration(value);
                                 doneLatch.countDown();
                             }
                             else System.out.println("null");

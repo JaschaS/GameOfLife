@@ -48,7 +48,7 @@ public class PlayBarController implements Initializable {
     private UpdateTask updateTask;
     private GameTab parent;
     private GameHandler connection;
-    private int currentGeneration = 0;
+    private int currentGeneration = 1;
     private boolean isRunning = false;
     private Thread updateThread;
     private NumberTextField cellSize;
@@ -158,9 +158,9 @@ public class PlayBarController implements Initializable {
     @FXML
     public void next(ActionEvent event) throws IOException {
 
-        if (!isRunning) {
-            isRunning = connection.startEngine(parent.getGame().getUserId(), parent.getGameId());
-        }
+        //if (!isRunning) {
+        //    isRunning = connection.startEngine(parent.getGame().getUserId(), parent.getGameId());
+        //}
 
         if (updateTask == null || !updateTask.isRunning()) {
             Generation gen = connection.getGeneration(User.getInstance().getId(), parent.getGameId(), ++currentGeneration);

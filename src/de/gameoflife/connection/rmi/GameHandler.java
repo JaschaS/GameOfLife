@@ -338,7 +338,7 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
     
     public boolean establishConnectionUIServer() {
         try {
-            uiServer = (IRemoteUI_Server) Naming.lookup("rmi://143.93.91.71/RemoteUIBackend");
+            uiServer = (IRemoteUI_Server) Naming.lookup("rmi://143.93.91.71:1098/RemoteUIBackendIntern");
         } catch (NotBoundException | MalformedURLException | RemoteException ex) {
             
             Logger.getLogger(GameHandler.class.getName()).log(Level.SEVERE, null, ex);

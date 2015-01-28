@@ -39,6 +39,8 @@ public abstract class RulesController implements Initializable {
     @FXML
     protected Button down;
     @FXML
+    protected Button numeric;
+    @FXML
     protected ListView rules;
     @FXML
     protected StackPane displayRules;
@@ -153,7 +155,11 @@ public abstract class RulesController implements Initializable {
 
         if (index > -1) {
 
-            list.remove(index);
+            ListItems item = list.remove(index);
+            
+            if( item.getRule() instanceof NumericRule ) numeric.setDisable(false);
+            
+            removeItem( index );
 
             if (list.size() == 0) {
                 hidePattern();
@@ -168,8 +174,10 @@ public abstract class RulesController implements Initializable {
             }
 
         }
-
+        
     }
+    
+    protected abstract void removeItem(int index);
 
     public void hidePattern() {
         numericPattern.setVisible(false);
@@ -189,6 +197,7 @@ public abstract class RulesController implements Initializable {
                 Evaluable e = it.next();
 
                 if (e instanceof NumericRule) {
+                    numeric.setDisable(true);
                     list.add(new ListItems("Numeric Rule", e));
                 } else {
                     if (e instanceof RulePattern) {

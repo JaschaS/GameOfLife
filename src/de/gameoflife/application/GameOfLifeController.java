@@ -2,19 +2,23 @@ package de.gameoflife.application;
 
 import de.gameoflife.connection.rmi.GameHandler;
 import java.io.IOException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.ResourceBundle;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.control.Tab;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.control.SingleSelectionModel;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.AnchorPane;
-import rmi.data.GameUI;
 
 /**
  * FXML Controller class
@@ -23,7 +27,7 @@ import rmi.data.GameUI;
  *
  * @version 2014-12-11-1 TDOO Stop alle spiele, wenn sich ausgeloggt wird!
  */
-public final class GameOfLifeController {
+public final class GameOfLifeController implements Initializable {
 
     @FXML
     private TabPane tabPane;
@@ -33,8 +37,19 @@ public final class GameOfLifeController {
     private GameOfLife application;
     private final HashMap<Integer, Tab> gameOpen = new HashMap<>();
 
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+
+        tabPane.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends Tab> ov, Tab t, Tab t1) -> {
+            GameHandler.getInstance().stopCurrentRunningGame();
+        });
+
+    }
+
     @FXML
     public void logout(ActionEvent event) throws IOException {
+
+        GameHandler.getInstance().stopCurrentRunningGame();
 
         tabPane.getTabs().clear();
         gameOpen.clear();
@@ -65,15 +80,6 @@ public final class GameOfLifeController {
     public void setUsername(String name) {
         username.setText(name);
     }
-    /*
-     public void createTab(int gameId) throws IOException {
-
-     createTab(GameHandler.getInstance().getGame(gameId));
-
-     }
-
-
-     */
 
     public void closeTab(int gameId) {
 
@@ -100,8 +106,10 @@ public final class GameOfLifeController {
     public void createTab(String gamename) throws IOException {
 
         int gameId = GameHandler.getInstance().getGameId(gamename);
-        
-        if( gameId != -1) createTab(gameId);
+
+        if (gameId != -1) {
+            createTab(gameId);
+        }
 
     }
 

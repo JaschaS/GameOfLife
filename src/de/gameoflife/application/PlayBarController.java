@@ -5,10 +5,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.rmi.NotBoundException;
 import java.util.ResourceBundle;
-import java.util.concurrent.CountDownLatch;
-import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
-import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -24,9 +21,13 @@ import queue.data.Generation;
  *
  * @author JScholz
  *
- * TODO Bei Start Threshold hinzufügen TODO Prev und next sprung groesse
- * hinzufuegensmuster TODO Stop currentgame TODO Analyse anzeigen TODO Farbe
- * setzen TODO Nur eine Numericrule?
+ * TODO Bei Start Threshold hinzufügen
+ *
+ * TODO Prev und next sprung groesse hinzufuegen
+ *
+ * TODO Analyse anzeigen
+ *
+ * TODO Farbe setzen
  *
  * TODO Prev und Next deaktivieren, wenn Play laeuft
  *
@@ -52,11 +53,11 @@ public final class PlayBarController implements Initializable {
     private Button stop;
     @FXML
     private Button play;
+    @FXML
+    private Button next;
 
-    private UpdateTask updateTask;
     private GameTab parent;
     private GameHandler connection;
-    private boolean isRunning = false;
     private Thread updateThread;
     private NumberTextField cellSize;
     private final GameHandler gameHandler = GameHandler.getInstance();
@@ -90,7 +91,7 @@ public final class PlayBarController implements Initializable {
         prev.setDisable(true);
 
         userId = User.getInstance().getId();
-        
+
     }
 
     public void editorActionEvent(EventHandler<ActionEvent> event) {
@@ -103,9 +104,7 @@ public final class PlayBarController implements Initializable {
      * Wird aufgerufen falls das Tab geschlossen wird!
      */
     public void close() {
-        if (updateTask != null && updateTask.isRunning()) {
-            updateTask.cancel();
-        }
+        connection.stopCurrentRunningGame();
         //TODO Analyse Task cancel!
         connection.stopEngine(User.getInstance().getId(), parent.getGameId());
     }
@@ -119,89 +118,57 @@ public final class PlayBarController implements Initializable {
     @FXML
     private void play(ActionEvent event) throws IOException, NotBoundException {
 
-        //System.out.println(parent.getGame().getUserId() + " " + parent.getGameId());
+        boolean isRunning = connection.gameRunning();
+
         if (!isRunning) {
 
-
-            
-            isRunning = connection.startEngine( userId, parent.getGameId());
+            connection.startGame(parent.getGameId(), speedSlider.valueProperty(), parent.getCanvas());
 
             play.setDisable(isRunning);
             stop.setDisable(!isRunning);
+            prev.setDisable(true);
+            next.setDisable(true);
 
-            if (isRunning) {
-
-                updateTask = new UpdateTask();
-                updateThread = new Thread(updateTask);
-                //updateThread.setDaemon(true);
-                updateThread.start();
-
-                //Wert an canvas binden, damit dieses beim aendern geupdatet wird?
-                //parent.getCanvas().setCanvasProperty(updateTask.valueProperty());
-            }
         }
 
-        /*Generation gen = connection.getNextGeneration(parent.getGame().getUserId(), parent.getGameId());
-
-         if (gen == null) {
-         System.out.println("null");
-         } else {
-         System.out.println("not null");
-         System.out.println(gen.toString());
-         }
-         */
     }
 
     @FXML
     private void stop(ActionEvent event) throws IOException {
 
+        boolean isRunning = connection.gameRunning();
+
         if (isRunning) {
-            connection.stopEngine( userId, parent.getGameId());
 
-            if (updateTask != null && updateTask.isRunning()) {
-                updateTask.cancel();
-            }
-
+            connection.stopCurrentRunningGame();
             play.setDisable(!isRunning);
             stop.setDisable(isRunning);
-            isRunning = false;
-        }
-        //if (updateTask != null && updateTask.isRunning()) {
 
-        //  connection.stopEngine(User.getInstance().getId(), parent.getGameId());
-        //  updateTask.cancel();
-        //}
-        //System.out.println("Stop successful: " + successful);
+            prev.setDisable(false);
+
+            if (parent.getCanvas().getCurrentGeneration() > 1) {
+                next.setDisable(false);
+            }
+
+        }
+
     }
 
     @FXML
     private void next(ActionEvent event) throws IOException {
 
-        //if (!isRunning) {
-        //    isRunning = connection.startEngine(parent.getGame().getUserId(), parent.getGameId());
-        //}
-        if (updateTask == null || !updateTask.isRunning()) {
+        boolean isRunning = connection.gameRunning();
+
+        if (!isRunning) {
 
             int currentGeneration = parent.getCanvas().getCurrentGeneration();
 
             Generation gen = connection.getGeneration(User.getInstance().getId(), parent.getGameId(), ++currentGeneration);
-            //Generation gen = connection.getNextGeneration(parent.getGame().getUserId(), parent.getGameId());
+
             if (gen == null) {
-                //System.out.println("gen null");
                 return;
             }
-            /*
-             for (int i = 0; i < gen.getConfig().length; ++i) {
 
-             for (int j = 0; j < gen.getConfig()[i].length; ++j) {
-             System.out.print(gen.getConfig()[i][j] + " ");
-             }
-             System.out.println();
-
-             }
-
-             System.out.println();
-             */
             if (prev.isDisabled()) {
                 prev.setDisable(false);
             }
@@ -216,32 +183,18 @@ public final class PlayBarController implements Initializable {
     private void previous(ActionEvent event) throws IOException {
 
         int currentGeneration = parent.getCanvas().getCurrentGeneration();
+        boolean isRunning = connection.gameRunning();
 
-        if (currentGeneration > 1 && (updateTask == null || !updateTask.isRunning())) {
+        if (!isRunning && currentGeneration > 1) {
 
             Generation gen = connection.getGeneration(User.getInstance().getId(), parent.getGameId(), --currentGeneration);
 
             if (gen == null) {
-                System.out.println("gen null");
                 return;
             }
-            /*
-             for (int i = 0; i < gen.getConfig().length; ++i) {
 
-             for (int j = 0; j < gen.getConfig()[i].length; ++j) {
-             System.out.print(gen.getConfig()[i][j] + " ");
-             }
-             System.out.println();
-
-             }
-
-             System.out.println();
-             */
-
-            //System.out.println(currentGeneration);
             if (currentGeneration <= 1) {
                 prev.setDisable(true);
-                isRunning = false;
             }
 
             parent.getCanvas().setCurrentGeneration(currentGeneration);
@@ -294,95 +247,76 @@ public final class PlayBarController implements Initializable {
 
     }
 
-    private class UpdateTask extends Task<int[][]> {
+    /*
+     public class UpdateTask extends Task<int[][]> {
 
-        private final GameHandler handler;
-        private final int userId;
-        private final int gameId;
-        private final GameCanvas canvas;
+     private final GameHandler handler;
+     private final int userId;
+     private final int gameId;
+     private final GameCanvas canvas;
 
-        public UpdateTask() {
-            handler = GameHandler.getInstance();
-            userId = User.getInstance().getId();
-            gameId = parent.getGameId();
-            canvas = parent.getCanvas();
-        }
+     public UpdateTask(int gameId, GameCanvas canvas) {
+     handler = GameHandler.getInstance();
+     userId = User.getInstance().getId();
+     gameId = parent.getGameId();
+     canvas = parent.getCanvas();
+     }
 
-        @Override
-        protected int[][] call() throws Exception {
+     @Override
+     protected int[][] call() throws Exception {
 
-            Generation gen;
-            long time;
-            int currentGen = 0;
+     Generation gen;
+     long time;
+     int currentGen = 0;
 
-            while (!isCancelled()) {
+     while (!isCancelled()) {
 
-                try {
-                    time = 60 * 1000 / ((long) speedSlider.getValue());
-                    Thread.sleep(time);
-                } catch (InterruptedException interrupted) {
-                }
+     try {
+     time = 60 * 1000 / ((long) speedSlider.getValue());
+     Thread.sleep(time);
+     } catch (InterruptedException interrupted) {
+     }
 
-                gen = handler.getNextGeneration(userId, gameId);
+     gen = handler.getNextGeneration(userId, gameId);
 
-                if (gen != null) {
+     if (gen != null) {
 
-                    ++currentGen;
+     ++currentGen;
 
-                    //final int tmp = currentGen;
-                    //++currentGeneration;
-                    //System.out.println( gen.getGenID());
-                    final CountDownLatch doneLatch = new CountDownLatch(1);
+     final CountDownLatch doneLatch = new CountDownLatch(1);
 
-                    //final int[][] genConfig = gen.getConfig();
-                    //final int id = gen.getGenID();
-                    /*Platform.runLater( new Runnable() {
-                        
-                     final int[][] config = genConfig;
+     final int tmp = currentGen;
 
-                     @Override
-                     public void run() {
-                     //System.out.println("start drawing " + id );
-                     canvas.drawCells(config);
-                     //System.out.println("Done drawing");
-                     doneLatch.countDown();
-                     }
-                     });*/
-                    final int tmp = currentGen;
+     Platform.runLater(new Runnable() {
 
-                    Platform.runLater(new Runnable() {
+     final int value = tmp;
 
-                        final int value = tmp;
+     @Override
+     public void run() {
+                            
+     Generation g = handler.getGeneration(userId, gameId, value);
+                            
+     if (g != null) {
+     System.out.println(value);
+     canvas.drawCells(g.getConfig());
+     canvas.setCurrentGeneration(value);
+     doneLatch.countDown();
+     }
+     }
+     });
 
-                        @Override
-                        public void run() {
-                            Generation g = handler.getGeneration(userId, gameId, value);
-                            if (g != null) {
-                                System.out.println(value);
-                                canvas.drawCells(g.getConfig());
-                                canvas.setCurrentGeneration(value);
-                                doneLatch.countDown();
-                            } else {
-                                System.out.println("null");
-                            }
-                        }
-                    });
+     doneLatch.await();
+                    
+     } else {
+     System.out.println("gen ist null");
+     }
 
-                    System.out.println("wait for update");
-                    doneLatch.await();
-                    //System.out.println(currentGeneration);
-                    System.out.println("Done");
-                    //updateValue(gen.getConfig());
-                } else {
-                    System.out.println("gen ist null");
-                }
+     }
 
-            }
+     return null;
 
-            return null;
+     }
 
-        }
-
-    }
-
+     }
+     */
 }

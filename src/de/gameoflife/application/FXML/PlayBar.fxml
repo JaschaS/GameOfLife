@@ -11,7 +11,7 @@
         <Button fx:id="play" mnemonicParsing="false" onAction="#play" text="Play" />
         <Button fx:id="stop" mnemonicParsing="false" onAction="#stop" text="Stop" />
         <Button fx:id="prev" mnemonicParsing="false" onAction="#previous" text="Prev" />
-        <Button mnemonicParsing="false" onAction="#next" text="Next" />
+        <Button fx:id="next" mnemonicParsing="false" onAction="#next" text="Next" />
         <Separator orientation="VERTICAL" />
       <Label text="Speed:" />
       <Slider fx:id="speedSlider" blockIncrement="1.0" majorTickUnit="60.0" max="120.0" min="1.0" minorTickCount="10" value="60.0" />

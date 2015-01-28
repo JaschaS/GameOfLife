@@ -8,6 +8,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.control.MultipleSelectionModel;
 import javafx.scene.input.MouseEvent;
+import rmi.data.rules.Evaluable;
 import rmi.data.rules.NumericRule;
 import rmi.data.rules.RulePattern;
 
@@ -51,6 +52,8 @@ public final class DeathRulesController extends RulesController implements Initi
         gameHandler.addDeathRule(gameId, new NumericRule());
         addItems(gameHandler.getDeathRules(gameId));
 
+        numeric.setDisable(true);
+        
     }
 
     @Override
@@ -61,6 +64,11 @@ public final class DeathRulesController extends RulesController implements Initi
         gameHandler.addDeathRule(gameId, new RulePattern(new boolean[8]));
         addItems(gameHandler.getDeathRules(gameId));
 
+    }
+
+    @Override
+    protected void removeItem(int index) {
+        gameHandler.removeDeathRule( parent.getGameId(), index);
     }
 
 }

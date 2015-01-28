@@ -93,4 +93,8 @@ public interface IGameConfiguration {
     String toString(final int gameId);
     
     int getGameId(final String gameName);
+    
+    void removeDeathRule(final int gameId, final int index);
+    
+    void removeBirthRule(final int gameId, final int index);
 }

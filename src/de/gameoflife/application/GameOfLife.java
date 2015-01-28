@@ -82,7 +82,10 @@ public final class GameOfLife extends Application {
         super.stop();
 
         queue.closeConnection();
-        GameHandler.getInstance().closeConnection();
+        
+        GameHandler connection = GameHandler.getInstance();
+        connection.stopCurrentRunningGame();
+        connection.closeConnection();
 
         System.exit(0);
     }

@@ -1,5 +1,8 @@
 package de.gameoflife.application;
 
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.canvas.Canvas;
@@ -13,6 +16,8 @@ import javafx.scene.paint.Color;
  *
  * @version 2014-12-11-1
  *
+ * TODO GameCanvas draw ueberarbeiten
+ * 
  */
 public final class GameCanvas extends Group {
 
@@ -23,7 +28,8 @@ public final class GameCanvas extends Group {
     private int height;
     private boolean[][] generation;
     private Color cellColor;
-    private int currentGeneration = 1;
+    //private int currentGeneration = 1;
+    private SimpleIntegerProperty currentGeneration;
 
     public GameCanvas(int width, int height, int cellSize) {
 
@@ -44,6 +50,8 @@ public final class GameCanvas extends Group {
         getChildren().addAll(grid, elements);
 
         generation = new boolean[height][width];
+        
+        currentGeneration = new SimpleIntegerProperty(1);
 
     }
 
@@ -68,12 +76,20 @@ public final class GameCanvas extends Group {
         setOnMouseClicked(null);
         setOnMouseDragged(null);
     }
-
+    
     public void setCurrentGeneration(int newGeneration) {
-        currentGeneration = newGeneration;
+        currentGeneration.set(newGeneration);
     }
     
     public int getCurrentGeneration() {
+        return currentGeneration.getValue();
+    }
+    
+    public void setCurrentGeneration(ChangeListener listener) {
+        currentGeneration.addListener(listener);
+    }
+    
+    public IntegerProperty getCurrentGame() {
         return currentGeneration;
     }
     

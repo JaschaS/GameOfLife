@@ -576,7 +576,7 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
     private void createUpdateTask(final int gameId, DoubleProperty sliderProperty, GameCanvas canvas) {
 
         canvasUpdateTask = new UpdateTask(gameId, canvas, sliderProperty);
-
+        
         Thread t = new Thread(canvasUpdateTask);
         t.start();
 

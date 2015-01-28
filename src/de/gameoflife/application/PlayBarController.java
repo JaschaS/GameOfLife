@@ -6,14 +6,18 @@ import java.net.URL;
 import java.rmi.NotBoundException;
 import java.util.ResourceBundle;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.ToolBar;
+import javafx.scene.paint.Color;
 import queue.data.Generation;
 
 /**
@@ -23,13 +27,7 @@ import queue.data.Generation;
  *
  * TODO Bei Start Threshold hinzufügen
  *
- * TODO Prev und next sprung groesse hinzufuegen
- *
  * TODO Analyse anzeigen
- *
- * TODO Farbe setzen
- *
- * TODO Prev und Next deaktivieren, wenn Play laeuft
  *
  * Jar Datei schicken Schnittstellen an Marx schicken?
  */
@@ -55,13 +53,18 @@ public final class PlayBarController implements Initializable {
     private Button play;
     @FXML
     private Button next;
+    @FXML
+    private Label currentGeneration;
+    @FXML
+    private ColorPicker colorPicker;
 
     private GameTab parent;
     private GameHandler connection;
-    private Thread updateThread;
     private NumberTextField cellSize;
     private final GameHandler gameHandler = GameHandler.getInstance();
     private int userId;
+    private int step = 1;
+    private NumberTextField stepSize;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -92,6 +95,45 @@ public final class PlayBarController implements Initializable {
 
         userId = User.getInstance().getId();
 
+        stepSize = new NumberTextField(25, 0, 100, "1");
+        stepSize.setListener((int value) -> {
+            step = value;
+        });
+
+        playToolBar.getItems().add(5, stepSize);
+
+        currentGeneration.textProperty().bind(parent.getCanvas().getCurrentGame().asString());
+
+        colorPicker.setValue(Color.RED);
+        colorPicker.setOnAction((ActionEvent event) -> {
+
+            parent.setCellColor(colorPicker.getValue());
+
+        });
+
+        ObservableList<Color> list = FXCollections.observableArrayList();
+
+        list.addAll(
+                Color.web("D93E30"),
+                Color.web("FFB429"),
+                Color.web("51A64E"),
+                Color.web("0D6BA6"),
+                Color.web("FF4444"),
+                Color.web("FFBB33"),
+                Color.web("99CC00"),
+                Color.web("33B5E5"),
+                Color.web("AA66CC"),
+                Color.web("CC0000"),
+                Color.web("FF8800"),
+                Color.web("669900"),
+                Color.web("9933CC"),
+                Color.web("0099CC")
+        );
+
+        colorPicker.getCustomColors().addAll(list);
+
+        colorPicker.setValue(colorPicker.getCustomColors().get(2));
+
     }
 
     public void editorActionEvent(EventHandler<ActionEvent> event) {
@@ -106,7 +148,6 @@ public final class PlayBarController implements Initializable {
     public void close() {
         connection.stopCurrentRunningGame();
         //TODO Analyse Task cancel!
-        connection.stopEngine(User.getInstance().getId(), parent.getGameId());
     }
 
     public void setParent(GameTab newParent) {
@@ -163,7 +204,7 @@ public final class PlayBarController implements Initializable {
 
             int currentGeneration = parent.getCanvas().getCurrentGeneration();
 
-            Generation gen = connection.getGeneration(User.getInstance().getId(), parent.getGameId(), ++currentGeneration);
+            Generation gen = connection.getGeneration(User.getInstance().getId(), parent.getGameId(), currentGeneration + step);
 
             if (gen == null) {
                 return;
@@ -173,7 +214,7 @@ public final class PlayBarController implements Initializable {
                 prev.setDisable(false);
             }
 
-            parent.getCanvas().setCurrentGeneration(currentGeneration);
+            parent.getCanvas().setCurrentGeneration(currentGeneration + step);
             parent.getCanvas().drawCells(gen.getConfig());
         }
 
@@ -187,7 +228,7 @@ public final class PlayBarController implements Initializable {
 
         if (!isRunning && currentGeneration > 1) {
 
-            Generation gen = connection.getGeneration(User.getInstance().getId(), parent.getGameId(), --currentGeneration);
+            Generation gen = connection.getGeneration(User.getInstance().getId(), parent.getGameId(), currentGeneration - step);
 
             if (gen == null) {
                 return;
@@ -197,7 +238,7 @@ public final class PlayBarController implements Initializable {
                 prev.setDisable(true);
             }
 
-            parent.getCanvas().setCurrentGeneration(currentGeneration);
+            parent.getCanvas().setCurrentGeneration(currentGeneration - step);
             parent.getCanvas().drawCells(gen.getConfig());
         }
 
@@ -247,76 +288,4 @@ public final class PlayBarController implements Initializable {
 
     }
 
-    /*
-     public class UpdateTask extends Task<int[][]> {
-
-     private final GameHandler handler;
-     private final int userId;
-     private final int gameId;
-     private final GameCanvas canvas;
-
-     public UpdateTask(int gameId, GameCanvas canvas) {
-     handler = GameHandler.getInstance();
-     userId = User.getInstance().getId();
-     gameId = parent.getGameId();
-     canvas = parent.getCanvas();
-     }
-
-     @Override
-     protected int[][] call() throws Exception {
-
-     Generation gen;
-     long time;
-     int currentGen = 0;
-
-     while (!isCancelled()) {
-
-     try {
-     time = 60 * 1000 / ((long) speedSlider.getValue());
-     Thread.sleep(time);
-     } catch (InterruptedException interrupted) {
-     }
-
-     gen = handler.getNextGeneration(userId, gameId);
-
-     if (gen != null) {
-
-     ++currentGen;
-
-     final CountDownLatch doneLatch = new CountDownLatch(1);
-
-     final int tmp = currentGen;
-
-     Platform.runLater(new Runnable() {
-
-     final int value = tmp;
-
-     @Override
-     public void run() {
-                            
-     Generation g = handler.getGeneration(userId, gameId, value);
-                            
-     if (g != null) {
-     System.out.println(value);
-     canvas.drawCells(g.getConfig());
-     canvas.setCurrentGeneration(value);
-     doneLatch.countDown();
-     }
-     }
-     });
-
-     doneLatch.await();
-                    
-     } else {
-     System.out.println("gen ist null");
-     }
-
-     }
-
-     return null;
-
-     }
-
-     }
-     */
 }

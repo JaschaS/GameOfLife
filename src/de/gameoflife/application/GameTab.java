@@ -229,6 +229,8 @@ public final class GameTab implements Initializable {
 
         content.setCenter(canvas);
 
+        playController.bindPropertyToCurrentGen(canvas.getCurrentGame().asString());
+        
     }
 
     public void showDeathRules() {

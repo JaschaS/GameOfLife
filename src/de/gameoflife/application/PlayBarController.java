@@ -78,7 +78,7 @@ public final class PlayBarController implements Initializable {
             }
         });
 
-        playToolBar.getItems().add(playToolBar.getItems().size(), cellSize);
+        playToolBar.getItems().add(playToolBar.getItems().size()-1, cellSize);
 
         analysisShow.setDisable(true);
 
@@ -95,14 +95,12 @@ public final class PlayBarController implements Initializable {
 
         userId = User.getInstance().getId();
 
-        stepSize = new NumberTextField(25, 0, 100, "1");
+        stepSize = new NumberTextField(40, 0, 100, "1");
         stepSize.setListener((int value) -> {
             step = value;
         });
 
         playToolBar.getItems().add(5, stepSize);
-
-        currentGeneration.textProperty().bind(parent.getCanvas().getCurrentGame().asString());
 
         colorPicker.setValue(Color.RED);
         colorPicker.setOnAction((ActionEvent event) -> {
@@ -155,6 +153,10 @@ public final class PlayBarController implements Initializable {
         parent = newParent;
 
     }
+    
+    public void bindPropertyToCurrentGen(ObservableValue property) {
+        currentGeneration.textProperty().bind(property);
+    }
 
     @FXML
     private void play(ActionEvent event) throws IOException, NotBoundException {
@@ -199,14 +201,15 @@ public final class PlayBarController implements Initializable {
     private void next(ActionEvent event) throws IOException {
 
         boolean isRunning = connection.gameRunning();
-
+        
         if (!isRunning) {
 
-            int currentGeneration = parent.getCanvas().getCurrentGeneration();
+            int currentGen = parent.getCanvas().getCurrentGeneration();
 
-            Generation gen = connection.getGeneration(User.getInstance().getId(), parent.getGameId(), currentGeneration + step);
+            Generation gen = connection.getGeneration(User.getInstance().getId(), parent.getGameId(), currentGen + step);
 
             if (gen == null) {
+                System.out.println("Next Step: gen ist null");
                 return;
             }
 
@@ -214,7 +217,7 @@ public final class PlayBarController implements Initializable {
                 prev.setDisable(false);
             }
 
-            parent.getCanvas().setCurrentGeneration(currentGeneration + step);
+            parent.getCanvas().setCurrentGeneration(currentGen + step);
             parent.getCanvas().drawCells(gen.getConfig());
         }
 
@@ -223,22 +226,23 @@ public final class PlayBarController implements Initializable {
     @FXML
     private void previous(ActionEvent event) throws IOException {
 
-        int currentGeneration = parent.getCanvas().getCurrentGeneration();
+        int currentGen = parent.getCanvas().getCurrentGeneration();
         boolean isRunning = connection.gameRunning();
 
-        if (!isRunning && currentGeneration > 1) {
+        if (!isRunning && currentGen > 1) {
 
-            Generation gen = connection.getGeneration(User.getInstance().getId(), parent.getGameId(), currentGeneration - step);
+            Generation gen = connection.getGeneration(User.getInstance().getId(), parent.getGameId(), currentGen - step);
 
             if (gen == null) {
+                System.out.println("Prev Step: gen ist null");
                 return;
             }
 
-            if (currentGeneration <= 1) {
+            if (currentGen <= 1) {
                 prev.setDisable(true);
             }
 
-            parent.getCanvas().setCurrentGeneration(currentGeneration - step);
+            parent.getCanvas().setCurrentGeneration(currentGen - step);
             parent.getCanvas().drawCells(gen.getConfig());
         }
 

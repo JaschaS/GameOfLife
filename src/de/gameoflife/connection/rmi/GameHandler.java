@@ -570,7 +570,7 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
     }
 
     public boolean gameRunning() {
-        return canvasUpdateTask == null || canvasUpdateTask.isRunning();
+        return canvasUpdateTask != null && canvasUpdateTask.isRunning();
     }
 
     private void createUpdateTask(final int gameId, DoubleProperty sliderProperty, GameCanvas canvas) {

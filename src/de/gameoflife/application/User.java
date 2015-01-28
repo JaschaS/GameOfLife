@@ -4,7 +4,7 @@ package de.gameoflife.application;
  *
  * @author JScholz
  */
-public final class User {
+final class User {
     
     private static User instance;
     private final String username;
@@ -17,27 +17,27 @@ public final class User {
     
     }
     
-    public static void create( String username, int id ) {
+    static void create( String username, int id ) {
     
         instance = new User( username, id );
         
     }
     
-    public static void removeInstance() {
+    static void removeInstance() {
     
         instance = null;
         
     }
     
-    public static User getInstance() {
+    static User getInstance() {
         return instance;     
     }
 
-    public String getUsername() {
+    String getUsername() {
         return username;
     }
     
-    public int getId() {
+    int getId() {
         return id;
     }
     

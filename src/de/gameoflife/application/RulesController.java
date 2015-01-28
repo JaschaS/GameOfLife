@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package de.gameoflife.application;
 
 import java.io.IOException;
@@ -48,7 +43,6 @@ public abstract class RulesController implements Initializable {
     protected StackPane displayRules;
 
     protected final ObservableList<ListItems> list = FXCollections.observableArrayList();
-    //protected List<Evaluable> items;
     protected GameTab parent;
     protected Parent numericPattern;
     protected Parent rulePattern;
@@ -80,13 +74,7 @@ public abstract class RulesController implements Initializable {
 
     }
 
-    @FXML
-    public abstract void numericRule(ActionEvent event) throws IOException;
-
-    @FXML
-    public abstract void patternRule(ActionEvent event) throws IOException;
-
-    public void showNumericPattern() {
+    private void showNumericPattern() {
 
         numericPattern.toFront();
         numericPattern.setVisible(true);
@@ -95,7 +83,7 @@ public abstract class RulesController implements Initializable {
         rulePattern.setVisible(false);
     }
 
-    public void showRulePattern() {
+    private void showRulePattern() {
 
         numericPattern.toBack();
         numericPattern.setVisible(false);
@@ -113,6 +101,12 @@ public abstract class RulesController implements Initializable {
     }
 
     @FXML
+    protected abstract void numericRule(ActionEvent event) throws IOException;
+
+    @FXML
+    protected abstract void patternRule(ActionEvent event) throws IOException;
+
+    @FXML
     protected void up(ActionEvent event) throws IOException {
 
         int index = rules.getSelectionModel().getSelectedIndex();
@@ -125,10 +119,6 @@ public abstract class RulesController implements Initializable {
             list.add(index - 1, first);
             list.add(index, tmp);
 
-            //Evaluable firstItem = items.remove(index);
-            //Evaluable secondItem = items.remove(index - 1);
-            //items.add(index - 1, firstItem);
-            //items.add(index, secondItem);
             rules.getSelectionModel().select(index - 1);
 
         }
@@ -139,17 +129,13 @@ public abstract class RulesController implements Initializable {
     protected void down(ActionEvent event) throws IOException {
 
         int index = rules.getSelectionModel().getSelectedIndex();
-        //System.out.println(index + " " + list.size());
+
         if (index < list.size() - 1) {
 
             ListItems first = list.remove(index);
-            //Label tmp = list.remove(index + 1);
 
             list.add(index + 1, first);
-            //list.add(index, tmp);
 
-            //Evaluable firstItem = items.remove(index);
-            //items.add(index + 1, firstItem);
             rules.getSelectionModel().select(index + 1);
 
         }
@@ -193,7 +179,6 @@ public abstract class RulesController implements Initializable {
         if (items != null) {
 
             list.clear();
-            //this.items = items;
 
             Iterator<Evaluable> it = items.iterator();
 
@@ -215,12 +200,12 @@ public abstract class RulesController implements Initializable {
     }
 
     protected void showPattern(Evaluable e) {
-  
+
         if (e instanceof NumericRule) {
 
             showNumericPattern();
             try {
-                numericPatternController.setItems( ((NumericRule)e).getConfigurationAsArray() );
+                numericPatternController.setItems(((NumericRule) e).getConfigurationAsArray());
             } catch (IOException ex) {
                 Logger.getLogger(RulesController.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -236,7 +221,7 @@ public abstract class RulesController implements Initializable {
         }
     }
 
-    class ListItems {
+    public class ListItems {
 
         private final Evaluable rule;
         private final Label label;

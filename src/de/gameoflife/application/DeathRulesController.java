@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package de.gameoflife.application;
 
 import java.io.IOException;
@@ -21,7 +17,7 @@ import rmi.data.rules.RulePattern;
  * @author JScholz
  *
  */
-public class DeathRulesController extends RulesController implements Initializable {
+public final class DeathRulesController extends RulesController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {

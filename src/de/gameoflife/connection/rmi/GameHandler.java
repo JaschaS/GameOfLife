@@ -1,10 +1,5 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package de.gameoflife.connection.rmi;
 
+package de.gameoflife.connection.rmi;
 
 import java.net.MalformedURLException;
 import java.rmi.Naming;
@@ -27,66 +22,65 @@ import rmi.interfaces.IGameEngineServer;
 import rmi.interfaces.IRemoteRuleEditor;
 import rmi.interfaces.IRemoteUI_Server;
 
-
 /**
  *
  * @author Daniel
  */
-public class GameHandler implements IGameConfiguration, IConnectionRuleEditor, 
-        IConnectionGameEngine, IConnectionAnalysis, IRemoteUI_Server{
-    
+public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
+        IConnectionGameEngine, IConnectionAnalysis, IRemoteUI_Server {
+
     //Contains all games which the user has opened in his GUI. 
     //For performance it creates an index over the game ids.
-    private HashMap<Integer,GameUI> gameList = null;
-    
+    private HashMap<Integer, GameUI> gameList = null;
+
     //Handles the communication between the RuleEditor and UI.
     private IRemoteRuleEditor ruleEditor = null;
-    
+
     //Handles the communication between the Engine and UI.
     private IGameEngineServer gameEngine = null;
-    
+
     //Handles the communication between the Analyse and UI.
     private IAnalysis analysis = null;
-    
+
     private IRemoteUI_Server uiServer = null;
-    
+
     private static GameHandler instance;
-    
-    private GameHandler(){
+
+    private GameHandler() {
         gameList = new HashMap<>();
     }
-    
+
     public static void init() {
-    
-        if( instance == null ) {
-            
+
+        if (instance == null) {
+
             instance = new GameHandler();
-            
-            instance.establishConnection();  
-            
+
+            instance.establishConnection();
+
         }
-            
+
     }
-    
+
     public static GameHandler getInstance() {
-    
+
         return instance;
-        
+
     }
-    
+
     public static void close() {
-        
-        if( instance != null ) {
-            
+
+        if (instance != null) {
+
             instance.closeConnection();
-            
+
             instance = null;
-            
+
         }
-        
+
     }
-    
-    public boolean establishConnection(){
+
+    public boolean establishConnection() {
         //TODO fehler abfangen
         establishConnectionRuleEditor();
         establishConnectionGameEngine();
@@ -94,55 +88,56 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
         establishConnectionUIServer();
         return true;
     }
-    
-    public boolean closeConnection(){
+
+    public boolean closeConnection() {
         closeConnectionRuleEditor();
         closeConnectionGameEngine();
         closeConnectionAnalysis();
         closeConnectionUIServer();
         return true;
     }
-    
-    public GameUI getGame( int gameId ) {
-        
-        return gameList.get( gameId );
-        
+
+    public GameUI getGame(int gameId) {
+
+        return gameList.get(gameId);
+
     }
-    
-    public GameUI getGame( String gamename ) {
-    
+
+    public GameUI getGame(String gamename) {
+
         Iterator<GameUI> it = gameList.values().iterator();
-        
+
         GameUI game;
-        
-        while( it.hasNext() ) {
-        
+
+        while (it.hasNext()) {
+
             game = it.next();
-            
-            if( game.getGameName().equals(gamename) ) return game;
-            
+
+            if (game.getGameName().equals(gamename)) {
+                return game;
+            }
+
         }
-        
+
         return null;
-        
+
     }
 
     /*
      * <---------------------------RuleEditor part ---------------------------->
      */
-    
     @Override
     public boolean establishConnectionRuleEditor() {
         try {
             ruleEditor = (IRemoteRuleEditor) Naming.lookup("rmi://143.93.91.72/" + IRemoteRuleEditor.SERVICENAME);
         } catch (NotBoundException | MalformedURLException | RemoteException ex) {
-            
+
             Logger.getLogger(GameHandler.class.getName()).log(Level.SEVERE, null, ex);
             return false;
         }
         return true;
     }
-    
+
     @Override
     public boolean closeConnectionRuleEditor() {
         ruleEditor = null;
@@ -152,7 +147,7 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
     @Override
     public boolean generateNewGame(int userId, String name) {
         try {
-            if (ruleEditor != null){
+            if (ruleEditor != null) {
                 GameUI game = ruleEditor.generateNewGame(userId, name);
                 gameList.put(game.getGameId(), game);
             } else {
@@ -167,9 +162,9 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
         }
         return true;
     }
-    
+
     @Override
-    public int copyGame(final int gameId){
+    public int copyGame(final int gameId) {
         try {
             GameUI temp = ruleEditor.copyGame(gameList.get(gameId).getUserId(), gameId);
             gameList.put(temp.getGameId(), temp);
@@ -179,12 +174,12 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
             return -1;
         }
     }
-    
+
     @Override
     public boolean saveGame(final int gameId) {
         try {
             GameUI g = gameList.get(gameId);
-            System.out.println( g.getStartGen().length);
+            System.out.println(g.getStartGen().length);
             ruleEditor.saveGame(g);
             return true;
         } catch (RemoteException ex) {
@@ -192,10 +187,10 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
             return false;
         }
     }
-    
+
     public boolean saveGame(final GameUI g) {
         try {
-            System.out.println( g.getStartGen().length);
+            System.out.println(g.getStartGen().length);
             ruleEditor.saveGame(g);
             return true;
         } catch (RemoteException ex) {
@@ -207,7 +202,7 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
     @Override
     public boolean loadGame(final int userId, final int gameId) {
         try {
-            gameList.put(gameId, ruleEditor.getGameObject(userId,gameId));
+            gameList.put(gameId, ruleEditor.getGameObject(userId, gameId));
         } catch (RemoteException ex) {
             //TODO
             return false;
@@ -218,96 +213,104 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
     @Override
     public ObservableList<GameUI> getGameList(final int userId) {
         try {
-            
-            List<GameUI> games = ruleEditor.getUserGames(userId);
-            
-            Iterator<GameUI> it = games.iterator();
-            GameUI game;
-            
-            while(it.hasNext()) {
-            
-                game = it.next();
-                
-                gameList.put(game.getGameId(), game);
-            
-            }
-          
-            return FXCollections.observableArrayList( gameList.values());
-            /*
-            Iterator<GameUI> it = games.iterator();
-            
-            ObservableList<Game> data = FXCollections.observableArrayList();
-            GameUI game;
-            Game g;
-            
-            while(it.hasNext()){
-                
-                game = it.next();
-                
-                g = new Game( 
-                        game.getGameId(),
-                        game.getGameName(),
-                        game.getCreationDate().toString(),
-                        game.isHistoryAvailable(),
-                        game.isAnalysisAvailable()
-                );
 
-                data.add( g );
-                
+            List<GameUI> games = ruleEditor.getUserGames(userId);
+
+            Iterator<GameUI> it = games.iterator();
+            GameUI game;
+
+            while (it.hasNext()) {
+
+                game = it.next();
+
+                gameList.put(game.getGameId(), game);
+
             }
-            */
+
+            return FXCollections.observableArrayList(gameList.values());
+            /*
+             Iterator<GameUI> it = games.iterator();
+            
+             ObservableList<Game> data = FXCollections.observableArrayList();
+             GameUI game;
+             Game g;
+            
+             while(it.hasNext()){
+                
+             game = it.next();
+                
+             g = new Game( 
+             game.getGameId(),
+             game.getGameName(),
+             game.getCreationDate().toString(),
+             game.isHistoryAvailable(),
+             game.isAnalysisAvailable()
+             );
+
+             data.add( g );
+                
+             }
+             */
             //return data;
         } catch (RemoteException ex) {
             Logger.getLogger(GameHandler.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         }
     }
-    
+
     /*
      * <-----------------------------Engine part ------------------------------>
      */
-    
     @Override
-    public boolean establishConnectionGameEngine(){
-         try {
+    public boolean establishConnectionGameEngine() {
+        try {
             gameEngine = (IGameEngineServer) Naming.lookup(IGameEngineServer.FULLSERVICEIDENTIFIER);
         } catch (NotBoundException | MalformedURLException | RemoteException ex) {
-            
+
             Logger.getLogger(GameHandler.class.getName()).log(Level.SEVERE, null, ex);
             return false;
         }
         return true;
     }
-    
+
     @Override
-    public boolean closeConnectionGameEngine(){
-        gameEngine=null;
+    public boolean closeConnectionGameEngine() {
+        gameEngine = null;
         return true;
     }
-    
+
     @Override
-    public boolean startEngine(final int userID, final int gameID){
+    public boolean startEngine(final int userID, final int gameID) {
         try {
+            if (gameEngine == null) {
+                return false;
+            }
             return gameEngine.sendIDsToEngine(userID, gameID);
         } catch (RemoteException ex) {
             Logger.getLogger(GameHandler.class.getName()).log(Level.SEVERE, null, ex);
             return false;
         }
     }
-    
+
     @Override
-    public boolean stopEngine(final int userID, final int gameID){
-         try {
+    public boolean stopEngine(final int userID, final int gameID) {
+        try {
+            if (gameEngine == null) {
+                return false;
+            }
             return gameEngine.stop(userID, gameID);
         } catch (RemoteException ex) {
             Logger.getLogger(GameHandler.class.getName()).log(Level.SEVERE, null, ex);
             return false;
         }
     }
-    
+
     @Override
-    public Generation getGeneration(final int userID, final int gameID, final int genID){
+    public Generation getGeneration(final int userID, final int gameID, final int genID) {
         try {
+            if (gameEngine == null) {
+                return null;
+            }
             return gameEngine.getGeneration(userID, gameID, genID);
         } catch (RemoteException ex) {
             Logger.getLogger(GameHandler.class.getName()).log(Level.SEVERE, null, ex);
@@ -317,67 +320,72 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
     /*
      * <----------------------------Analysis part ----------------------------->
      */
-    
+
     @Override
-    public boolean establishConnectionAnalysis(){
+    public boolean establishConnectionAnalysis() {
         try {
             analysis = (IAnalysis) Naming.lookup(IAnalysis.RMI_ADDR);
         } catch (NotBoundException | MalformedURLException | RemoteException ex) {
-            
+
             Logger.getLogger(GameHandler.class.getName()).log(Level.SEVERE, null, ex);
             return false;
         }
         return true;
     }
-    
+
     @Override
-    public boolean closeConnectionAnalysis(){
-        analysis=null;
+    public boolean closeConnectionAnalysis() {
+        analysis = null;
         return true;
     }
-    
+
     @Override
-    public void startAnalysis(int gameID){
+    public void startAnalysis(int gameID) {
         try {
-            analysis.startAnalysis(gameList.get(gameID).getUserId(), gameID);
+            
+            if (analysis != null) {
+                analysis.startAnalysis(gameList.get(gameID).getUserId(), gameID);
+            }
+
         } catch (RemoteException ex) {
             Logger.getLogger(GameHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     /*
      * <-----------------------UI Server part ------------------------->
      */
-    
     public boolean establishConnectionUIServer() {
         try {
             uiServer = (IRemoteUI_Server) Naming.lookup("rmi://143.93.91.71:1098/RemoteUIBackendIntern");
         } catch (NotBoundException | MalformedURLException | RemoteException ex) {
-            
+
             Logger.getLogger(GameHandler.class.getName()).log(Level.SEVERE, null, ex);
             return false;
         }
         return true;
     }
-    
+
     public void closeConnectionUIServer() {
         uiServer = null;
     }
-    
+
     @Override
-    public Generation getNextGeneration(final int userId, final int gameId){
+    public Generation getNextGeneration(final int userId, final int gameId) {
         try {
+            if (uiServer == null) {
+                return null;
+            }
             return uiServer.getNextGeneration(userId, gameId);
         } catch (RemoteException ex) {
             Logger.getLogger(GameHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }
-    
+
     /*
      * <-----------------------GameConfiguration part ------------------------->
      */
-    
     @Override
     public void setGameName(final int gameId, String gameName) {
         gameList.get(gameId).setGameName(gameName);
@@ -402,97 +410,96 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
     public void setBorderOverflow(final int gameId, boolean borderOverflow) {
         gameList.get(gameId).setBorderOverflow(borderOverflow);
     }
-    
+
     @Override
-    public void setNowModified(final int gameId){
+    public void setNowModified(final int gameId) {
         gameList.get(gameId).setNowModified();
     }
-    
+
     @Override
-    public int getUserId(){
+    public int getUserId() {
         Collection<GameUI> collection = gameList.values();
         Iterator<GameUI> it = collection.iterator();
-        if (it.hasNext()){
+        if (it.hasNext()) {
             return it.next().getUserId();
         } else {
             return -1;
         }
     }
-    
+
     @Override
-    public Date getCreationDate(final int gameId){
+    public Date getCreationDate(final int gameId) {
         return gameList.get(gameId).getCreationDate();
     }
-    
+
     @Override
-    public Date getModifiedDate(final int gameId){
+    public Date getModifiedDate(final int gameId) {
         return gameList.get(gameId).getModifiedDate();
     }
-    
+
     @Override
-    public String getName(final int gameId){
+    public String getName(final int gameId) {
         return gameList.get(gameId).getGameName();
     }
-    
+
     @Override
-    public boolean[][] getStartGen(final int gameId){
+    public boolean[][] getStartGen(final int gameId) {
         return gameList.get(gameId).getStartGen();
     }
-    
+
     @Override
-    public List<Evaluable> getDeathRules(final int gameId){
+    public List<Evaluable> getDeathRules(final int gameId) {
         return gameList.get(gameId).getDeathRules();
     }
-    
+
     @Override
-    public List<Evaluable> getBirthRules(final int gameId){
+    public List<Evaluable> getBirthRules(final int gameId) {
         return gameList.get(gameId).getBirthRules();
     }
-    
+
     @Override
-    public boolean getBorderOverflow(final int gameId){
+    public boolean getBorderOverflow(final int gameId) {
         return gameList.get(gameId).getBorderOverflow();
     }
-    
+
     @Override
-    public boolean isHistoryAvailable(final int gameId){
+    public boolean isHistoryAvailable(final int gameId) {
         return gameList.get(gameId).isHistoryAvailable();
     }
-    
+
     @Override
-    public boolean isAnalysisAvailable(final int gameId){
+    public boolean isAnalysisAvailable(final int gameId) {
         return gameList.get(gameId).isAnalysisAvailable();
     }
-    
+
     @Override
-    public String toString(final int gameId){
+    public String toString(final int gameId) {
         return gameList.get(gameId).toString();
     }
-    
-     /*public static void main(String[] args) {
+
+    /*public static void main(String[] args) {
 
         
-                // 2. Save modified GameUI Object back
-                final RulePattern oneBirthrule = new RulePattern(new int[]{1,1,1,0,0,1,1,1});
-                final NumericRule oneDeathrule = new NumericRule();
-                oneDeathrule.setTriggerAtNumberOfNeighbours(5, true); //Death at 5 alive neigbours
-                oneDeathrule.setTriggerAtNumberOfNeighbours(4, true); //Death at 4 alive neigbours
-                game.setBorderOverflow(true);
-                game.addBirthRule(oneBirthrule);
-                game.addDeathRule(oneDeathrule);
-                final boolean[][] field = new boolean[][] {
-                                new boolean[]{false,false,false,false,false,false,false,false,false},
-                                new boolean[]{false,true ,true ,true ,false,true ,false,true ,false},
-                                new boolean[]{false,true ,false,false,false,true ,false,true ,false},
-                                new boolean[]{false,true ,true ,true ,false,true ,true ,true ,false},
-                                new boolean[]{false,true ,false,false,false,true ,false,true ,false},
-                                new boolean[]{false,true ,false,false,false,true ,false,true ,false},
-                                new boolean[]{false,false,false,false,false,false,false,false,false},
-                        };
-                game.setStartGen(field);
+     // 2. Save modified GameUI Object back
+     final RulePattern oneBirthrule = new RulePattern(new int[]{1,1,1,0,0,1,1,1});
+     final NumericRule oneDeathrule = new NumericRule();
+     oneDeathrule.setTriggerAtNumberOfNeighbours(5, true); //Death at 5 alive neigbours
+     oneDeathrule.setTriggerAtNumberOfNeighbours(4, true); //Death at 4 alive neigbours
+     game.setBorderOverflow(true);
+     game.addBirthRule(oneBirthrule);
+     game.addDeathRule(oneDeathrule);
+     final boolean[][] field = new boolean[][] {
+     new boolean[]{false,false,false,false,false,false,false,false,false},
+     new boolean[]{false,true ,true ,true ,false,true ,false,true ,false},
+     new boolean[]{false,true ,false,false,false,true ,false,true ,false},
+     new boolean[]{false,true ,true ,true ,false,true ,true ,true ,false},
+     new boolean[]{false,true ,false,false,false,true ,false,true ,false},
+     new boolean[]{false,true ,false,false,false,true ,false,true ,false},
+     new boolean[]{false,false,false,false,false,false,false,false,false},
+     };
+     game.setStartGen(field);
          
-    }*/
-
+     }*/
     @Override
     public String getAnalyseData(int userId, int gameId) throws RemoteException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.

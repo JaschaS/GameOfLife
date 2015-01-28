@@ -14,16 +14,16 @@ import javafx.scene.paint.Color;
  * @version 2014-12-11-1
  *
  */
-public class GameCanvas extends Group {
+public final class GameCanvas extends Group {
 
-    protected final Canvas grid;
-    protected final Canvas elements;
-    protected int cellSize;
-    protected int width;
-    protected int height;
-    protected boolean[][] generation;
-    protected Color cellColor;
-    protected int currentGeneration = 1;
+    private final Canvas grid;
+    private final Canvas elements;
+    private int cellSize;
+    private int width;
+    private int height;
+    private boolean[][] generation;
+    private Color cellColor;
+    private int currentGeneration = 1;
 
     public GameCanvas(int width, int height, int cellSize) {
 
@@ -146,7 +146,6 @@ public class GameCanvas extends Group {
                 gc.setStroke(Color.BLACK);
                 gc.strokeRect(x, y, cellSize, cellSize);
 
-                //cells.add(new Cell(x, y));
             }
 
         }
@@ -233,7 +232,7 @@ public class GameCanvas extends Group {
         return elements;
     }
 
-    protected class GameCanvasEraserClickListener implements EventHandler<MouseEvent> {
+    private class GameCanvasEraserClickListener implements EventHandler<MouseEvent> {
 
         @Override
         public void handle(MouseEvent event) {
@@ -281,7 +280,7 @@ public class GameCanvas extends Group {
 
     }
 
-    protected class GameCanvasDrawClickListener implements EventHandler<MouseEvent> {
+    private class GameCanvasDrawClickListener implements EventHandler<MouseEvent> {
 
         @Override
         public void handle(MouseEvent event) {
@@ -332,7 +331,7 @@ public class GameCanvas extends Group {
 
     }
 
-    protected class Cell {
+    private class Cell {
 
         private final int x;
         private final int y;

@@ -23,18 +23,16 @@ import queue.data.Generation;
  * FXML Controller class
  *
  * @author JScholz
- * 
- * TODO Bei Start Threshold hinzufügen
- * TODO Prev und next sprung groesse hinzufuegensmuster
- * TODO Stop currentgame
- * TODO Analyse anzeigen
- * TODO Farbe setzen
- * TODO Nur eine Numericrule?
- * 
- * Jar Datei schicken
- * Schnittstellen an Marx schicken?
+ *
+ * TODO Bei Start Threshold hinzufügen TODO Prev und next sprung groesse
+ * hinzufuegensmuster TODO Stop currentgame TODO Analyse anzeigen TODO Farbe
+ * setzen TODO Nur eine Numericrule?
+ *
+ * TODO Prev und Next deaktivieren, wenn Play laeuft
+ *
+ * Jar Datei schicken Schnittstellen an Marx schicken?
  */
-public class PlayBarController implements Initializable {
+public final class PlayBarController implements Initializable {
 
     @FXML
     private ToolBar playToolBar;
@@ -58,7 +56,6 @@ public class PlayBarController implements Initializable {
     private UpdateTask updateTask;
     private GameTab parent;
     private GameHandler connection;
-    //private int currentGeneration = 1;
     private boolean isRunning = false;
     private Thread updateThread;
     private NumberTextField cellSize;
@@ -109,8 +106,14 @@ public class PlayBarController implements Initializable {
         connection.stopEngine(User.getInstance().getId(), parent.getGameId());
     }
 
+    public void setParent(GameTab newParent) {
+
+        parent = newParent;
+
+    }
+
     @FXML
-    public void play(ActionEvent event) throws IOException, NotBoundException {
+    private void play(ActionEvent event) throws IOException, NotBoundException {
 
         //System.out.println(parent.getGame().getUserId() + " " + parent.getGameId());
         if (!isRunning) {
@@ -144,7 +147,7 @@ public class PlayBarController implements Initializable {
     }
 
     @FXML
-    public void stop(ActionEvent event) throws IOException {
+    private void stop(ActionEvent event) throws IOException {
 
         if (isRunning) {
             connection.stopEngine(User.getInstance().getId(), parent.getGameId());
@@ -166,16 +169,15 @@ public class PlayBarController implements Initializable {
     }
 
     @FXML
-    public void next(ActionEvent event) throws IOException {
+    private void next(ActionEvent event) throws IOException {
 
         //if (!isRunning) {
         //    isRunning = connection.startEngine(parent.getGame().getUserId(), parent.getGameId());
         //}
-
         if (updateTask == null || !updateTask.isRunning()) {
-            
+
             int currentGeneration = parent.getCanvas().getCurrentGeneration();
-            
+
             Generation gen = connection.getGeneration(User.getInstance().getId(), parent.getGameId(), ++currentGeneration);
             //Generation gen = connection.getNextGeneration(parent.getGame().getUserId(), parent.getGameId());
             if (gen == null) {
@@ -205,11 +207,11 @@ public class PlayBarController implements Initializable {
     }
 
     @FXML
-    public void previous(ActionEvent event) throws IOException {
+    private void previous(ActionEvent event) throws IOException {
 
         int currentGeneration = parent.getCanvas().getCurrentGeneration();
-        
-        if (currentGeneration > 1 && (updateTask == null || !updateTask.isRunning()) ) {
+
+        if (currentGeneration > 1 && (updateTask == null || !updateTask.isRunning())) {
 
             Generation gen = connection.getGeneration(User.getInstance().getId(), parent.getGameId(), --currentGeneration);
 
@@ -243,7 +245,7 @@ public class PlayBarController implements Initializable {
     }
 
     @FXML
-    public void startAnalysis(ActionEvent event) throws IOException {
+    private void startAnalysis(ActionEvent event) throws IOException {
 
         connection.startAnalysis(parent.getGameId());
 
@@ -257,7 +259,7 @@ public class PlayBarController implements Initializable {
     }
 
     @FXML
-    public void showAnalysis(ActionEvent event) throws IOException {
+    private void showAnalysis(ActionEvent event) throws IOException {
 
         //Wenn das gedrueckt wird, sollen der string ausgegeben werden...
         //Daten holen sys out
@@ -286,13 +288,7 @@ public class PlayBarController implements Initializable {
 
     }
 
-    public void setParent(GameTab newParent) {
-
-        parent = newParent;
-
-    }
-
-    protected class UpdateTask extends Task<int[][]> {
+    private class UpdateTask extends Task<int[][]> {
 
         private final GameHandler handler;
         private final int userId;
@@ -308,7 +304,7 @@ public class PlayBarController implements Initializable {
 
         @Override
         protected int[][] call() throws Exception {
-            
+
             Generation gen;
             long time;
             int currentGen = 0;
@@ -324,32 +320,30 @@ public class PlayBarController implements Initializable {
                 gen = handler.getNextGeneration(userId, gameId);
 
                 if (gen != null) {
-                    
+
                     ++currentGen;
-                    
+
                     //final int tmp = currentGen;
                     //++currentGeneration;
                     //System.out.println( gen.getGenID());
                     final CountDownLatch doneLatch = new CountDownLatch(1);
-                    
+
                     //final int[][] genConfig = gen.getConfig();
                     //final int id = gen.getGenID();
-                    
                     /*Platform.runLater( new Runnable() {
                         
-                        final int[][] config = genConfig;
+                     final int[][] config = genConfig;
 
-                        @Override
-                        public void run() {
-                            //System.out.println("start drawing " + id );
-                            canvas.drawCells(config);
-                            //System.out.println("Done drawing");
-                            doneLatch.countDown();
-                        }
-                    });*/
-                    
+                     @Override
+                     public void run() {
+                     //System.out.println("start drawing " + id );
+                     canvas.drawCells(config);
+                     //System.out.println("Done drawing");
+                     doneLatch.countDown();
+                     }
+                     });*/
                     final int tmp = currentGen;
-                    
+
                     Platform.runLater(new Runnable() {
 
                         final int value = tmp;
@@ -362,13 +356,12 @@ public class PlayBarController implements Initializable {
                                 canvas.drawCells(g.getConfig());
                                 canvas.setCurrentGeneration(value);
                                 doneLatch.countDown();
+                            } else {
+                                System.out.println("null");
                             }
-                            else System.out.println("null");
                         }
                     });
-                    
-                    
-                    
+
                     System.out.println("wait for update");
                     doneLatch.await();
                     //System.out.println(currentGeneration);

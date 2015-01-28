@@ -24,7 +24,7 @@ import rmi.data.GameUI;
  * @version 2014-12-11-1
  *
  */
-public class GameTab implements Initializable {
+public final class GameTab implements Initializable {
 
     @FXML
     private StackPane pane;
@@ -107,10 +107,6 @@ public class GameTab implements Initializable {
                 
                 GameHandler.getInstance().saveGame(game.getGameId());
 
-                //System.out.println("Save successful: " + successful);
-                //System.out.println(game);
-                //System.out.println(game.getBirthRules());
-                //System.out.println(game.getDeathRules());
                 showPlayBar();
 
             });

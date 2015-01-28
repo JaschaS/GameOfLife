@@ -1,7 +1,5 @@
 package de.gameoflife.connection.rmi;
 
-import de.gameoflife.application.Game;
-import java.util.List;
 import javafx.collections.ObservableList;
 import rmi.data.GameUI;
 

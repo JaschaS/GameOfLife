@@ -27,7 +27,7 @@ import rmi.data.GameUI;
  * @version 2014-12-11-1
  *
  */
-public class GameOfLife extends Application {
+public final class GameOfLife extends Application {
 
     public static ReadOnlyDoubleProperty stageWidthProperty;
     public static ReadOnlyDoubleProperty stageHeightProperty;
@@ -88,7 +88,7 @@ public class GameOfLife extends Application {
         System.exit(0);
     }
 
-    void showLoginScreen() {
+    public void showLoginScreen() {
 
         currentNodeToBack();
 
@@ -100,7 +100,7 @@ public class GameOfLife extends Application {
 
     }
 
-    void showGameScreen() {
+    public void showGameScreen() {
 
         currentNodeToBack();
 
@@ -110,7 +110,7 @@ public class GameOfLife extends Application {
 
     }
 
-    void newGame() {
+    public void newGame() {
 
         newGame.toFront();
         newGame.setVisible(true);
@@ -121,7 +121,7 @@ public class GameOfLife extends Application {
 
     }
 
-    void loadGame() {
+    public void loadGame() {
 
         loadGameController.setItems();
         loadGameController.clearSelection();
@@ -135,7 +135,7 @@ public class GameOfLife extends Application {
 
     }
 
-    void deleteGame() {
+    public void deleteGame() {
 
         deleteGameController.setItems();
         deleteGameController.clearSelection();
@@ -301,9 +301,6 @@ public class GameOfLife extends Application {
 
                 if (g != null) {
 
-                    //boolean successful = GameHandler.getInstance().loadGame(User.getInstance().getId(), g.getGameId());
-
-                    //System.out.println( successful );
                     if (!gamesceneController.gameIsOpen( g.getGameId() )) {
 
                         gamesceneController.createTab( g );

@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package de.gameoflife.application;
 
 import java.io.IOException;
@@ -23,17 +19,17 @@ import javafx.scene.layout.HBox;
  *
  * @author JScholz
  */
-public class NumericPatternController implements Initializable {
+public final class NumericPatternController implements Initializable {
 
     @FXML
-    protected HBox numericPattern;
+    private HBox numericPattern;
     @FXML
-    protected ListView listView;
+    private ListView listView;
 
-    protected final ObservableList<HBox> list = FXCollections.observableArrayList();
-    protected final ArrayList<NumericPatternItemController> itemController = new ArrayList<>();
-    protected boolean[] rules;
-    protected String text;
+    private final ObservableList<HBox> list = FXCollections.observableArrayList();
+    private final ArrayList<NumericPatternItemController> itemController = new ArrayList<>();
+    private boolean[] rules;
+    private String text;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {

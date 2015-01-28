@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package de.gameoflife.application;
 
 import de.gameoflife.connection.rmi.GameHandler;
@@ -27,7 +23,7 @@ import javafx.scene.paint.Color;
  *
  * @author JScholz
  */
-public class EditorBarController implements Initializable {
+public final class EditorBarController implements Initializable {
 
     @FXML
     private ToolBar editorToolBar;
@@ -117,15 +113,6 @@ public class EditorBarController implements Initializable {
 
         colorPicker.setValue(colorPicker.getCustomColors().get(2));
 
-        //colorPicker.setValue(new Color(81, 166, 78, 1));
-        //System.out.println(colorPicker.getCustomColors());
-        /*colorPicker.getCustomColors().addAll(
-         new Color(81, 166, 78, 1),
-         new Color(13, 107, 166, 1),
-         new Color(242, 171, 39, 1),
-         new Color(217, 62, 48, 1)
-         );
-         */
     }
 
     @FXML
@@ -145,18 +132,6 @@ public class EditorBarController implements Initializable {
     @FXML
     public void save(ActionEvent event) throws IOException {
 
-        /*final RulePattern oneBirthrule = new RulePattern(new boolean[]{true, true, true, false, false, true, true, true});
-         final NumericRule oneDeathrule = new NumericRule();
-         oneDeathrule.setTriggerAtNumberOfNeighbours(5, true); //Death at 5 alive neigbours
-         oneDeathrule.setTriggerAtNumberOfNeighbours(4, true); //Death at 4 alive neigbours
-
-         parent.getGame().addBirthRule(oneBirthrule);
-         parent.getGame().addDeathRule(oneDeathrule);
-         */
-        
-        //parent.getGame().setNowModified();
-        
-        //System.out.println( parent.getGame().getModifiedDate() );
         boolean successful = GameHandler.getInstance().saveGame(parent.getGame());
 
         System.out.println("Save successful: " + successful);

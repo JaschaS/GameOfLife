@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package de.gameoflife.application;
 
 import javafx.beans.value.ObservableValue;
@@ -16,9 +12,9 @@ import javafx.scene.input.KeyEvent;
  */
 public class NumberTextField extends TextField {
 
-    private NumberTextListener listener;
-    private final int min;
-    private final int max;
+    protected NumberTextListener listener;
+    protected final int min;
+    protected final int max;
 
     public NumberTextField(double width, int min, int max, String startValue) {
 
@@ -123,7 +119,7 @@ public class NumberTextField extends TextField {
 
     }
 
-    private boolean validate(String text) {
+    protected boolean validate(String text) {
 
         return text.equals("") || text.matches("[0-9]");
 

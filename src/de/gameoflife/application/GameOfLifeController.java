@@ -30,8 +30,8 @@ public final class GameOfLifeController {
     private TabPane tabPane;
     @FXML
     private Label username;
+    
     private GameOfLife application;
-
     private final HashMap<Integer, Tab> gameOpen = new HashMap<>();
 
     @FXML
@@ -105,11 +105,6 @@ public final class GameOfLifeController {
 
     public void createTab(GameUI game) throws IOException {
        
-        //System.out.println( game.getBirthRules() );
-        //System.out.println( game.getDeathRules() );
-        
-        //GameHandler.getInstance().saveGame(game.getGameId());
-
         FXMLLoader tabContentLoader = new FXMLLoader(getClass().getResource("FXML/Tab.fxml"));
 
         Parent tabContent = (Parent) tabContentLoader.load();
@@ -118,13 +113,9 @@ public final class GameOfLifeController {
         tabController.initCanvas(game);
         tabController.parentController(this);
         
-        //GameUI t = GameHandler.getInstance().getGameList(User.getInstance().getId()).get(0);
-        //System.out.println(t.isHistoryAvailable() + " name " + t.getGameName());
-        //System.out.println(game.isHistoryAvailable() + " name " + game.getGameName());
         if(game.isHistoryAvailable()) tabController.showPlayBar();
         else tabController.showEditorBar();
 
-        //Parent tabContent = FXMLLoader.load( getClass().getResource("FXML/NewGame.fxml") );
         Tab newTab = new Tab();
         newTab.setText(game.getGameName());
         

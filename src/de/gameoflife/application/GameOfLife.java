@@ -311,6 +311,7 @@ public class GameOfLife extends Application {
                         closeLoadScreen();
 
                     }
+                    else closeLoadScreen();
 
                 }
 

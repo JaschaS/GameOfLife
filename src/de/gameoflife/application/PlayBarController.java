@@ -25,12 +25,11 @@ import queue.data.Generation;
  * @author JScholz
  * 
  * TODO Bei Start Threshold hinzufügen
- * TODO Prev und next sprung groesse hinzufuegen
+ * TODO Prev und next sprung groesse hinzufuegensmuster
  * TODO Stop currentgame
  * TODO Analyse anzeigen
  * TODO Farbe setzen
  * TODO Nur eine Numericrule?
- * TODO Load nur ein Spiel von einer Spielid
  * 
  * Jar Datei schicken
  * Schnittstellen an Marx schicken?
@@ -253,7 +252,7 @@ public class PlayBarController implements Initializable {
         //Task starten wie in play
         //Task sollte ein boolean wert zurueckgeben, dann kann der show button wieder aktiviert werden mit setdisable(false)
         //Oder so Etwas: bindet den wert den der task zurueck gibt an den disable des buttons
-        //analysisShow.disableProperty().bind( task.valueProperty);
+        //analysisShow.disableProperty().bind( task.valueProperty);  //Daniel
         //Diesen JSon string vorher im Task speichern. Also eine Variable in PlaybarController definieren und im task zuweisen?
     }
 
@@ -267,11 +266,11 @@ public class PlayBarController implements Initializable {
         //Eventuell model setzen??
         // man erhält nur das Parent FXMLLoader.load( getClass().getResource("FXML/NewGame.fxml") ); aber kein Controller!
         /*
-         FXMLLoader analyseLoader = new FXMLLoader(getClass().getResource("FXML/Analyse.fxml")); 
+         FXMLLoader analyseLoader = new FXMLLoader(getClass().getResource("FXML/<Dein FXML Name>.fxml")); //Analyse
 
          Parent analyse = (Parent) analyseLoader.load();
         
-         AnalyseController controller = analyseLoader.getController();
+         <Dein FXML Controller> controller = analyseLoader.getController();
          controller.setDaten(String s);
         
         
@@ -309,7 +308,7 @@ public class PlayBarController implements Initializable {
 
         @Override
         protected int[][] call() throws Exception {
-
+            
             Generation gen;
             long time;
             int currentGen = 0;

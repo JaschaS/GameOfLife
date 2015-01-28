@@ -18,7 +18,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import org.json.JSONObject;
-import rmi.data.GameUI;
 
 /**
  *
@@ -189,10 +188,9 @@ public final class GameOfLife extends Application {
 
                 boolean successful = GameHandler.getInstance().generateNewGame(User.getInstance().getId(), newGameController.getGameName());
 
-                //System.out.println( successful );
                 if (successful) {
 
-                    gamesceneController.createTab(newGameController.getGameName());
+                    gamesceneController.createTab( newGameController.getGameName() );
 
                     closeNewGame();
 
@@ -202,8 +200,6 @@ public final class GameOfLife extends Application {
 
                 }
 
-                //gamesceneController.createTab( "asdfasdf" );
-                //closeNewGame();
             } catch (IOException ex) {
                 Logger.getLogger(GameOfLife.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -297,13 +293,13 @@ public final class GameOfLife extends Application {
 
             try {
 
-                GameUI g = loadGameController.getSelectedGame();
+                int gameId = loadGameController.getSelectedGameID();
+                
+                if (gameId != TableViewWindow.ERROR_VALUE) {
 
-                if (g != null) {
+                    if (!gamesceneController.gameIsOpen( gameId )) {
 
-                    if (!gamesceneController.gameIsOpen( g.getGameId() )) {
-
-                        gamesceneController.createTab( g );
+                        gamesceneController.createTab( gameId );
 
                         closeLoadScreen();
 
@@ -337,14 +333,13 @@ public final class GameOfLife extends Application {
 
         deleteGameController.okButtonEvent((ActionEvent deleteEvent) -> {
 
-            GameUI g = deleteGameController.getSelectedGame();
+            int gameId = deleteGameController.getSelectedGameID();
+            System.out.println(gameId);
+            if (gameId != TableViewWindow.ERROR_VALUE) {
 
-            if (g != null) {
+                if (gamesceneController.gameIsOpen(gameId)) gamesceneController.closeTab(gameId);
 
-                if (gamesceneController.gameIsOpen(g.getGameId())) gamesceneController.closeTab(g.getGameId());
-
-                    //deleteGameController.setItems();
-                queue.deleteGame(User.getInstance().getId(), g.getGameId());
+                queue.deleteGame(User.getInstance().getId(), gameId);
 
                 //TODO Spiel Tab offen und loeschen soll das Tab schließen.
                 closeDeleteScreen();

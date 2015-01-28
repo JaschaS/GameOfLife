@@ -14,8 +14,10 @@ import rmi.data.GameUI;
  *
  * @author JScholz
  */
-public class ListViewWindow {
+public class TableViewWindow {
 
+    public static final int ERROR_VALUE = -1;
+    
     @FXML
     protected TableView<GameUI> gameList;
     @FXML
@@ -53,9 +55,11 @@ public class ListViewWindow {
 
     }
 
-    public GameUI getSelectedGame() {
-
-        return gameList.getSelectionModel().getSelectedItem();
+    public int getSelectedGameID() {
+        
+        GameUI g = gameList.getSelectionModel().getSelectedItem();
+        
+        return g != null ? g.getGameId() : -1;
 
     }
 

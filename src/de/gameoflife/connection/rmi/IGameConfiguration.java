@@ -91,4 +91,6 @@ public interface IGameConfiguration {
     boolean isAnalysisAvailable(final int gameId);
     
     String toString(final int gameId);
+    
+    int getGameId(final String gameName);
 }

@@ -46,16 +46,20 @@ public final class DeathRulesController extends RulesController implements Initi
     @Override
     public void numericRule(ActionEvent event) throws IOException {
 
-        parent.getGame().addDeathRule(new NumericRule());
-        addItems(parent.getGame().getDeathRules());
+        int gameId = parent.getGameId();
+        
+        gameHandler.addDeathRule(gameId, new NumericRule());
+        addItems(gameHandler.getDeathRules(gameId));
 
     }
 
     @Override
     public void patternRule(ActionEvent event) throws IOException {
 
-        parent.getGame().addDeathRule(new RulePattern(new boolean[8]));
-        addItems(parent.getGame().getDeathRules());
+        int gameId = parent.getGameId();
+        
+        gameHandler.addDeathRule(gameId, new RulePattern(new boolean[8]));
+        addItems(gameHandler.getDeathRules(gameId));
 
     }
 

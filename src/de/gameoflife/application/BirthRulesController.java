@@ -47,16 +47,20 @@ public final class BirthRulesController extends RulesController implements Initi
     @Override
     public void numericRule(ActionEvent event) throws IOException {
 
-        parent.getGame().addBirthRule(new NumericRule());
-        addItems(parent.getGame().getBirthRules());
+        int gameId = parent.getGameId();
+        
+        gameHandler.addBirthRule(gameId, new NumericRule());
+        addItems(gameHandler.getBirthRules(gameId));
 
     }
 
     @Override
     public void patternRule(ActionEvent event) throws IOException {
         
-        parent.getGame().addBirthRule(new RulePattern(new boolean[8]));
-        addItems(parent.getGame().getBirthRules());
+        int gameId = parent.getGameId();
+        
+        gameHandler.addBirthRule(gameId, new RulePattern(new boolean[8]));
+        addItems(gameHandler.getBirthRules(gameId));
 
     }
 

@@ -13,7 +13,7 @@ import rmi.data.GameUI;
  *
  * @author JScholz
  */
-public class DeleteGameController extends ListViewWindow implements Initializable {
+public class DeleteGameController extends TableViewWindow implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {

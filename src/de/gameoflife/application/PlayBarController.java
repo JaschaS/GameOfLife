@@ -59,6 +59,8 @@ public final class PlayBarController implements Initializable {
     private boolean isRunning = false;
     private Thread updateThread;
     private NumberTextField cellSize;
+    private final GameHandler gameHandler = GameHandler.getInstance();
+    private int userId;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -87,6 +89,8 @@ public final class PlayBarController implements Initializable {
         stop.setDisable(true);
         prev.setDisable(true);
 
+        userId = User.getInstance().getId();
+        
     }
 
     public void editorActionEvent(EventHandler<ActionEvent> event) {
@@ -118,7 +122,9 @@ public final class PlayBarController implements Initializable {
         //System.out.println(parent.getGame().getUserId() + " " + parent.getGameId());
         if (!isRunning) {
 
-            isRunning = connection.startEngine(parent.getGame().getUserId(), parent.getGameId());
+
+            
+            isRunning = connection.startEngine( userId, parent.getGameId());
 
             play.setDisable(isRunning);
             stop.setDisable(!isRunning);
@@ -150,7 +156,7 @@ public final class PlayBarController implements Initializable {
     private void stop(ActionEvent event) throws IOException {
 
         if (isRunning) {
-            connection.stopEngine(User.getInstance().getId(), parent.getGameId());
+            connection.stopEngine( userId, parent.getGameId());
 
             if (updateTask != null && updateTask.isRunning()) {
                 updateTask.cancel();

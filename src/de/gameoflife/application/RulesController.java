@@ -1,5 +1,6 @@
 package de.gameoflife.application;
 
+import de.gameoflife.connection.rmi.GameHandler;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Iterator;
@@ -43,6 +44,7 @@ public abstract class RulesController implements Initializable {
     protected StackPane displayRules;
 
     protected final ObservableList<ListItems> list = FXCollections.observableArrayList();
+    protected final GameHandler gameHandler = GameHandler.getInstance();
     protected GameTab parent;
     protected Parent numericPattern;
     protected Parent rulePattern;

@@ -16,7 +16,7 @@ import rmi.data.GameUI;
  *
  * @author JScholz
  */
-public final class LoadGameController extends ListViewWindow implements Initializable {
+public final class LoadGameController extends TableViewWindow implements Initializable {
 
     @FXML
     private TableColumn<GameUI, Boolean> history;

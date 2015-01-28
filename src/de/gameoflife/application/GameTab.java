@@ -44,10 +44,11 @@ public final class GameTab implements Initializable {
     private Parent birthRulesParent;
     private EditorBarController editorController;
     private PlayBarController playController;
-    private GameUI game;
+    private int gameId;
     private GameOfLifeController parentcontroller;
     private DeathRulesController deathRulesController;
     private BirthRulesController birthRulesController;
+    private final GameHandler gameHandler = GameHandler.getInstance();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -105,7 +106,7 @@ public final class GameTab implements Initializable {
             editorController.setParent(this);
             editorController.doneActionEvent((ActionEvent event) -> {
                 
-                GameHandler.getInstance().saveGame(game.getGameId());
+                gameHandler.saveGame(gameId);
 
                 showPlayBar();
 
@@ -119,9 +120,9 @@ public final class GameTab implements Initializable {
             playController.setParent(this);
             playController.editorActionEvent((ActionEvent event) -> {
 
-                if (game.isHistoryAvailable()) {
+                if (gameHandler.isHistoryAvailable(gameId)) {
 
-                    int copyGameId = GameHandler.getInstance().copyGame(game.getGameId());
+                    int copyGameId = gameHandler.copyGame(gameId);
 
                     try {
                         parentcontroller.createTab(copyGameId);
@@ -146,17 +147,13 @@ public final class GameTab implements Initializable {
     }
     
     public int getGameId() {
-        return game.getGameId();
+        return gameId;
     }
 
     public GameCanvas getCanvas() {
         return canvas;
     }
 
-    public GameUI getGame() {
-        return game;
-    }
-    
     public void closing() {
         playController.close();
     }
@@ -169,11 +166,11 @@ public final class GameTab implements Initializable {
 
     public void setCanvasWidth(int width) {
 
-        boolean[][] generation = game.getStartGen();
+        boolean[][] generation = gameHandler.getStartGen(gameId);
 
         generation = new boolean[generation.length][width];
 
-        game.setStartGen(generation);
+        gameHandler.setStartGen(gameId, generation);
 
         canvas.setGridWidth(width);
 
@@ -181,11 +178,11 @@ public final class GameTab implements Initializable {
 
     public void setCanvasHeight(int height) {
 
-        boolean[][] generation = game.getStartGen();
+        boolean[][] generation = gameHandler.getStartGen(gameId);
 
         generation = new boolean[height][generation[0].length];
 
-        game.setStartGen(generation);
+        gameHandler.setStartGen(gameId, generation);
 
         canvas.setGridHeight(height);
 
@@ -211,23 +208,25 @@ public final class GameTab implements Initializable {
         editorBar.setVisible(true);
     }
 
-    public void initCanvas(GameUI game) {
+    public void initCanvas(int gameId) {
 
-        this.game = game;
+        this.gameId = gameId;
 
-        editorController.setBorderOverflow(game.getBorderOverflow());
-        editorController.setCellHeight(game.getStartGen().length);
-        editorController.setCellWidth(game.getStartGen()[0].length);
+        boolean[][] startGeneration = gameHandler.getStartGen(gameId);
+        
+        editorController.setBorderOverflow(gameHandler.getBorderOverflow(gameId));
+        editorController.setCellHeight(startGeneration.length);
+        editorController.setCellWidth(startGeneration[0].length);
 
         //3, 3, 20
         canvas = new GameCanvas(
-                game.getStartGen()[0].length,
-                game.getStartGen().length,
+                startGeneration[0].length,
+                startGeneration.length,
                 20
         );
 
         canvas.drawGrid();
-        canvas.setGeneration(game.getStartGen());
+        canvas.setGeneration(startGeneration);
 
         content.setCenter(canvas);
 
@@ -235,7 +234,7 @@ public final class GameTab implements Initializable {
 
     public void showDeathRules() {
 
-        deathRulesController.addItems(game.getDeathRules());
+        deathRulesController.addItems(gameHandler.getDeathRules(gameId));
 
         tabContent.toBack();
         tabContent.setDisable(true);
@@ -247,7 +246,7 @@ public final class GameTab implements Initializable {
 
     public void showBirthRules() {
 
-        birthRulesController.addItems(game.getBirthRules());
+        birthRulesController.addItems(gameHandler.getBirthRules(gameId));
 
         tabContent.toBack();
         tabContent.setDisable(true);

@@ -1,4 +1,3 @@
-
 package de.gameoflife.connection.rmi;
 
 import java.net.MalformedURLException;
@@ -178,20 +177,7 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
     @Override
     public boolean saveGame(final int gameId) {
         try {
-            GameUI g = gameList.get(gameId);
-            System.out.println(g.getStartGen().length);
-            ruleEditor.saveGame(g);
-            return true;
-        } catch (RemoteException ex) {
-            //TODO
-            return false;
-        }
-    }
-
-    public boolean saveGame(final GameUI g) {
-        try {
-            System.out.println(g.getStartGen().length);
-            ruleEditor.saveGame(g);
+            ruleEditor.saveGame(gameList.get(gameId));
             return true;
         } catch (RemoteException ex) {
             //TODO
@@ -228,30 +214,7 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
             }
 
             return FXCollections.observableArrayList(gameList.values());
-            /*
-             Iterator<GameUI> it = games.iterator();
             
-             ObservableList<Game> data = FXCollections.observableArrayList();
-             GameUI game;
-             Game g;
-            
-             while(it.hasNext()){
-                
-             game = it.next();
-                
-             g = new Game( 
-             game.getGameId(),
-             game.getGameName(),
-             game.getCreationDate().toString(),
-             game.isHistoryAvailable(),
-             game.isAnalysisAvailable()
-             );
-
-             data.add( g );
-                
-             }
-             */
-            //return data;
         } catch (RemoteException ex) {
             Logger.getLogger(GameHandler.class.getName()).log(Level.SEVERE, null, ex);
             return null;
@@ -342,7 +305,7 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
     @Override
     public void startAnalysis(int gameID) {
         try {
-            
+
             if (analysis != null) {
                 analysis.startAnalysis(gameList.get(gameID).getUserId(), gameID);
             }
@@ -475,6 +438,26 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
     @Override
     public String toString(final int gameId) {
         return gameList.get(gameId).toString();
+    }
+
+    @Override
+    public int getGameId(final String gameName) {
+
+        Iterator<GameUI> it = gameList.values().iterator();
+
+        GameUI game;
+
+        while (it.hasNext()) {
+
+            game = it.next();
+
+            if (game.getGameName().equals(gameName)) {
+                return game.getGameId();
+            }
+
+        }
+
+        return -1;
     }
 
     /*public static void main(String[] args) {

@@ -40,6 +40,7 @@ public final class EditorBarController implements Initializable {
     private NumberTextField cellSize;
     private boolean userDraws = false;
     private boolean userErase = false;
+    private final GameHandler gameHandler = GameHandler.getInstance();
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -77,7 +78,8 @@ public final class EditorBarController implements Initializable {
         editorToolBar.getItems().add(8, cellSize);
 
         borderOverflow.selectedProperty().addListener((ObservableValue<? extends Boolean> ov, Boolean oldVal, Boolean newVal) -> {
-            parent.getGame().setBorderOverflow(newVal);
+            
+            gameHandler.setBorderOverflow( parent.getGameId(), newVal);
 
             GameHandler.getInstance().saveGame(parent.getGameId());
         });
@@ -132,7 +134,7 @@ public final class EditorBarController implements Initializable {
     @FXML
     public void save(ActionEvent event) throws IOException {
 
-        boolean successful = GameHandler.getInstance().saveGame(parent.getGame());
+        boolean successful = gameHandler.saveGame(parent.getGameId());
 
         System.out.println("Save successful: " + successful);
     }

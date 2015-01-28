@@ -21,8 +21,7 @@ import rmi.data.GameUI;
  *
  * @author JScholz
  *
- * @version 2014-12-11-1
- * TDOO Stop alle spiele, wenn sich ausgeloggt wird!
+ * @version 2014-12-11-1 TDOO Stop alle spiele, wenn sich ausgeloggt wird!
  */
 public final class GameOfLifeController {
 
@@ -30,7 +29,7 @@ public final class GameOfLifeController {
     private TabPane tabPane;
     @FXML
     private Label username;
-    
+
     private GameOfLife application;
     private final HashMap<Integer, Tab> gameOpen = new HashMap<>();
 
@@ -66,20 +65,15 @@ public final class GameOfLifeController {
     public void setUsername(String name) {
         username.setText(name);
     }
+    /*
+     public void createTab(int gameId) throws IOException {
 
-    public void createTab(int gameId) throws IOException {
+     createTab(GameHandler.getInstance().getGame(gameId));
 
-        createTab(GameHandler.getInstance().getGame(gameId));
+     }
 
-    }
 
-    public void createTab(String gamename) throws IOException {
-
-        GameUI game = GameHandler.getInstance().getGame(gamename);
-
-        createTab(game);
-
-    }
+     */
 
     public void closeTab(int gameId) {
 
@@ -103,27 +97,40 @@ public final class GameOfLifeController {
 
     }
 
-    public void createTab(GameUI game) throws IOException {
-       
+    public void createTab(String gamename) throws IOException {
+
+        int gameId = GameHandler.getInstance().getGameId(gamename);
+        
+        if( gameId != -1) createTab(gameId);
+
+    }
+
+    public void createTab(int gameId) throws IOException {
+
+        GameHandler gameHandler = GameHandler.getInstance();
+
         FXMLLoader tabContentLoader = new FXMLLoader(getClass().getResource("FXML/Tab.fxml"));
 
         Parent tabContent = (Parent) tabContentLoader.load();
 
         GameTab tabController = tabContentLoader.getController();
-        tabController.initCanvas(game);
+        tabController.initCanvas(gameId);
         tabController.parentController(this);
-        
-        if(game.isHistoryAvailable()) tabController.showPlayBar();
-        else tabController.showEditorBar();
+
+        if (gameHandler.isHistoryAvailable(gameId)) {
+            tabController.showPlayBar();
+        } else {
+            tabController.showEditorBar();
+        }
 
         Tab newTab = new Tab();
-        newTab.setText(game.getGameName());
-        
+        newTab.setText(gameHandler.getName(gameId));
+
         newTab.setOnCloseRequest((Event event) -> {
             tabController.closing();
-            gameOpen.remove(game.getGameId());
+            gameOpen.remove(gameId);
         });
-        
+
         AnchorPane pane = new AnchorPane();
         pane.minHeight(0.0);
         pane.minHeight(0.0);
@@ -144,7 +151,7 @@ public final class GameOfLifeController {
         SingleSelectionModel<Tab> selectionModel = tabPane.getSelectionModel();
         selectionModel.select(newTab);
 
-        gameOpen.put(game.getGameId(), newTab);
+        gameOpen.put(gameId, newTab);
 
     }
 

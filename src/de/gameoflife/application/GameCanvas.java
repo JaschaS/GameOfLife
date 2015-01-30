@@ -16,8 +16,6 @@ import javafx.scene.paint.Color;
  *
  * @version 2014-12-11-1
  *
- * TODO GameCanvas draw ueberarbeiten
- * 
  */
 public final class GameCanvas extends Group {
 
@@ -28,8 +26,7 @@ public final class GameCanvas extends Group {
     private int height;
     private boolean[][] generation;
     private Color cellColor;
-    //private int currentGeneration = 1;
-    private SimpleIntegerProperty currentGeneration;
+    private final SimpleIntegerProperty currentGeneration;
 
     public GameCanvas(int width, int height, int cellSize) {
 
@@ -50,7 +47,7 @@ public final class GameCanvas extends Group {
         getChildren().addAll(grid, elements);
 
         generation = new boolean[height][width];
-        
+
         currentGeneration = new SimpleIntegerProperty(1);
 
     }
@@ -76,23 +73,23 @@ public final class GameCanvas extends Group {
         setOnMouseClicked(null);
         setOnMouseDragged(null);
     }
-    
+
     public void setCurrentGeneration(int newGeneration) {
         currentGeneration.set(newGeneration);
     }
-    
+
     public int getCurrentGeneration() {
         return currentGeneration.getValue();
     }
-    
+
     public void setCurrentGeneration(ChangeListener listener) {
         currentGeneration.addListener(listener);
     }
-    
+
     public IntegerProperty getCurrentGame() {
         return currentGeneration;
     }
-    
+
     public void drawCells(int[][] grid) {
 
         GraphicsContext gc = elements.getGraphicsContext2D();
@@ -248,102 +245,95 @@ public final class GameCanvas extends Group {
         return elements;
     }
 
-    private class GameCanvasEraserClickListener implements EventHandler<MouseEvent> {
+    private class GameCanvasEraserClickListener extends GameCanvasListener {
+
+        public GameCanvasEraserClickListener() {
+            super(true);
+        }
+        
+        @Override
+        public void handle(MouseEvent event) {
+            super.handle(event);
+        }
+
+        @Override
+        protected void draw(int x, int y) {
+            GraphicsContext gc = elements.getGraphicsContext2D();
+            gc.clearRect(x, y, cellSize, cellSize);
+        }
+
+    }
+
+    private class GameCanvasDrawClickListener extends GameCanvasListener {
+
+        public GameCanvasDrawClickListener() {
+            super(false);
+        }
 
         @Override
         public void handle(MouseEvent event) {
+            super.handle(event);
+        }
 
-            boolean found = false;
-            int i = 0;
-            int j = 0;
-            int x;
-            int y;
+        @Override
+        protected void draw(int x, int y) {
 
-            while (i < generation.length && !found) {
+            GraphicsContext gc = elements.getGraphicsContext2D();
 
-                y = i * cellSize;
-
-                while (j < generation[i].length && !found) {
-
-                    x = j * cellSize;
-
-                    if (x <= (int) event.getX() && (int) event.getX() < (x + cellSize)
-                            && y <= (int) event.getY() && (int) event.getY() < (y + cellSize)) {
-
-                        if (generation[i][j] == true) {
-
-                            GraphicsContext gc = elements.getGraphicsContext2D();
-                            gc.clearRect(x, y, cellSize, cellSize);
-
-                            generation[i][j] = false;
-
-                        }
-
-                        found = true;
-
-                    }
-
-                    ++j;
-
-                }
-
-                j = 0;
-                ++i;
-
-            }
+            gc.setFill(cellColor);
+            gc.setStroke(cellColor);
+            gc.fillRect(x, y, cellSize, cellSize);
 
         }
 
     }
 
-    private class GameCanvasDrawClickListener implements EventHandler<MouseEvent> {
+    private abstract class GameCanvasListener implements EventHandler<MouseEvent> {
 
+        protected final boolean check;
+
+        public GameCanvasListener(boolean check) {
+            this.check = check;
+        }
+        
         @Override
         public void handle(MouseEvent event) {
 
-            boolean found = false;
-            int i = 0;
-            int j = 0;
-            int x;
-            int y;
+            int clickX = (int) event.getX();
+            int clickY = (int) event.getY();
+            int i = clickY / cellSize;
+            int j = clickX / cellSize;
+            int minX = clickX / cellSize * cellSize;
+            int minY = clickY / cellSize * cellSize;
+            int maxX = clickX / cellSize * cellSize + cellSize;
+            int maxY = clickY / cellSize * cellSize + cellSize;
 
-            while (i < generation.length && !found) {
+            //in Y drinne
+            if (minY <= clickY && clickY < maxY && valid(i, j)) {
 
-                y = i * cellSize;
+                //in X drinne
+                if (minX <= clickX && clickX < maxX && generation[i][j] == check) {
 
-                while (j < generation[i].length && !found) {
+                    draw(minX, minY);
 
-                    x = j * cellSize;
-
-                    if (x <= (int) event.getX() && (int) event.getX() < (x + cellSize)
-                            && y <= (int) event.getY() && (int) event.getY() < (y + cellSize)) {
-
-                        if (generation[i][j] == false) {
-
-                            GraphicsContext gc = elements.getGraphicsContext2D();
-
-                            gc.setFill(cellColor);
-                            gc.setStroke(cellColor);
-                            gc.fillRect(x, y, cellSize, cellSize);
-
-                            generation[i][j] = true;
-
-                        }
-
-                        found = true;
-
-                    }
-
-                    ++j;
+                    generation[i][j] = !check;
 
                 }
-
-                j = 0;
-                ++i;
 
             }
 
         }
+
+        protected boolean valid(int i, int j) {
+
+            boolean iValid = i >= 0 && i < generation.length;
+            boolean jValid = j >= 0 && j < generation[0].length;
+
+            return iValid && jValid;
+
+        }
+
+        protected abstract void draw(int x, int y);
 
     }
 

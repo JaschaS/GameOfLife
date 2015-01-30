@@ -104,7 +104,12 @@ public final class GameTab implements Initializable {
             editorController = editorBarLoader.getController();
             editorController.setParent(this);
             editorController.doneActionEvent((ActionEvent event) -> {
-                
+
+                //Wenn nicht gezeichnet worden ist, schauen ob geloescht wird!
+                if (!editorController.isDrawing()) {
+                    editorController.isErasing();
+                }
+
                 gameHandler.saveGame(gameId);
 
                 showPlayBar();
@@ -144,7 +149,7 @@ public final class GameTab implements Initializable {
         }
 
     }
-    
+
     public int getGameId() {
         return gameId;
     }
@@ -212,7 +217,7 @@ public final class GameTab implements Initializable {
         this.gameId = gameId;
 
         boolean[][] startGeneration = gameHandler.getStartGen(gameId);
-        
+
         editorController.setBorderOverflow(gameHandler.getBorderOverflow(gameId));
         editorController.setCellHeight(startGeneration.length);
         editorController.setCellWidth(startGeneration[0].length);
@@ -230,7 +235,7 @@ public final class GameTab implements Initializable {
         content.setCenter(canvas);
 
         playController.bindPropertyToCurrentGen(canvas.getCurrentGame().asString());
-        
+
     }
 
     public void showDeathRules() {

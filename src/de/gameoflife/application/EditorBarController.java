@@ -1,4 +1,3 @@
-
 package de.gameoflife.application;
 
 import de.gameoflife.connection.rmi.GameHandler;
@@ -15,6 +14,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ColorPicker;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.ToolBar;
 import javafx.scene.paint.Color;
 
@@ -40,10 +41,59 @@ public final class EditorBarController implements Initializable {
     private NumberTextField cellSize;
     private boolean userDraws = false;
     private boolean userErase = false;
+    private ToggleGroup drawGroup;
+    private ToggleButton draw;
+    private ToggleButton erase;
     private final GameHandler gameHandler = GameHandler.getInstance();
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+
+        drawGroup = new ToggleGroup();
+
+        draw = new ToggleButton("Draw");
+        draw.setToggleGroup(drawGroup);
+        draw.setOnAction((ActionEvent event) -> {
+
+            if (!userDraws) {
+
+                if (userErase) {
+                    parent.getCanvas().removeListener();
+                    userErase = false;
+                }
+
+                parent.getCanvas().addDrawListener();
+                userDraws = true;
+
+            } else {
+                parent.getCanvas().removeListener();
+                userDraws = false;
+            }
+
+        });
+
+        erase = new ToggleButton("Erase");
+        erase.setToggleGroup(drawGroup);
+        erase.setOnAction((ActionEvent event) -> {
+
+            if (!userErase) {
+
+                if (userDraws) {
+                    parent.getCanvas().removeListener();
+                    userDraws = false;
+                }
+
+                parent.getCanvas().addEraserListener();
+                userErase = true;
+            } else {
+                parent.getCanvas().removeListener();
+                userErase = false;
+            }
+
+        });
+
+        editorToolBar.getItems().add(12, draw);
+        editorToolBar.getItems().add(13, erase);
 
         cellWidth = new NumberTextField(100, 3, 100, "3");
         cellHeight = new NumberTextField(100, 3, 100, "3");
@@ -51,6 +101,11 @@ public final class EditorBarController implements Initializable {
 
         cellWidth.setListener((int value) -> {
             if (parent != null) {
+
+                //Wenn nicht gezeichnet worden ist, schauen ob geloescht wird!
+                if (!isDrawing()) {
+                    isErasing();
+                }
 
                 parent.setCanvasWidth(value);
 
@@ -60,6 +115,11 @@ public final class EditorBarController implements Initializable {
         cellHeight.setListener((int value) -> {
             if (parent != null) {
 
+                //Wenn nicht gezeichnet worden ist, schauen ob geloescht wird!
+                if (!isDrawing()) {
+                    isErasing();
+                }
+
                 parent.setCanvasHeight(value);
 
             }
@@ -67,6 +127,11 @@ public final class EditorBarController implements Initializable {
 
         cellSize.setListener((int value) -> {
             if (parent != null) {
+
+                //Wenn nicht gezeichnet worden ist, schauen ob geloescht wird!
+                if (!isDrawing()) {
+                    isErasing();
+                }
 
                 parent.setCanvasCellSize(value);
 
@@ -78,13 +143,23 @@ public final class EditorBarController implements Initializable {
         editorToolBar.getItems().add(8, cellSize);
 
         borderOverflow.selectedProperty().addListener((ObservableValue<? extends Boolean> ov, Boolean oldVal, Boolean newVal) -> {
-            
-            gameHandler.setBorderOverflow( parent.getGameId(), newVal);
+
+            //Wenn nicht gezeichnet worden ist, schauen ob geloescht wird!
+            if (!isDrawing()) {
+                isErasing();
+            }
+
+            gameHandler.setBorderOverflow(parent.getGameId(), newVal);
 
             GameHandler.getInstance().saveGame(parent.getGameId());
         });
 
         colorPicker.setOnAction((ActionEvent event) -> {
+
+            //Wenn nicht gezeichnet worden ist, schauen ob geloescht wird!
+            if (!isDrawing()) {
+                isErasing();
+            }
 
             parent.setCellColor(colorPicker.getValue());
 
@@ -120,12 +195,22 @@ public final class EditorBarController implements Initializable {
     @FXML
     public void deathRules(ActionEvent event) throws IOException {
 
+        //Wenn nicht gezeichnet worden ist, schauen ob geloescht wird!
+        if (!isDrawing()) {
+            isErasing();
+        }
+
         parent.showDeathRules();
 
     }
 
     @FXML
     public void birthRules(ActionEvent event) throws IOException {
+
+        //Wenn nicht gezeichnet worden ist, schauen ob geloescht wird!
+        if (!isDrawing()) {
+            isErasing();
+        }
 
         parent.showBirthRules();
 
@@ -134,51 +219,23 @@ public final class EditorBarController implements Initializable {
     @FXML
     public void save(ActionEvent event) throws IOException {
 
+        //Wenn nicht gezeichnet worden ist, schauen ob geloescht wird!
+        if (!isDrawing()) {
+            isErasing();
+        }
+
         boolean successful = gameHandler.saveGame(parent.getGameId());
 
         System.out.println("Save successful: " + successful);
     }
 
     @FXML
-    public void draw(ActionEvent event) throws IOException {
-
-        if (!userDraws) {
-
-            if (userErase) {
-                parent.getCanvas().removeListener();
-                userErase = false;
-            }
-
-            parent.getCanvas().addDrawListener();
-            userDraws = true;
-        } else {
-            parent.getCanvas().removeListener();
-            userDraws = false;
-        }
-
-    }
-
-    @FXML
-    public void erase(ActionEvent event) throws IOException {
-
-        if (!userErase) {
-
-            if (userDraws) {
-                parent.getCanvas().removeListener();
-                userDraws = false;
-            }
-
-            parent.getCanvas().addEraserListener();
-            userErase = true;
-        } else {
-            parent.getCanvas().removeListener();
-            userErase = false;
-        }
-
-    }
-
-    @FXML
     public void clear(ActionEvent event) throws IOException {
+
+        //Wenn nicht gezeichnet worden ist, schauen ob geloescht wird!
+        if (!isDrawing()) {
+            isErasing();
+        }
 
         GameCanvas canvas = parent.getCanvas();
 
@@ -198,15 +255,51 @@ public final class EditorBarController implements Initializable {
     }
 
     public void setBorderOverflow(boolean overflow) {
+
         borderOverflow.setSelected(overflow);
+
     }
 
     public void setCellWidth(int width) {
+
         cellWidth.setText(width + "");
     }
 
     public void setCellHeight(int height) {
+
         cellHeight.setText(height + "");
+    }
+
+    public boolean isDrawing() {
+
+        if (userDraws) {
+
+            parent.getCanvas().removeListener();
+            userDraws = false;
+
+            draw.setSelected(false);
+
+            return true;
+
+        }
+
+        return false;
+    }
+
+    public boolean isErasing() {
+
+        if (userErase) {
+
+            parent.getCanvas().removeListener();
+            userErase = false;
+
+            erase.setSelected(false);
+
+            return true;
+        }
+
+        return false;
+
     }
 
     private void setCanvasWidth(int width) {

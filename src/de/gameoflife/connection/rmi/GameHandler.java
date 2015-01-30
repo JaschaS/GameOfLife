@@ -685,6 +685,6 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
      }*/
     @Override
     public String getAnalyseData(int userId, int gameId) throws RemoteException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return uiServer.getAnalyseData(userId, gameId);
     }
 }

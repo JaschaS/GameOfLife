@@ -69,7 +69,7 @@ public final class GameOfLife extends Application {
 
         currentNodeInFront = loginMask;
 
-        Scene scene = new Scene(stackpane, 600, 400);
+        Scene scene = new Scene(stackpane, 1280, 720);
 
         primaryStage.centerOnScreen();
         primaryStage.setTitle("Game of Life");

@@ -44,10 +44,10 @@ public class RabbitMQConnection {
 
     public void closeConnection() {
         try {
-            if (channel != null) {
+            if (channel != null && channel.isOpen()) {
                 channel.close();
             }
-            if (con != null) {
+            if (con != null && con.isOpen()) {
                 con.close();
                 
             }

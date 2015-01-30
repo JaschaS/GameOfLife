@@ -22,7 +22,8 @@
         <Separator orientation="VERTICAL" />
       <Label text="Analysis:" />
       <Button fx:id="analysisStart" mnemonicParsing="false" onAction="#startAnalysis" text="Start" />
-      <Button fx:id="analysisShow" mnemonicParsing="false" onAction="#showAnalysis" text="Show" />
+      <Button fx:id="analysisStop" mnemonicParsing="false" onAction="#stopAnalysis" disable="true"   text="Stop" />
+      <Button fx:id="analysisShow" mnemonicParsing="false" onAction="#showAnalysis" disable="true"  text="Show" />
       <Separator orientation="VERTICAL" />
         <Button fx:id="editor" mnemonicParsing="false" text="Editor" />
       <Label text="Cellsize:" />

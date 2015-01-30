@@ -5,7 +5,11 @@ import java.io.IOException;
 import java.net.URL;
 import java.rmi.NotBoundException;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
+import javafx.beans.value.ObservableValueBase;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -59,6 +63,8 @@ public final class PlayBarController implements Initializable {
     @FXML
     private Button next;
     @FXML
+    private Button analysisStop;
+    @FXML
     private Label currentGeneration;
     @FXML
     private ColorPicker colorPicker;
@@ -70,8 +76,11 @@ public final class PlayBarController implements Initializable {
     private int userId;
     private int step = 1;
     private NumberTextField stepSize;
-    private Task<Void> task;
+    private Task<Void> analyseTask;
     private String analyseData;
+    private Parent analyse;
+    private ShowAnalysisController analyseController;
+    private Stage analyseStage;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -85,9 +94,7 @@ public final class PlayBarController implements Initializable {
             }
         });
 
-        playToolBar.getItems().add(playToolBar.getItems().size()-1, cellSize);
-
-        analysisShow.setDisable(true);
+        playToolBar.getItems().add(playToolBar.getItems().size() - 1, cellSize);
 
         speedSlider.valueProperty().addListener((ObservableValue<? extends Number> ov, Number oldValue, Number newValue) -> {
 
@@ -139,6 +146,22 @@ public final class PlayBarController implements Initializable {
 
         colorPicker.setValue(colorPicker.getCustomColors().get(2));
 
+        try {
+            FXMLLoader analyseLoader = new FXMLLoader(getClass().getResource("FXML/ShowAnalysis.fxml")); //Analyse
+
+            analyse = (Parent) analyseLoader.load();
+            analyseController = analyseLoader.getController();
+
+            Scene analyseScene = new Scene(analyse);
+            analyseStage = new Stage();
+            analyseStage.setScene(analyseScene);
+            analyseStage.centerOnScreen();
+            analyseStage.setTitle("Analysis Data");
+
+        } catch (IOException ex) {
+            Logger.getLogger(PlayBarController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
     }
 
     public void editorActionEvent(EventHandler<ActionEvent> event) {
@@ -152,7 +175,11 @@ public final class PlayBarController implements Initializable {
      */
     public void close() {
         connection.stopCurrentRunningGame();
-        //TODO Analyse Task cancel!
+
+        if (analyseTask != null && analyseTask.isRunning()) {
+            analyseTask.cancel();
+        }
+
     }
 
     public void setParent(GameTab newParent) {
@@ -160,7 +187,7 @@ public final class PlayBarController implements Initializable {
         parent = newParent;
 
     }
-    
+
     public void bindPropertyToCurrentGen(ObservableValue property) {
         currentGeneration.textProperty().bind(property);
     }
@@ -208,7 +235,7 @@ public final class PlayBarController implements Initializable {
     private void next(ActionEvent event) throws IOException {
 
         boolean isRunning = connection.gameRunning();
-        
+
         if (!isRunning) {
 
             int currentGen = parent.getCanvas().getCurrentGeneration();
@@ -258,29 +285,52 @@ public final class PlayBarController implements Initializable {
     @FXML
     private void startAnalysis(ActionEvent event) throws IOException {
 
-        //connection.startAnalysis(parent.getGameId());
-        analyseData=null;
-        analysisShow.setDisable(true);
-        
-        task = new Task<Void>() {
-            @Override
-            protected Void call() throws Exception {
-                while (analyseData==null){ 
+        if (analyseTask == null || !analyseTask.isRunning()) {
+
+            analyseData = null;
+
+            analysisShow.setDisable(true);
+            analysisStop.setDisable(false);
+            analysisStart.setDisable(true);
+
+            //connection.startAnalysis(parent.getGameId());
+            analyseTask = new Task<Void>() {
+                @Override
+                protected Void call() throws Exception {
+                    while (analyseData == null) {
+
+                        Thread.sleep(10000); //sleep 10 seconds
+                        System.out.println("test");
+
+                        analyseData = connection.getAnalyseData(3, 3);
+                        //analyseData=connection.getAnalyseData(User.getInstance().getId(), parent.getGameId() );
+                    }
+
+                    //Now analyseData is available
                     
-                    Thread.sleep(10000); //sleep 10 seconds
-                    System.out.println("test");
-                    analyseData=connection.getAnalyseData(3,3);
-                    //analyseData=connection.getAnalyseData(User.getInstance().getId(), parent.getGameId() );
+                    //Die Button sind teil des UI Threads, wenn du nur setDisable machst
+                    //siehst du teilweise erst das update, wenn man mit der Maus drueber
+                    //geht. Daher mit Platform runlater ausfuehren, dann sieht man
+                    //direkt das update.
+                    //Einfach mal ohne runlater ausprobieren, dann sieht man den unterschied!
+                    Platform.runLater(() -> {
+                        analysisShow.setDisable(false);
+                        analysisStop.setDisable(true);
+                        analysisStart.setDisable(false);
+                    });
+
+                    //Daten setzen
+                    //Da es ein JSON String ist muss dieser noch zerlegt werden.
+                    //TODO
+                    //analyseController.setContent(analyseData);
+                    return null;
                 }
-                //Now analyseData is available
-                analysisShow.setDisable(false);
-                
-                return null;
-            }
-        };
-        
-        Thread t = new Thread(task);
-        t.start();
+            };
+
+            Thread t = new Thread(analyseTask);
+            t.start();
+
+        }
         //TODO Analysis abfangen...
         //Task schreiben
         //Task starten wie in play
@@ -290,46 +340,70 @@ public final class PlayBarController implements Initializable {
         //Diesen JSon string vorher im Task speichern. Also eine Variable in PlaybarController definieren und im task zuweisen?
     }
 
-    
+    @FXML
+    private void stopAnalysis(ActionEvent event) throws IOException {
+
+        if (analyseTask != null && analyseTask.isRunning()) {
+
+            analyseTask.cancel();
+
+            analysisStop.setDisable(true);
+            analysisStart.setDisable(false);
+
+            if (analyseData != null) {
+                analysisShow.setDisable(false);
+            }
+
+        }
+
+    }
+
     @FXML
     private void showAnalysis(ActionEvent event) throws IOException {
         /*
-        TODO:
-        In der Methode müssen die daten der analyse geparst werden und eine tabelle mit den
-        vorhandenen mustern muss gefüllt werden. Jedes Muster hat andere Eigenschaften, deshalb
-        müsste dafür noch eine passende struktur erstellt werden.
-        */
-        
-        
-        System.out.println(analyseData);
+         TODO:
+         In der Methode müssen die daten der analyse geparst werden und eine tabelle mit den
+         vorhandenen mustern muss gefüllt werden. Jedes Muster hat andere Eigenschaften, deshalb
+         müsste dafür noch eine passende struktur erstellt werden.
+         */
+
+        if (analyseData != null) {
+
+            System.out.println(analyseData);
+
+            if( analyseController != null) {
+            
+                analyseController.setLabel(analyseData);
+            
+            }
+            
+            if (analyseStage != null) {
+                
+                analyseStage.show();
+            }
+
+        }
         //Wenn das gedrueckt wird, sollen der string ausgegeben werden...
         //Daten holen sys out
         //System.out.println("");
         //Variante neues Fenster erstellen
         //Eventuell model setzen??
         // man erhält nur das Parent FXMLLoader.load( getClass().getResource("FXML/NewGame.fxml") ); aber kein Controller!
-        
-        FXMLLoader analyseLoader = new FXMLLoader(getClass().getResource("FXML/ShowAnalysis.fxml")); //Analyse
 
-        Parent analyse = (Parent) analyseLoader.load();
-        
-        ShowAnalysisController controller = analyseLoader.getController();
-        
-        
-        
-        Scene s = new Scene( analyse );
-        Stage stage = new Stage();
-        stage.setScene(s);
-        stage.centerOnScreen();
-        stage.setTitle("Game of Life");
-        stage.show();
-         
-        
-        controller.setLabel(analyseData);
+        //FXMLLoader analyseLoader = new FXMLLoader(getClass().getResource("FXML/ShowAnalysis.fxml")); //Analyse
+        //Parent analyse = (Parent) analyseLoader.load();
+        //ShowAnalysisController controller = analyseLoader.getController();
+/*
+         Scene s = new Scene(analyse);
+         Stage stage = new Stage();
+         stage.setScene(s);
+         stage.centerOnScreen();
+         stage.setTitle("Game of Life");
+         stage.show();
+
+         controller.setLabel(analyseData);
+         */
         //Alternative koenntest du das Parent analyse auch der Stackpane zuweisen
-        
-        
-
     }
 
 }

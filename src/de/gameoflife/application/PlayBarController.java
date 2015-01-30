@@ -266,8 +266,9 @@ public final class PlayBarController implements Initializable {
             @Override
             protected Void call() throws Exception {
                 while (analyseData==null){ 
-                    System.out.println("test");
+                    
                     Thread.sleep(10000); //sleep 10 seconds
+                    System.out.println("test");
                     analyseData=connection.getAnalyseData(3,3);
                     //analyseData=connection.getAnalyseData(User.getInstance().getId(), parent.getGameId() );
                 }
@@ -289,8 +290,17 @@ public final class PlayBarController implements Initializable {
         //Diesen JSon string vorher im Task speichern. Also eine Variable in PlaybarController definieren und im task zuweisen?
     }
 
+    
     @FXML
     private void showAnalysis(ActionEvent event) throws IOException {
+        /*
+        TODO:
+        In der Methode müssen die daten der analyse geparst werden und eine tabelle mit den
+        vorhandenen mustern muss gefüllt werden. Jedes Muster hat andere Eigenschaften, deshalb
+        müsste dafür noch eine passende struktur erstellt werden.
+        */
+        
+        
         System.out.println(analyseData);
         //Wenn das gedrueckt wird, sollen der string ausgegeben werden...
         //Daten holen sys out
@@ -304,7 +314,7 @@ public final class PlayBarController implements Initializable {
         Parent analyse = (Parent) analyseLoader.load();
         
         ShowAnalysisController controller = analyseLoader.getController();
-        controller.setPattern(analyseData);
+        
         
         
         Scene s = new Scene( analyse );
@@ -314,6 +324,8 @@ public final class PlayBarController implements Initializable {
         stage.setTitle("Game of Life");
         stage.show();
          
+        
+        controller.setLabel(analyseData);
         //Alternative koenntest du das Parent analyse auch der Stackpane zuweisen
         
         

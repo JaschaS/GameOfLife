@@ -5,20 +5,21 @@
  */
 package de.gameoflife.application;
 
-import java.net.URL;
-import java.util.ResourceBundle;
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
+import javafx.fxml.FXML;;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.GridPane;
 
 /**
  *
  * @author Daniel
  */
-public class ShowAnalysisController implements Initializable{
+public class ShowAnalysisController{
 
+    @FXML
+    private Label analyseDataLabel;
+    
     @FXML
     private TableView tableView;
     
@@ -32,15 +33,10 @@ public class ShowAnalysisController implements Initializable{
     private TableColumn generation;
     
     @FXML
-    private Pane parentPane;
-    
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        
-    }
+    private GridPane gridPane;
     
     @FXML
-    public void setPattern(String data){
-        pattern.setText(data);
+    public void setLabel(String data){
+        analyseDataLabel.setText(data);
     }
 }

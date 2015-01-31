@@ -6,6 +6,8 @@
 package de.gameoflife.application;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -16,6 +18,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 
 /**
@@ -30,23 +33,23 @@ public class ShowAnalysisController {
     private Label analyseDataLabel;
 
     @FXML
-    private TableView<String> tableView;
+    private TableView<AnalysisPattern> tableView;
 
     @FXML
-    private TableColumn<String, String> pattern;
+    private TableColumn<AnalysisPattern, String> pattern;
 
     @FXML
-    private TableColumn<String, String> count;
+    private TableColumn<AnalysisPattern, String> count;
 
-    @FXML
-    private TableColumn<String, String> generation;
-
-    @FXML
-    private GridPane gridPane;
 
     @FXML
     public void setLabel(String data) {
         analyseDataLabel.setText(data);
+    }    
+    
+    public void setItemsToAdd(List<AnalysisPattern> list){
+        tableView.getItems().setAll(list);
+        
     }
 
 }

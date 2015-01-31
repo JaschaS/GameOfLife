@@ -4,12 +4,15 @@ import de.gameoflife.connection.rmi.GameHandler;
 import java.io.IOException;
 import java.net.URL;
 import java.rmi.NotBoundException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.ResourceBundle;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
-import javafx.beans.value.ObservableValueBase;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -27,6 +30,8 @@ import javafx.scene.control.Slider;
 import javafx.scene.control.ToolBar;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import queue.data.Generation;
 
 /**
@@ -318,7 +323,39 @@ public final class PlayBarController implements Initializable {
                         analysisStop.setDisable(true);
                         analysisStart.setDisable(false);
                     });
-
+                    
+                    JSONObject json = new JSONObject(analyseData);
+                    HashMap<String,JSONArray> patterns = new HashMap<>();
+                    patterns.put("static-object",json.optJSONArray("static-object"));
+                    patterns.put("population-density",json.optJSONArray("population-density"));
+                    patterns.put("extermination",json.optJSONArray("extermination"));
+                    patterns.put("beacon",json.optJSONArray("beacon"));
+                    patterns.put("blinker",json.optJSONArray("blinker"));
+                    patterns.put("glider",json.optJSONArray("glider"));
+                    patterns.put("heavyweight-spaceship",json.optJSONArray("heavyweight-spaceship"));
+                    patterns.put("lightweight-spaceship",json.optJSONArray("lightweight-spaceship"));
+                    patterns.put("middleweight-spaceship",json.optJSONArray("middleweight-spaceship"));
+                    patterns.put("beehive",json.optJSONArray("beehive"));
+                    patterns.put("block",json.optJSONArray("block"));
+                    
+                    //enthaelt alle pattern mit ihrer anzahl
+                    ArrayList<AnalysisPattern> patternWithCount= new ArrayList<>();
+                    
+                    Set<String> keys=patterns.keySet();
+                    Iterator<String> it = keys.iterator();
+                    
+                    while (it.hasNext()){
+                        String temp = it.next();
+                        if (patterns.get(temp) != null){
+                            patternWithCount.add(new AnalysisPattern(temp,patterns.get(temp).length()));
+                        } else {
+                            patternWithCount.add(new AnalysisPattern(temp,0));
+                        }
+                    }                    
+        
+                    //Die GUI setzen
+                    analyseController.setItemsToAdd(patternWithCount);
+                    
                     //Daten setzen
                     //Da es ein JSON String ist muss dieser noch zerlegt werden.
                     //TODO
@@ -326,7 +363,7 @@ public final class PlayBarController implements Initializable {
                     return null;
                 }
             };
-
+            
             Thread t = new Thread(analyseTask);
             t.start();
 

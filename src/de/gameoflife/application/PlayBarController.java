@@ -311,7 +311,7 @@ public final class PlayBarController implements Initializable {
                         System.out.println("test");
 
                         //TODO: diese zeile durch die untere ersetzen
-                        analyseData = connection.getAnalyseData(3, 3);
+                        analyseData = gameHandler.getAnalyseData(3, 3);
                         //analyseData=connection.getAnalyseData(User.getInstance().getId(), parent.getGameId() );
                     }
 

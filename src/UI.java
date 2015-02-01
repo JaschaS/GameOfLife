@@ -3,12 +3,7 @@ import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import java.util.List;
-import queue.data.Generation;
-
-import rmi.data.GameUI;
-import rmi.data.rules.NumericRule;
-import rmi.data.rules.RulePattern;
+import rmi.interfaces.IAnalysis;
 import rmi.interfaces.IGameEngineServer;
 import rmi.interfaces.IRemoteRuleEditor;
 import rmi.interfaces.IRemoteUI_Server;
@@ -22,14 +17,32 @@ public class UI {
             IRemoteRuleEditor ruleEditor = (IRemoteRuleEditor) Naming.lookup(IRemoteRuleEditor.FULLSERVICEIDENTIFIER);
             IGameEngineServer gameEngine = (IGameEngineServer) Naming.lookup(IGameEngineServer.FULLSERVICEIDENTIFIER);
             IRemoteUI_Server uiServer = (IRemoteUI_Server) Naming.lookup("rmi://143.93.91.71:1098/RemoteUIBackendIntern");
+            IAnalysis analysis = (IAnalysis) Naming.lookup(IAnalysis.RMI_ADDR);
 			//IRemoteRuleEditor ruleEditor = (IRemoteRuleEditor) Naming.lookup("rmi://localhost/" + IRemoteRuleEditor.SERVICENAME);
             
-            boolean b = gameEngine.stop(21, 0);
+            //boolean b = gameEngine.stop(21, 0);
             
-            System.out.println("stop " + b);
+            //System.out.println("stop " + b);
             
             // 1. Generate new GameUI Object for user
             final int userId = 21;
+            
+            //analysis.st
+            //analysis.startAnalysis(userId, 0);
+            
+            String data = null;
+            
+            while(data == null) {
+            
+                //System.out.println("daten null");
+            
+                data = uiServer.getAnalyseData(userId, 0);
+                
+            }
+            
+            System.out.println(data);
+            
+            
             /*
              final GameUI game = ruleEditor.generateNewGame(userId, "RMI Test for UI");
              System.out.println(game);
@@ -58,7 +71,7 @@ public class UI {
              final int gameId = game.getGameId();
              */
             // 3. Load GameUI for given gameId
-            final GameUI loadedGame = ruleEditor.getGameObject(userId, 0);
+            /*final GameUI loadedGame = ruleEditor.getGameObject(userId, 0);
 
             System.out.println(loadedGame);
 
@@ -111,7 +124,7 @@ public class UI {
             } else {
                 System.out.println("konnte nicht gestaret werden");
             }
-
+                    */
         } catch (MalformedURLException | RemoteException | NotBoundException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

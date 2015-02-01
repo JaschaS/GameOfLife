@@ -207,13 +207,13 @@ public final class PlayBarController implements Initializable {
         if (!isRunning) {
             //System.out.println("play ok");
             
-            gameHandler.startGame(parent.getGameId(), speedSlider.valueProperty(), parent.getCanvas());
+            isRunning = gameHandler.startGame(parent.getGameId(), speedSlider.valueProperty(), parent.getCanvas());
 
-            play.setDisable(true);
-            stop.setDisable(false);
+            play.setDisable(isRunning);
+            stop.setDisable(!isRunning);
             prev.setDisable(true);
-            next.setDisable(true);
-
+            if(!isRunning) next.setDisable( !gameHandler.isHistoryAvailable(parent.getGameId()));
+            else next.setDisable(true);
         }
 
     }
@@ -229,9 +229,9 @@ public final class PlayBarController implements Initializable {
             
             play.setDisable(false);
             stop.setDisable(true);
-            prev.setDisable(false);
 
             if (parent.getCanvas().getCurrentGeneration() > 1) {
+                prev.setDisable(false);
                 next.setDisable(false);
             }
 

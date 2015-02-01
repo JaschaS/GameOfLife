@@ -217,15 +217,6 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
 
             GameUI g = ruleEditor.getGameObject(userId, gameId);
 
-            System.out.println(g);
-
-            for (int i = 0; i < g.getStartGen().length; ++i) {
-                for (int j = 0; j < g.getStartGen()[i].length; ++j) {
-                    System.out.print(g.getStartGen()[i][j] + " ");
-                }
-                System.out.println("");
-            }
-
             gameList.put(gameId, g);
         } catch (RemoteException ex) {
             //TODO
@@ -250,7 +241,7 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
             while (it.hasNext()) {
 
                 game = it.next();
-
+                
                 gameList.put(game.getGameId(), game);
 
             }
@@ -543,20 +534,21 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
     /*
      * <-----------------------Sonstiges part ------------------------->
      */
-    public void startGame(final int gameId, DoubleProperty sliderProperty, GameCanvas canvas) {
+    public boolean startGame(final int gameId, DoubleProperty sliderProperty, GameCanvas canvas) {
 
         User u = User.getInstance();
 
         if (canvasUpdateTask == null) {
             System.out.println("es läuft noch kein updateTask");
             boolean successful = startEngine(u.getId(), gameId);
-
+            System.out.println("succ " + successful);
             if (successful) {
                 System.out.println("Engine gestartet");
                 createUpdateTask(gameId, sliderProperty, canvas);
-
+                return true;
             }
             else System.out.println("Smt went wrong");
+            
         } else {
 
             if (canvasUpdateTask.isRunning()) {
@@ -564,11 +556,11 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
                 stopGame(gameId);
 
                 createUpdateTask(gameId, sliderProperty, canvas);
-
+                return true;
             }
 
         }
-
+        return false;
     }
 
     public void stopCurrentRunningGame() {

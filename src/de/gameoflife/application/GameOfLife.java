@@ -260,7 +260,7 @@ public final class GameOfLife extends Application {
                     controller.clear();
 
                     showGameScreen();
-
+                    
                 }
 
             }

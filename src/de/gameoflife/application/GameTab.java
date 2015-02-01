@@ -213,7 +213,7 @@ public final class GameTab implements Initializable {
     }
 
     public void initCanvas(int gameId) {
-
+        
         this.gameId = gameId;
 
         boolean[][] startGeneration = gameHandler.getStartGen(gameId);
@@ -226,16 +226,19 @@ public final class GameTab implements Initializable {
         canvas = new GameCanvas(
                 startGeneration[0].length,
                 startGeneration.length,
-                20
+                20,
+                gameId
         );
 
         canvas.drawGrid();
-        canvas.setGeneration(startGeneration);
+        canvas.drawCells();
+        //canvas.setGeneration(startGeneration);
 
         content.setCenter(canvas);
 
         playController.bindPropertyToCurrentGen(canvas.getCurrentGame().asString());
-
+        
+        playController.activateNextButton( !gameHandler.isHistoryAvailable(gameId) );
     }
 
     public void showDeathRules() {

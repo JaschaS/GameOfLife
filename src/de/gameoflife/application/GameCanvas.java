@@ -1,5 +1,6 @@
 package de.gameoflife.application;
 
+import de.gameoflife.connection.rmi.GameHandler;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ChangeListener;
@@ -24,11 +25,13 @@ public final class GameCanvas extends Group {
     private int cellSize;
     private int width;
     private int height;
-    private boolean[][] generation;
+    //private boolean[][] generation;
+    private final int gameId;
     private Color cellColor;
     private final SimpleIntegerProperty currentGeneration;
+    private GameHandler gameHandler = GameHandler.getInstance();
 
-    public GameCanvas(int width, int height, int cellSize) {
+    public GameCanvas(int width, int height, int cellSize, int gameId) {
 
         super();
 
@@ -45,11 +48,11 @@ public final class GameCanvas extends Group {
         grid = new Canvas(this.width, this.height);
 
         getChildren().addAll(grid, elements);
-
-        generation = new boolean[height][width];
-
+        
         currentGeneration = new SimpleIntegerProperty(1);
 
+        this.gameId = gameId;
+        
     }
 
     public void addEraserListener() {
@@ -113,8 +116,10 @@ public final class GameCanvas extends Group {
 
     }
 
-    private void drawCells() {
+    public void drawCells() {
 
+        boolean[][] generation = gameHandler.getStartGen(gameId);
+        
         GraphicsContext gc = elements.getGraphicsContext2D();
 
         for (int i = 0, y = 0; y < grid.getHeight(); y += cellSize) {
@@ -141,12 +146,6 @@ public final class GameCanvas extends Group {
 
     }
 
-    public void setGeneration(boolean[][] generation) {
-        //Flache kopie um späteres zuweisen zu vereinfachen
-        this.generation = generation;
-        drawCells();
-    }
-
     public void drawGrid() {
 
         GraphicsContext gc = grid.getGraphicsContext2D();
@@ -166,7 +165,9 @@ public final class GameCanvas extends Group {
     }
 
     public void clear(boolean deleteGeneration) {
-
+        
+        boolean[][] generation = gameHandler.getStartGen(gameId);
+        
         GraphicsContext gc = grid.getGraphicsContext2D();
 
         gc.clearRect(0, 0, width, height);
@@ -186,13 +187,15 @@ public final class GameCanvas extends Group {
 
             }
         }
+        
+        gameHandler.setStartGen(gameId, generation);
 
     }
 
     public void setGridWidth(int newWidth) {
 
-        generation = new boolean[generation.length][newWidth];
-
+        gameHandler.setStartGen(gameId, new boolean[gameHandler.getStartGenHeight(gameId)][newWidth] );
+        
         width = newWidth * cellSize;
         grid.setWidth(width);
         elements.setWidth(width);
@@ -203,7 +206,7 @@ public final class GameCanvas extends Group {
 
     public void setGridHeight(int newHeight) {
 
-        generation = new boolean[newHeight][generation[0].length];
+        gameHandler.setStartGen(gameId, new boolean[newHeight][gameHandler.getStartGenWidth(gameId)] );
 
         height = newHeight * cellSize;
         grid.setHeight(height);
@@ -291,9 +294,11 @@ public final class GameCanvas extends Group {
     private abstract class GameCanvasListener implements EventHandler<MouseEvent> {
 
         protected final boolean check;
+        protected final boolean[][] generation;
 
         public GameCanvasListener(boolean check) {
             this.check = check;
+            generation = gameHandler.getStartGen(gameId);
         }
         
         @Override
@@ -322,6 +327,8 @@ public final class GameCanvas extends Group {
 
             }
 
+            gameHandler.setStartGen(gameId, generation);
+            
         }
 
         protected boolean valid(int i, int j) {

@@ -79,7 +79,7 @@ public interface IGameConfiguration {
      * @return the start generation as an boolean array
      */
     boolean[][] getStartGen(final int gameId);
-            
+    
     List<Evaluable> getDeathRules(final int gameId);
     
     List<Evaluable> getBirthRules(final int gameId);
@@ -94,7 +94,12 @@ public interface IGameConfiguration {
     
     int getGameId(final String gameName);
     
+    int getStartGenHeight(final int gameId);
+    
+    int getStartGenWidth(final int gameId);
+    
     void removeDeathRule(final int gameId, final int index);
     
     void removeBirthRule(final int gameId, final int index);
+    
 }

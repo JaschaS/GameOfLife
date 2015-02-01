@@ -150,8 +150,7 @@ public final class EditorBarController implements Initializable {
             }
 
             gameHandler.setBorderOverflow(parent.getGameId(), newVal);
-
-            GameHandler.getInstance().saveGame(parent.getGameId());
+            
         });
 
         colorPicker.setOnAction((ActionEvent event) -> {

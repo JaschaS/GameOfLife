@@ -25,11 +25,10 @@ public final class GameCanvas extends Group {
     private int cellSize;
     private int width;
     private int height;
-    //private boolean[][] generation;
     private final int gameId;
     private Color cellColor;
     private final SimpleIntegerProperty currentGeneration;
-    private GameHandler gameHandler = GameHandler.getInstance();
+    private final GameHandler gameHandler = GameHandler.getInstance();
 
     public GameCanvas(int width, int height, int cellSize, int gameId) {
 

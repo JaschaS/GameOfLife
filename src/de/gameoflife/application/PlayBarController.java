@@ -39,11 +39,6 @@ import queue.data.Generation;
  *
  * @author JScholz
  *
- * TODO Bei Start Threshold hinzufügen
- *
- * TODO Analyse anzeigen
- *
- * Jar Datei schicken Schnittstellen an Marx schicken?
  */
 public final class PlayBarController implements Initializable {
 
@@ -301,14 +296,15 @@ public final class PlayBarController implements Initializable {
             analysisStop.setDisable(false);
             analysisStart.setDisable(true);
 
-            //connection.startAnalysis(parent.getGameId());
+            gameHandler.startAnalysis(parent.getGameId());
+            
             analyseTask = new Task<Void>() {
                 @Override
                 protected Void call() throws Exception {
                     while (analyseData == null) {
 
                         Thread.sleep(10000); //sleep 10 seconds
-                        System.out.println("test");
+                        //System.out.println("test");
 
                         //TODO: diese zeile durch die untere ersetzen
                         analyseData = gameHandler.getAnalyseData(3, 3);

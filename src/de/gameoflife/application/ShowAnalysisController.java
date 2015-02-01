@@ -10,6 +10,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 
 /**
  *
@@ -30,16 +31,10 @@ public class ShowAnalysisController {
 
     @FXML
     private TableColumn<AnalysisPattern, String> count;
-
-
-    @FXML
-    public void setLabel(String data) {
-        analyseDataLabel.setText(data);
-    }    
     
     public void setItemsToAdd(List<AnalysisPattern> list){
+        analyseDataLabel.setText("Founded patterns:");
         tableView.getItems().setAll(list);
-        
     }
 
 }

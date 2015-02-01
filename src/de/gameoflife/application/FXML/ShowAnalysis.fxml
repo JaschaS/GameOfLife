@@ -8,7 +8,7 @@
 <?import javafx.collections.FXCollections?>
 <?import javafx.scene.control.cell.PropertyValueFactory?>
 
-<GridPane fx:id="gridPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.gameoflife.application.ShowAnalysisController">
+<GridPane fx:id="gridPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.gameoflife.application.ShowAnalysisController">
   <columnConstraints>
     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -19,7 +19,7 @@
     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
-      <TableView fx:id="tableView" prefWidth="600.0" GridPane.columnSpan="2" GridPane.rowSpan="2">
+      <TableView fx:id="tableView" prefWidth="800.0" GridPane.columnSpan="2" GridPane.rowIndex="1" GridPane.rowSpan="2">
          <columns>
             <TableColumn fx:id="pattern" text="Pattern"> 
                 <cellValueFactory>
@@ -31,11 +31,46 @@
                     <PropertyValueFactory property="countOfPattern" />
                 </cellValueFactory>
             </TableColumn>
+            <TableColumn text="X-Coordinate" fx:id="xCoordinate">
+                <cellValueFactory>
+                    <PropertyValueFactory property="startXCoordinate" />
+                </cellValueFactory>
+            </TableColumn>
+            <TableColumn fx:id="yCoordinate" text="Y-Coordinate">
+                <cellValueFactory>
+                    <PropertyValueFactory property="startYCoordinate" />
+                </cellValueFactory>
+            </TableColumn>
+            <TableColumn fx:id="generationNo" text="Gen-No.">
+                <cellValueFactory>
+                    <PropertyValueFactory property="startGenerationNo" />
+                </cellValueFactory>
+            </TableColumn>
+            <TableColumn fx:id="genCount" text="Gen-Count">
+                <cellValueFactory>
+                    <PropertyValueFactory property="generationCount" />
+                </cellValueFactory>
+            </TableColumn>
+            <TableColumn fx:id="period" text="Period">
+                <cellValueFactory>
+                    <PropertyValueFactory property="periode" />
+                </cellValueFactory>
+            </TableColumn>
+            <TableColumn fx:id="direction" text="Direction">
+                <cellValueFactory>
+                    <PropertyValueFactory property="direction" />
+                </cellValueFactory>
+            </TableColumn>
+            <TableColumn fx:id="average" text="Avg">
+                <cellValueFactory>
+                    <PropertyValueFactory property="avg" />
+                </cellValueFactory>
+            </TableColumn>
          </columns>
          <columnResizePolicy>
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
          </columnResizePolicy>
       </TableView>
-      <Label fx:id="analyseDataLabel" prefHeight="17.0" prefWidth="411.0" text="Label" GridPane.rowIndex="2" />
+      <Label fx:id="analyseDataLabel" prefHeight="17.0" prefWidth="495.0" text="Label" />
    </children>
 </GridPane>

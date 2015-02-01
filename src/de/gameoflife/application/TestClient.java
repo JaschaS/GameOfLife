@@ -24,7 +24,7 @@ public class TestClient implements Serializable{
         try {
             IRemoteAnalyseData server = (IRemoteAnalyseData) Naming.lookup(IRemoteAnalyseData.FULLSERVICEIDENTIFIER);
             
-            server.sendAnalyseData(3, 3, "{\"beacon\":[],\"blinker\":[],\"glider\":[{\"direction\":\"left/bottom\",\"start-x-coordinate\":4,\"start-y-coordinate\":5,\"start-gerneration-no.\":102,\"periode\":8},{\"direction\":\"right/top\",\"start-x-coordinate\":25,\"start-y-coordinate\":96,\"start-gerneration-no.\":523,\"periode\":4}],\"heavyweight-spaceship\":[],\"lightweight-spaceship\":[],\"middleweight-spaceship\":[],\"beehive\":[],\"block\":[]}");
+            server.sendAnalyseData(3, 3, "{\"beacon\":[],\"blinker\":[],\"glider\":[{\"direction\":\"left/bottom\",\"start-x-coordinate\":4,\"start-y-coordinate\":5,\"start-generation-no.\":102,\"periode\":8},{\"direction\":\"right/top\",\"start-x-coordinate\":25,\"start-y-coordinate\":96,\"start-generation-no.\":523,\"periode\":4}],\"heavyweight-spaceship\":[],\"lightweight-spaceship\":[],\"middleweight-spaceship\":[],\"beehive\":[],\"block\":[]}");
             
         } catch (RemoteException | NotBoundException | MalformedURLException ex) {
             Logger.getLogger(TestClient.class.getName()).log(Level.SEVERE, null, ex);

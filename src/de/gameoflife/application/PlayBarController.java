@@ -307,6 +307,7 @@ public final class PlayBarController implements Initializable {
                         Thread.sleep(10000); //sleep 10 seconds
                         System.out.println("test");
 
+                        //TODO: diese zeile durch die untere ersetzen
                         analyseData = connection.getAnalyseData(3, 3);
                         //analyseData=connection.getAnalyseData(User.getInstance().getId(), parent.getGameId() );
                     }
@@ -339,27 +340,36 @@ public final class PlayBarController implements Initializable {
                     patterns.put("block",json.optJSONArray("block"));
                     
                     //enthaelt alle pattern mit ihrer anzahl
-                    ArrayList<AnalysisPattern> patternWithCount= new ArrayList<>();
+                    ArrayList<AnalysisPattern> patternTable= new ArrayList<>();
                     
                     Set<String> keys=patterns.keySet();
                     Iterator<String> it = keys.iterator();
                     
+                    String patternName, count, x, y, genNo, genCount, period, direction, avg;
+                    JSONObject temp;
+                    
                     while (it.hasNext()){
-                        String temp = it.next();
-                        if (patterns.get(temp) != null){
-                            patternWithCount.add(new AnalysisPattern(temp,patterns.get(temp).length()));
-                        } else {
-                            patternWithCount.add(new AnalysisPattern(temp,0));
+                        patternName = it.next();
+                        
+                        if (patterns.get(patternName) != null && patterns.get(patternName).length() > 0){
+                            count = patterns.get(patternName).length()+"";
+                            for(int i = 0; i < patterns.get(patternName).length(); i++){
+                                temp = patterns.get(patternName).getJSONObject(i);
+                                x = temp.optInt("start-x-coordinate",-1)+"";
+                                y = temp.optInt("start-y-coordinate",-1)+"";
+                                genNo = temp.optInt("start-generation-no.",-1)+"";
+                                genCount = temp.optInt("generationcount",-1)+"";
+                                period = temp.optInt("periode")+"";
+                                direction = temp.optString("direction");
+                                avg = temp.optInt("avg",-1)+"";
+                                
+                                patternTable.add(new AnalysisPattern(patternName,direction,avg,count,period,x,y,genNo,genCount));
+                            }
                         }
                     }                    
         
                     //Die GUI setzen
-                    analyseController.setItemsToAdd(patternWithCount);
-                    
-                    //Daten setzen
-                    //Da es ein JSON String ist muss dieser noch zerlegt werden.
-                    //TODO
-                    //analyseController.setContent(analyseData);
+                    analyseController.setItemsToAdd(patternTable);
                     return null;
                 }
             };
@@ -397,22 +407,8 @@ public final class PlayBarController implements Initializable {
 
     @FXML
     private void showAnalysis(ActionEvent event) throws IOException {
-        /*
-         TODO:
-         In der Methode müssen die daten der analyse geparst werden und eine tabelle mit den
-         vorhandenen mustern muss gefüllt werden. Jedes Muster hat andere Eigenschaften, deshalb
-         müsste dafür noch eine passende struktur erstellt werden.
-         */
 
         if (analyseData != null) {
-
-            System.out.println(analyseData);
-
-            if( analyseController != null) {
-            
-                analyseController.setLabel(analyseData);
-            
-            }
             
             if (analyseStage != null) {
                 

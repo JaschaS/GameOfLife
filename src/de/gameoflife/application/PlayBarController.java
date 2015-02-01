@@ -75,7 +75,6 @@ public final class PlayBarController implements Initializable {
     private ColorPicker colorPicker;
 
     private GameTab parent;
-    private GameHandler connection;
     private NumberTextField cellSize;
     private final GameHandler gameHandler = GameHandler.getInstance();
     private int userId;
@@ -107,10 +106,9 @@ public final class PlayBarController implements Initializable {
 
         });
 
-        connection = GameHandler.getInstance();
-
         stop.setDisable(true);
-        prev.setDisable(true);
+        prev.setDisable(true);        
+        next.setDisable(true);
 
         userId = User.getInstance().getId();
 
@@ -179,7 +177,7 @@ public final class PlayBarController implements Initializable {
      * Wird aufgerufen falls das Tab geschlossen wird!
      */
     public void close() {
-        connection.stopCurrentRunningGame();
+        gameHandler.stopCurrentRunningGame();
 
         if (analyseTask != null && analyseTask.isRunning()) {
             analyseTask.cancel();
@@ -192,6 +190,10 @@ public final class PlayBarController implements Initializable {
         parent = newParent;
 
     }
+    
+    public void activateNextButton( boolean activate) {
+        next.setDisable(activate);
+    }
 
     public void bindPropertyToCurrentGen(ObservableValue property) {
         currentGeneration.textProperty().bind(property);
@@ -200,14 +202,15 @@ public final class PlayBarController implements Initializable {
     @FXML
     private void play(ActionEvent event) throws IOException, NotBoundException {
 
-        boolean isRunning = connection.gameRunning();
-
+        boolean isRunning = gameHandler.gameRunning();
+        //System.out.println("play");
         if (!isRunning) {
+            //System.out.println("play ok");
+            
+            gameHandler.startGame(parent.getGameId(), speedSlider.valueProperty(), parent.getCanvas());
 
-            connection.startGame(parent.getGameId(), speedSlider.valueProperty(), parent.getCanvas());
-
-            play.setDisable(isRunning);
-            stop.setDisable(!isRunning);
+            play.setDisable(true);
+            stop.setDisable(false);
             prev.setDisable(true);
             next.setDisable(true);
 
@@ -218,14 +221,14 @@ public final class PlayBarController implements Initializable {
     @FXML
     private void stop(ActionEvent event) throws IOException {
 
-        boolean isRunning = connection.gameRunning();
+        boolean isRunning = gameHandler.gameRunning();
 
         if (isRunning) {
 
-            connection.stopCurrentRunningGame();
-            play.setDisable(!isRunning);
-            stop.setDisable(isRunning);
-
+            gameHandler.stopCurrentRunningGame();
+            
+            play.setDisable(false);
+            stop.setDisable(true);
             prev.setDisable(false);
 
             if (parent.getCanvas().getCurrentGeneration() > 1) {
@@ -239,13 +242,13 @@ public final class PlayBarController implements Initializable {
     @FXML
     private void next(ActionEvent event) throws IOException {
 
-        boolean isRunning = connection.gameRunning();
+        boolean isRunning = gameHandler.gameRunning();
 
         if (!isRunning) {
 
             int currentGen = parent.getCanvas().getCurrentGeneration();
 
-            Generation gen = connection.getGeneration(User.getInstance().getId(), parent.getGameId(), currentGen + step);
+            Generation gen = gameHandler.getGeneration(User.getInstance().getId(), parent.getGameId(), currentGen + step);
 
             if (gen == null) {
                 System.out.println("Next Step: gen ist null");
@@ -266,11 +269,11 @@ public final class PlayBarController implements Initializable {
     private void previous(ActionEvent event) throws IOException {
 
         int currentGen = parent.getCanvas().getCurrentGeneration();
-        boolean isRunning = connection.gameRunning();
+        boolean isRunning = gameHandler.gameRunning();
 
         if (!isRunning && currentGen > 1) {
 
-            Generation gen = connection.getGeneration(User.getInstance().getId(), parent.getGameId(), currentGen - step);
+            Generation gen = gameHandler.getGeneration(User.getInstance().getId(), parent.getGameId(), currentGen - step);
 
             if (gen == null) {
                 System.out.println("Prev Step: gen ist null");
@@ -307,7 +310,7 @@ public final class PlayBarController implements Initializable {
                         Thread.sleep(10000); //sleep 10 seconds
                         System.out.println("test");
 
-                        analyseData = connection.getAnalyseData(3, 3);
+                        analyseData = gameHandler.getAnalyseData(3, 3);
                         //analyseData=connection.getAnalyseData(User.getInstance().getId(), parent.getGameId() );
                     }
 

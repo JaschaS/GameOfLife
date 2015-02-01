@@ -52,6 +52,7 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
     private static GameHandler instance;
 
     private UpdateTask canvasUpdateTask = null;
+    private Thread updateThread = null;
 
     private GameHandler() {
         gameList = new HashMap<>();
@@ -155,8 +156,9 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
     public boolean generateNewGame(int userId, String name) {
         try {
             if (ruleEditor != null) {
-                GameUI game = ruleEditor.generateNewGame(userId, name);
-                gameList.put(game.getGameId(), game);
+                GameUI g = ruleEditor.generateNewGame(userId, name);
+
+                gameList.put(g.getGameId(), g);
             } else {
                 //TODO: throw error that the connection must be established first
                 System.out.println("rule editor null");
@@ -193,7 +195,10 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
     public boolean saveGame(final int gameId) {
         try {
             if (ruleEditor != null) {
-                ruleEditor.saveGame(gameList.get(gameId));
+
+                GameUI g = gameList.get(gameId);
+
+                ruleEditor.saveGame(g);
             }
             return true;
         } catch (RemoteException ex) {
@@ -210,7 +215,18 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
                 return false;
             }
 
-            gameList.put(gameId, ruleEditor.getGameObject(userId, gameId));
+            GameUI g = ruleEditor.getGameObject(userId, gameId);
+
+            System.out.println(g);
+
+            for (int i = 0; i < g.getStartGen().length; ++i) {
+                for (int j = 0; j < g.getStartGen()[i].length; ++j) {
+                    System.out.print(g.getStartGen()[i][j] + " ");
+                }
+                System.out.println("");
+            }
+
+            gameList.put(gameId, g);
         } catch (RemoteException ex) {
             //TODO
             return false;
@@ -400,6 +416,16 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
     }
 
     @Override
+    public int getStartGenHeight(final int gameId) {
+        return gameList.get(gameId).getStartGen().length;
+    }
+
+    @Override
+    public int getStartGenWidth(final int gameId) {
+        return gameList.get(gameId).getStartGen()[0].length;
+    }
+
+    @Override
     public void addDeathRule(final int gameId, Evaluable rule) {
         gameList.get(gameId).addDeathRule(rule);
     }
@@ -522,19 +548,19 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
         User u = User.getInstance();
 
         if (canvasUpdateTask == null) {
-
+            System.out.println("es läuft noch kein updateTask");
             boolean successful = startEngine(u.getId(), gameId);
 
             if (successful) {
-
+                System.out.println("Engine gestartet");
                 createUpdateTask(gameId, sliderProperty, canvas);
 
             }
-
+            else System.out.println("Smt went wrong");
         } else {
 
             if (canvasUpdateTask.isRunning()) {
-
+                System.out.println("stopppen!!");
                 stopGame(gameId);
 
                 createUpdateTask(gameId, sliderProperty, canvas);
@@ -576,9 +602,10 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
     private void createUpdateTask(final int gameId, DoubleProperty sliderProperty, GameCanvas canvas) {
 
         canvasUpdateTask = new UpdateTask(gameId, canvas, sliderProperty);
-        
-        Thread t = new Thread(canvasUpdateTask);
-        t.start();
+
+        updateThread = new Thread(canvasUpdateTask);
+        updateThread.setName("UpdateThread");
+        updateThread.start();
 
     }
 
@@ -604,7 +631,7 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
 
         @Override
         protected Void call() throws Exception {
-
+            System.out.println("start Game");
             Generation gen;
             long time;
             int currentGen = 0;
@@ -638,7 +665,7 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
                             Generation g = handler.getGeneration(userId, gameId, value);
 
                             if (g != null) {
-                                //System.out.println(value);
+                                System.out.println(value);
                                 canvas.drawCells(g.getConfig());
                                 canvas.setCurrentGeneration(value);
                                 doneLatch.countDown();
@@ -653,7 +680,7 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
                 }
 
             }
-
+            System.out.println("stopped");
             return null;
 
         }

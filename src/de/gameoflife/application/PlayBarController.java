@@ -38,6 +38,10 @@ import queue.data.Generation;
  * FXML Controller class
  *
  * @author JScholz
+ * 
+ * TODO wenn gen == 1 prev deaktivieren
+ * TODO wenn gen < genjump, dann passiert nichts mehr
+ * TODO wenn gestartet und es history gibt, dann kann es sein, dass das spiel trotzdem geaendert werden...
  *
  */
 public final class PlayBarController implements Initializable {
@@ -307,7 +311,7 @@ public final class PlayBarController implements Initializable {
                         //System.out.println("test");
 
                         //TODO: diese zeile durch die untere ersetzen
-                        analyseData = gameHandler.getAnalyseData(3, 3);
+                        analyseData = gameHandler.getAnalyseData(userId, parent.getGameId());
                         //analyseData=connection.getAnalyseData(User.getInstance().getId(), parent.getGameId() );
                     }
 

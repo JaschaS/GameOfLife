@@ -260,11 +260,7 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
     @Override
     public boolean establishConnectionGameEngine() {
         try {
-
-            if (gameEngine == null) {
-                return false;
-            }
-
+            
             gameEngine = (IGameEngineServer) Naming.lookup(IGameEngineServer.FULLSERVICEIDENTIFIER);
 
         } catch (NotBoundException | MalformedURLException | RemoteException ex) {

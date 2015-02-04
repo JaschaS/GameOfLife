@@ -3,6 +3,8 @@ import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import queue.data.Generation;
+import rmi.data.GameUI;
 import rmi.interfaces.IAnalysis;
 import rmi.interfaces.IGameEngineServer;
 import rmi.interfaces.IRemoteRuleEditor;
@@ -30,9 +32,9 @@ public class UI {
             //analysis.st
             //analysis.startAnalysis(userId, 0);
             
-            String data = null;
+            //String data = null;
             
-            while(data == null) {
+            /*while(data == null) {
             
                 //System.out.println("daten null");
             
@@ -41,7 +43,7 @@ public class UI {
             }
             
             System.out.println(data);
-            
+            */
             
             /*
              final GameUI game = ruleEditor.generateNewGame(userId, "RMI Test for UI");
@@ -71,7 +73,7 @@ public class UI {
              final int gameId = game.getGameId();
              */
             // 3. Load GameUI for given gameId
-            /*final GameUI loadedGame = ruleEditor.getGameObject(userId, 0);
+            final GameUI loadedGame = ruleEditor.getGameObject(userId, 0);
 
             System.out.println(loadedGame);
 
@@ -124,7 +126,7 @@ public class UI {
             } else {
                 System.out.println("konnte nicht gestaret werden");
             }
-                    */
+                    
         } catch (MalformedURLException | RemoteException | NotBoundException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

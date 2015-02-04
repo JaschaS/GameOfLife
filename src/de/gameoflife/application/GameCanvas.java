@@ -99,9 +99,9 @@ public final class GameCanvas extends Group {
         gc.clearRect(0, 0, width, height);
 
         //TODO Array index out of bound
-        for (int i = 0, y = 0; y < this.grid.getHeight(); y += cellSize) {
+        for (int i = 0, y = 0; y < this.grid.getHeight() && y < grid.length; y += cellSize) {
 
-            for (int j = 0, x = 0; x < this.grid.getWidth(); x += cellSize) {
+            for (int j = 0, x = 0; x < this.grid.getWidth() && x < grid[i].length; x += cellSize) {
 
                 if (grid[i][j] > 0) {
                     gc.setFill(cellColor);

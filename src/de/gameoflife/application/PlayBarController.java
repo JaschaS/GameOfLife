@@ -300,7 +300,7 @@ public final class PlayBarController implements Initializable {
             analysisStop.setDisable(false);
             analysisStart.setDisable(true);
 
-            gameHandler.startAnalysis(parent.getGameId());
+            gameHandler.startAnalysis(parent.getGameId(), parent.getCanvas().getCurrentGeneration());
             
             analyseTask = new Task<Void>() {
                 @Override

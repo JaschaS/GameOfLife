@@ -22,5 +22,5 @@ public interface IConnectionAnalysis {
      * Starts the analysis for the given game
      * @param gameID The id of the game
      */
-    public void startAnalysis(int gameID);
+    public void startAnalysis(int gameID, int genID);
 }

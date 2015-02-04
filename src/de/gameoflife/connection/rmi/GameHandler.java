@@ -346,11 +346,11 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
     }
 
     @Override
-    public void startAnalysis(int gameID) {
+    public void startAnalysis(int gameID, int genID) {
         try {
 
             if (analysis != null) {
-                analysis.startAnalysis(gameList.get(gameID).getUserId(), gameID);
+                analysis.startAnalysis(gameList.get(gameID).getUserId(), gameID, genID);
             }
 
         } catch (RemoteException ex) {

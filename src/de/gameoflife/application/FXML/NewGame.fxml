@@ -19,7 +19,7 @@
                 <TextField fx:id="gameName" prefHeight="26.0" prefWidth="279.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <HBox prefHeight="0.0" prefWidth="200.0" spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="2">
                <children>
-                    <Button fx:id="create" text="create" />
+                    <Button fx:id="create" text="ok" />
                     <Button fx:id="cancel"  text="cancel" />
                </children>
             </HBox>                

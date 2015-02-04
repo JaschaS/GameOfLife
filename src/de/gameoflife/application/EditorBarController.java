@@ -150,7 +150,7 @@ public final class EditorBarController implements Initializable {
             }
 
             gameHandler.setBorderOverflow(parent.getGameId(), newVal);
-            
+
         });
 
         colorPicker.setOnAction((ActionEvent event) -> {
@@ -226,6 +226,18 @@ public final class EditorBarController implements Initializable {
         boolean successful = gameHandler.saveGame(parent.getGameId());
 
         System.out.println("Save successful: " + successful);
+    }
+
+    @FXML
+    public void rename(ActionEvent event) throws IOException {
+
+        //Wenn nicht gezeichnet worden ist, schauen ob geloescht wird!
+        if (!isDrawing()) {
+            isErasing();
+        }
+
+        parent.renameGame();
+        
     }
 
     @FXML

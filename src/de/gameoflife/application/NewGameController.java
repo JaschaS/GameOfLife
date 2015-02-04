@@ -26,6 +26,9 @@ public final class NewGameController {
     @FXML
     private Label error;
 
+    private boolean createGame = true;
+    private int gameId = 0;
+
     public void clearText() {
 
         gameName.setText("");
@@ -57,10 +60,26 @@ public final class NewGameController {
 
     }
 
+    public void createsAGame(boolean value) {
+        createGame = value;
+    }
+    
+    public void setGameId(int id) {
+        gameId = id;
+    }
+
     public String getGameName() {
 
         return gameName.getText();
 
+    }
+
+    public boolean createsAGame() {
+        return createGame;
+    }
+    
+    public int getGameId() {
+        return gameId;
     }
 
 }

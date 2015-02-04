@@ -3,6 +3,7 @@ package de.gameoflife.application;
 import com.goebl.david.Webb;
 import de.gameoflife.connection.rabbitmq.RabbitMQConnection;
 import de.gameoflife.connection.rmi.GameHandler;
+import javafx.event.EventHandler;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.rmi.NotBoundException;
@@ -178,6 +179,20 @@ public final class GameOfLife extends Application {
 
     }
 
+    public void renameGame(int gameId) {
+
+        newGameController.setGameId(gameId);
+        newGameController.createsAGame(false);
+
+        newGame.toFront();
+        newGame.setVisible(true);
+
+        gamescene.setDisable(true);
+
+        newGameController.setFocus();
+
+    }
+
     public void loadGame() {
 
         gamescene.setDisable(true);
@@ -239,27 +254,57 @@ public final class GameOfLife extends Application {
         newGame.setVisible(false);
         newGameController = newGameLoader.getController();
         newGameController.createEvent((ActionEvent event1) -> {
-
             try {
 
-                boolean successful = GameHandler.getInstance().generateNewGame(User.getInstance().getId(), newGameController.getGameName());
+                GameHandler handler = GameHandler.getInstance();
 
-                if (successful) {
+                if (newGameController.createsAGame()) {
 
-                    gamesceneController.createTab(newGameController.getGameName());
+                    boolean successful = handler.generateNewGame(User.getInstance().getId(), newGameController.getGameName());
 
-                    closeNewGame();
+                    if (successful) {
+
+                        gamesceneController.createTab(newGameController.getGameName());
+
+                        closeNewGame();
+
+                    } else {
+
+                        newGameController.setErrorText("An error occurred.");
+
+                    }
 
                 } else {
 
-                    newGameController.setErrorText("An error occurred.");
+                    String newName = newGameController.getGameName();
+
+                    if (!newName.equals("")) {
+
+                        GameUI game = handler.getGame(newGameController.getGameId());
+
+                        if (!newName.equals(game.getGameName())) {
+
+                            game.setGameName(newGameController.getGameName());
+
+                            handler.saveGame(game.getGameId());
+
+                        }
+
+                        gamesceneController.renameSelectedTab(newName);
+                        newGameController.createsAGame(true);
+                        closeNewGame();
+
+                    } else {
+
+                        newGameController.setErrorText("Wrong input.");
+
+                    }
 
                 }
 
             } catch (IOException ex) {
                 Logger.getLogger(GameOfLife.class.getName()).log(Level.SEVERE, null, ex);
             }
-
         });
 
         newGameController.cancelEvent((ActionEvent event2) -> {
@@ -392,6 +437,7 @@ public final class GameOfLife extends Application {
 
             int gameId = deleteGameController.getSelectedGameID();
             System.out.println(gameId);
+            
             if (gameId != TableViewWindow.ERROR_VALUE) {
 
                 if (gamesceneController.gameIsOpen(gameId)) {
@@ -419,7 +465,7 @@ public final class GameOfLife extends Application {
 
         private final TableViewWindow view;
         private final Parent parent;
-        
+
         public LoadingScreenTask(TableViewWindow view, Parent parent) {
             this.view = view;
             this.parent = parent;
@@ -433,10 +479,10 @@ public final class GameOfLife extends Application {
             Platform.runLater(() -> {
                 view.setItems(data);
                 view.clearSelection();
-                
+
                 loadingScreen.toBack();
                 loadingScreen.setVisible(false);
-                
+
                 parent.toFront();
                 parent.setVisible(true);
                 parent.requestFocus();

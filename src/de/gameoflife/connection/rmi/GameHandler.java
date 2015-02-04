@@ -157,7 +157,7 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
         try {
             if (ruleEditor != null) {
                 GameUI g = ruleEditor.generateNewGame(userId, name);
-
+                System.out.println( g.isHistoryAvailable() );
                 gameList.put(g.getGameId(), g);
             } else {
                 //TODO: throw error that the connection must be established first
@@ -241,7 +241,7 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
             while (it.hasNext()) {
 
                 game = it.next();
-
+                
                 gameList.put(game.getGameId(), game);
 
             }

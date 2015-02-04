@@ -75,6 +75,10 @@ public final class GameOfLifeController implements Initializable {
     public void setRootApplication(GameOfLife rootApp) {
         application = rootApp;
     }
+    
+    public void renameGame(int gameid) {
+        application.renameGame(gameid);
+    }
 
     public void setUsername(String name) {
         username.setText(name);
@@ -84,6 +88,13 @@ public final class GameOfLifeController implements Initializable {
 
         tabPane.getTabs().remove(gameOpen.get(gameId));
 
+    }
+    
+    public void renameSelectedTab(String newName) {
+        
+        Tab t = tabPane.getSelectionModel().getSelectedItem();
+        t.setText(newName);
+        
     }
 
     public boolean gameIsOpen(int gameId) {

@@ -268,5 +268,9 @@ public final class GameTab implements Initializable {
     public void parentController(GameOfLifeController controller) {
         parentcontroller = controller;
     }
+    
+    public void renameGame() {
+        parentcontroller.renameGame(gameId);
+    }
 
 }

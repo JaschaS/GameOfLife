@@ -535,13 +535,18 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
         User u = User.getInstance();
 
         if (canvasUpdateTask == null) {
+            
             System.out.println("es läuft noch kein updateTask");
             boolean successful = startEngine(u.getId(), gameId);
             System.out.println("succ " + successful);
+            
             if (successful) {
+                
                 System.out.println("Engine gestartet");
+                getGame(gameId).setHistoryAvailable(true);
                 createUpdateTask(gameId, sliderProperty, canvas);
                 return true;
+                
             } else {
                 System.out.println("Smt went wrong");
             }

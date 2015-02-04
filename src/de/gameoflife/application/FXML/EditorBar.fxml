@@ -10,7 +10,6 @@
     <items>
         <Button fx:id="done" mnemonicParsing="false" text="Done" />
         <Button mnemonicParsing="false" onAction="#save" text="Save" />
-      <Button mnemonicParsing="false" text="copy" />
       <Button mnemonicParsing="false" text="rename" />
         <Separator orientation="VERTICAL" />
         <Label text="Width:" />

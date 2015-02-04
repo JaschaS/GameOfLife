@@ -38,10 +38,7 @@ import queue.data.Generation;
  * FXML Controller class
  *
  * @author JScholz
- * 
- * TODO wenn gen == 1 prev deaktivieren
- * TODO wenn gen < genjump, dann passiert nichts mehr
- * TODO wenn gestartet und es history gibt, dann kann es sein, dass das spiel trotzdem geaendert werden...
+ *
  *
  */
 public final class PlayBarController implements Initializable {
@@ -106,7 +103,7 @@ public final class PlayBarController implements Initializable {
         });
 
         stop.setDisable(true);
-        prev.setDisable(true);        
+        prev.setDisable(true);
         next.setDisable(true);
 
         userId = User.getInstance().getId();
@@ -189,8 +186,8 @@ public final class PlayBarController implements Initializable {
         parent = newParent;
 
     }
-    
-    public void activateNextButton( boolean activate) {
+
+    public void activateNextButton(boolean activate) {
         next.setDisable(activate);
     }
 
@@ -202,17 +199,19 @@ public final class PlayBarController implements Initializable {
     private void play(ActionEvent event) throws IOException, NotBoundException {
 
         boolean isRunning = gameHandler.gameRunning();
-        //System.out.println("play");
+
         if (!isRunning) {
-            //System.out.println("play ok");
-            
+
             isRunning = gameHandler.startGame(parent.getGameId(), speedSlider.valueProperty(), parent.getCanvas());
 
             play.setDisable(isRunning);
             stop.setDisable(!isRunning);
             prev.setDisable(true);
-            if(!isRunning) next.setDisable( !gameHandler.isHistoryAvailable(parent.getGameId()));
-            else next.setDisable(true);
+            if (!isRunning) {
+                next.setDisable(!gameHandler.isHistoryAvailable(parent.getGameId()));
+            } else {
+                next.setDisable(true);
+            }
         }
 
     }
@@ -225,13 +224,14 @@ public final class PlayBarController implements Initializable {
         if (isRunning) {
 
             gameHandler.stopCurrentRunningGame();
-            
+
             play.setDisable(false);
             stop.setDisable(true);
 
+            next.setDisable(false);
+
             if (parent.getCanvas().getCurrentGeneration() > 1) {
                 prev.setDisable(false);
-                next.setDisable(false);
             }
 
         }
@@ -272,7 +272,10 @@ public final class PlayBarController implements Initializable {
 
         if (!isRunning && currentGen > 1) {
 
-            Generation gen = gameHandler.getGeneration(User.getInstance().getId(), parent.getGameId(), currentGen - step);
+            if(currentGen > step) currentGen -= step;
+            else currentGen = 1;
+            
+            Generation gen = gameHandler.getGeneration(User.getInstance().getId(), parent.getGameId(), currentGen);
 
             if (gen == null) {
                 System.out.println("Prev Step: gen ist null");
@@ -283,7 +286,7 @@ public final class PlayBarController implements Initializable {
                 prev.setDisable(true);
             }
 
-            parent.getCanvas().setCurrentGeneration(currentGen - step);
+            parent.getCanvas().setCurrentGeneration(currentGen);
             parent.getCanvas().drawCells(gen.getConfig());
         }
 
@@ -301,7 +304,7 @@ public final class PlayBarController implements Initializable {
             analysisStart.setDisable(true);
 
             gameHandler.startAnalysis(parent.getGameId(), parent.getCanvas().getCurrentGeneration());
-            
+
             analyseTask = new Task<Void>() {
                 @Override
                 protected Void call() throws Exception {
@@ -316,7 +319,6 @@ public final class PlayBarController implements Initializable {
                     }
 
                     //Now analyseData is available
-                    
                     //Die Button sind teil des UI Threads, wenn du nur setDisable machst
                     //siehst du teilweise erst das update, wenn man mit der Maus drueber
                     //geht. Daher mit Platform runlater ausfuehren, dann sieht man
@@ -327,67 +329,61 @@ public final class PlayBarController implements Initializable {
                         analysisStop.setDisable(true);
                         analysisStart.setDisable(false);
                     });
-                    
+
                     JSONObject json = new JSONObject(analyseData);
-                    HashMap<String,JSONArray> patterns = new HashMap<>();
-                    patterns.put("static-object",json.optJSONArray("static-object"));
-                    patterns.put("population-density",json.optJSONArray("population-density"));
-                    patterns.put("extermination",json.optJSONArray("extermination"));
-                    patterns.put("beacon",json.optJSONArray("beacon"));
-                    patterns.put("blinker",json.optJSONArray("blinker"));
-                    patterns.put("glider",json.optJSONArray("glider"));
-                    patterns.put("heavyweight-spaceship",json.optJSONArray("heavyweight-spaceship"));
-                    patterns.put("lightweight-spaceship",json.optJSONArray("lightweight-spaceship"));
-                    patterns.put("middleweight-spaceship",json.optJSONArray("middleweight-spaceship"));
-                    patterns.put("beehive",json.optJSONArray("beehive"));
-                    patterns.put("block",json.optJSONArray("block"));
-                    
+                    HashMap<String, JSONArray> patterns = new HashMap<>();
+                    patterns.put("static-object", json.optJSONArray("static-object"));
+                    patterns.put("population-density", json.optJSONArray("population-density"));
+                    patterns.put("extermination", json.optJSONArray("extermination"));
+                    patterns.put("beacon", json.optJSONArray("beacon"));
+                    patterns.put("blinker", json.optJSONArray("blinker"));
+                    patterns.put("glider", json.optJSONArray("glider"));
+                    patterns.put("heavyweight-spaceship", json.optJSONArray("heavyweight-spaceship"));
+                    patterns.put("lightweight-spaceship", json.optJSONArray("lightweight-spaceship"));
+                    patterns.put("middleweight-spaceship", json.optJSONArray("middleweight-spaceship"));
+                    patterns.put("beehive", json.optJSONArray("beehive"));
+                    patterns.put("block", json.optJSONArray("block"));
+
                     //enthaelt alle pattern mit ihrer anzahl
-                    ArrayList<AnalysisPattern> patternTable= new ArrayList<>();
-                    
-                    Set<String> keys=patterns.keySet();
+                    ArrayList<AnalysisPattern> patternTable = new ArrayList<>();
+
+                    Set<String> keys = patterns.keySet();
                     Iterator<String> it = keys.iterator();
-                    
+
                     String patternName, count, x, y, genNo, genCount, period, direction, avg;
                     JSONObject temp;
-                    
-                    while (it.hasNext()){
+
+                    while (it.hasNext()) {
                         patternName = it.next();
-                        
-                        if (patterns.get(patternName) != null && patterns.get(patternName).length() > 0){
-                            count = patterns.get(patternName).length()+"";
-                            for(int i = 0; i < patterns.get(patternName).length(); i++){
+
+                        if (patterns.get(patternName) != null && patterns.get(patternName).length() > 0) {
+                            count = patterns.get(patternName).length() + "";
+                            for (int i = 0; i < patterns.get(patternName).length(); i++) {
                                 temp = patterns.get(patternName).getJSONObject(i);
-                                x = temp.optInt("start-x-coordinate",-1)+"";
-                                y = temp.optInt("start-y-coordinate",-1)+"";
-                                genNo = temp.optInt("start-generation-no.",-1)+"";
-                                genCount = temp.optInt("generationcount",-1)+"";
-                                period = temp.optInt("periode")+"";
+                                x = temp.optInt("start-x-coordinate", -1) + "";
+                                y = temp.optInt("start-y-coordinate", -1) + "";
+                                genNo = temp.optInt("start-generation-no.", -1) + "";
+                                genCount = temp.optInt("generationcount", -1) + "";
+                                period = temp.optInt("periode") + "";
                                 direction = temp.optString("direction");
-                                avg = temp.optInt("avg",-1)+"";
-                                
-                                patternTable.add(new AnalysisPattern(patternName,direction,avg,count,period,x,y,genNo,genCount));
+                                avg = temp.optInt("avg", -1) + "";
+
+                                patternTable.add(new AnalysisPattern(patternName, direction, avg, count, period, x, y, genNo, genCount));
                             }
                         }
-                    }                    
-        
+                    }
+
                     //Die GUI setzen
                     analyseController.setItemsToAdd(patternTable);
                     return null;
                 }
             };
-            
+
             Thread t = new Thread(analyseTask);
             t.start();
 
         }
-        //TODO Analysis abfangen...
-        //Task schreiben
-        //Task starten wie in play
-        //Task sollte ein boolean wert zurueckgeben, dann kann der show button wieder aktiviert werden mit setdisable(false)
-        //Oder so Etwas: bindet den wert den der task zurueck gibt an den disable des buttons
-        //analysisShow.disableProperty().bind( task.valueProperty);  //Daniel
-        //Diesen JSon string vorher im Task speichern. Also eine Variable in PlaybarController definieren und im task zuweisen?
+
     }
 
     @FXML
@@ -412,34 +408,14 @@ public final class PlayBarController implements Initializable {
     private void showAnalysis(ActionEvent event) throws IOException {
 
         if (analyseData != null) {
-            
+
             if (analyseStage != null) {
-                
+
                 analyseStage.show();
             }
 
         }
-        //Wenn das gedrueckt wird, sollen der string ausgegeben werden...
-        //Daten holen sys out
-        //System.out.println("");
-        //Variante neues Fenster erstellen
-        //Eventuell model setzen??
-        // man erhält nur das Parent FXMLLoader.load( getClass().getResource("FXML/NewGame.fxml") ); aber kein Controller!
 
-        //FXMLLoader analyseLoader = new FXMLLoader(getClass().getResource("FXML/ShowAnalysis.fxml")); //Analyse
-        //Parent analyse = (Parent) analyseLoader.load();
-        //ShowAnalysisController controller = analyseLoader.getController();
-/*
-         Scene s = new Scene(analyse);
-         Stage stage = new Stage();
-         stage.setScene(s);
-         stage.centerOnScreen();
-         stage.setTitle("Game of Life");
-         stage.show();
-
-         controller.setLabel(analyseData);
-         */
-        //Alternative koenntest du das Parent analyse auch der Stackpane zuweisen
     }
 
 }

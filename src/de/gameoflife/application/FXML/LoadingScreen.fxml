@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<GridPane alignment="CENTER" hgap="10" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="135.0" prefWidth="375.0" style="-fx-background-color: rgb(241,241,241); -fx-effect: dropshadow(three-pass-box, grey, 30, 0.5, 0, 0); -fx-border-radius: 5 5 5 5;   -fx-background-radius: 5 5 5 5;" vgap="12" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+    <columnConstraints>
+      <ColumnConstraints halignment="RIGHT" />
+      <ColumnConstraints halignment="LEFT" />
+      <ColumnConstraints />
+    </columnConstraints>
+     <children>
+           
+                <Label text="Loading" GridPane.columnIndex="1" />
+      <ProgressBar focusTraversable="false" prefHeight="20.0" prefWidth="308.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />                
+                
+     </children>
+   <rowConstraints>
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+   </rowConstraints>
+</GridPane>

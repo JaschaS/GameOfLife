@@ -1,5 +1,8 @@
 package de.gameoflife.connection.rmi;
 
+import java.net.MalformedURLException;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
 import javafx.collections.ObservableList;
 import rmi.data.GameUI;
 
@@ -13,7 +16,7 @@ public interface IConnectionRuleEditor {
      * Establishs a connection to the RuleEditor.
      * @return true, if the connection is established, else false.
      */
-    boolean establishConnectionRuleEditor();
+    boolean establishConnectionRuleEditor() throws NotBoundException, MalformedURLException, RemoteException;
     
     /*
      * Closes the connection to the RuleEditor. Should be called by logout of

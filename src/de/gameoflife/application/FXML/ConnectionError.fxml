@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<GridPane alignment="CENTER" hgap="10" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="135.0" prefWidth="375.0" style="-fx-background-color: rgb(241,241,241); -fx-effect: dropshadow(three-pass-box, grey, 30, 0.5, 0, 0); -fx-border-radius: 5 5 5 5;   -fx-background-radius: 5 5 5 5;" vgap="10.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.gameoflife.application.ConnectionErrorController">
+    <columnConstraints>
+      <ColumnConstraints halignment="RIGHT" />
+      <ColumnConstraints halignment="LEFT" />
+      <ColumnConstraints />
+    </columnConstraints>
+     <children>
+           
+                <Label prefHeight="16.0" prefWidth="295.0" text="A connection failure has occurred" GridPane.columnIndex="1">
+         <GridPane.margin>
+            <Insets top="15.0" />
+         </GridPane.margin></Label>
+      <Button fx:id="error" mnemonicParsing="false" text="Retry" GridPane.columnIndex="1" GridPane.rowIndex="2" />                
+                
+     </children>
+   <rowConstraints>
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+   </rowConstraints>
+</GridPane>

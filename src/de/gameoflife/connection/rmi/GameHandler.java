@@ -58,7 +58,7 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
         gameList = new HashMap<>();
     }
 
-    public static void init() {
+    public static void init() throws NotBoundException, MalformedURLException, RemoteException {
 
         if (instance == null) {
 
@@ -88,7 +88,7 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
 
     }
 
-    public boolean establishConnection() {
+    public boolean establishConnection() throws NotBoundException, MalformedURLException, RemoteException {
         //TODO fehler abfangen
         establishConnectionRuleEditor();
         establishConnectionGameEngine();
@@ -135,13 +135,13 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
      * <---------------------------RuleEditor part ---------------------------->
      */
     @Override
-    public boolean establishConnectionRuleEditor() {
+    public boolean establishConnectionRuleEditor() throws NotBoundException, MalformedURLException, RemoteException {
         try {
             ruleEditor = (IRemoteRuleEditor) Naming.lookup("rmi://143.93.91.72/" + IRemoteRuleEditor.SERVICENAME);
         } catch (NotBoundException | MalformedURLException | RemoteException ex) {
 
             Logger.getLogger(GameHandler.class.getName()).log(Level.SEVERE, null, ex);
-            return false;
+            throw ex;
         }
         return true;
     }
@@ -241,7 +241,7 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
             while (it.hasNext()) {
 
                 game = it.next();
-                
+
                 gameList.put(game.getGameId(), game);
 
             }
@@ -258,15 +258,15 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
      * <-----------------------------Engine part ------------------------------>
      */
     @Override
-    public boolean establishConnectionGameEngine() {
+    public boolean establishConnectionGameEngine() throws NotBoundException, MalformedURLException, RemoteException {
         try {
-            
+
             gameEngine = (IGameEngineServer) Naming.lookup(IGameEngineServer.FULLSERVICEIDENTIFIER);
 
         } catch (NotBoundException | MalformedURLException | RemoteException ex) {
 
             Logger.getLogger(GameHandler.class.getName()).log(Level.SEVERE, null, ex);
-            return false;
+            throw ex;
         }
         return true;
     }
@@ -326,7 +326,7 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
      */
 
     @Override
-    public boolean establishConnectionAnalysis() {
+    public boolean establishConnectionAnalysis() throws NotBoundException, MalformedURLException, RemoteException {
         try {
 
             analysis = (IAnalysis) Naming.lookup(IAnalysis.RMI_ADDR);
@@ -334,7 +334,7 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
         } catch (NotBoundException | MalformedURLException | RemoteException ex) {
 
             Logger.getLogger(GameHandler.class.getName()).log(Level.SEVERE, null, ex);
-            return false;
+            throw ex;
         }
         return true;
     }
@@ -361,13 +361,13 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
     /*
      * <-----------------------UI Server part ------------------------->
      */
-    public boolean establishConnectionUIServer() {
+    public boolean establishConnectionUIServer() throws NotBoundException, MalformedURLException, RemoteException {
         try {
             uiServer = (IRemoteUI_Server) Naming.lookup("rmi://143.93.91.71:1098/RemoteUIBackendIntern");
         } catch (NotBoundException | MalformedURLException | RemoteException ex) {
 
             Logger.getLogger(GameHandler.class.getName()).log(Level.SEVERE, null, ex);
-            return false;
+            throw ex;
         }
         return true;
     }
@@ -542,9 +542,10 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
                 System.out.println("Engine gestartet");
                 createUpdateTask(gameId, sliderProperty, canvas);
                 return true;
+            } else {
+                System.out.println("Smt went wrong");
             }
-            else System.out.println("Smt went wrong");
-            
+
         } else {
 
             if (canvasUpdateTask.isRunning()) {

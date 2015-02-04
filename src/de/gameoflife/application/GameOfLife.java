@@ -4,11 +4,16 @@ import com.goebl.david.Webb;
 import de.gameoflife.connection.rabbitmq.RabbitMQConnection;
 import de.gameoflife.connection.rmi.GameHandler;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -18,6 +23,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import org.json.JSONObject;
+import rmi.data.GameUI;
 
 /**
  *
@@ -38,6 +44,7 @@ public final class GameOfLife extends Application {
     private Parent loginMask;
     private Parent loadGame;
     private Parent deleteGame;
+    private Parent loadingScreen;
     private LoginMaskController loginMaskController;
     private GameOfLifeController gamesceneController;
     private NewGameController newGameController;
@@ -52,11 +59,35 @@ public final class GameOfLife extends Application {
         stageWidthProperty = primaryStage.widthProperty();
         stageHeightProperty = primaryStage.heightProperty();
 
-        queue = new RabbitMQConnection();
-
-        GameHandler.init();
-
         this.primaryStage = primaryStage;
+
+        FXMLLoader connectionErrorLoader = new FXMLLoader(getClass().getResource("FXML/ConnectionError.fxml")); //FXMLLoader.load( getClass().getResource("FXML/NewGame.fxml") );
+
+        Parent connectionError = (Parent) connectionErrorLoader.load();
+        connectionError.setVisible(false);
+        ConnectionErrorController connectionErrorController = connectionErrorLoader.getController();
+        connectionErrorController.addActionEvent((ActionEvent event) -> {
+            try {
+
+                GameHandler.getInstance().establishConnectionAnalysis();
+                GameHandler.getInstance().establishConnectionGameEngine();
+                GameHandler.getInstance().establishConnectionRuleEditor();
+
+                //GameHandler.getInstance().establishConnection();
+                connectionError.setVisible(false);
+                connectionError.toBack();
+
+                loginMask.setVisible(true);
+                loginMask.toFront();
+
+            } catch (NotBoundException | MalformedURLException | RemoteException ex) {
+                Logger.getLogger(GameOfLife.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
+
+        loadingScreen = FXMLLoader.load(getClass().getResource("FXML/LoadingScreen.fxml"));
+        loadingScreen.setVisible(false);
+        loadingScreen.toBack();
 
         initLoginScreen();
         initGameScreen();
@@ -65,7 +96,7 @@ public final class GameOfLife extends Application {
         initNewGameScreen();
 
         ObservableList<Node> children = stackpane.getChildren();
-        children.addAll(loginMask, gamescene, newGame, loadGame, deleteGame);
+        children.addAll(loginMask, gamescene, newGame, loadGame, deleteGame, loadingScreen, connectionError);
 
         currentNodeInFront = loginMask;
 
@@ -75,6 +106,30 @@ public final class GameOfLife extends Application {
         primaryStage.setTitle("Game of Life");
         primaryStage.setScene(scene);
         primaryStage.show();
+
+        try {
+
+            queue = new RabbitMQConnection();
+
+            GameHandler.init();
+
+        } catch (NotBoundException | MalformedURLException | RemoteException ex) {
+
+            loginMask.setVisible(false);
+            loginMask.toBack();
+
+            connectionError.setVisible(true);
+            connectionError.toFront();
+
+        } catch (IOException ex) {
+
+            loginMask.setVisible(false);
+            loginMask.toBack();
+
+            connectionError.setVisible(true);
+            connectionError.toFront();
+
+        }
     }
 
     @Override
@@ -82,7 +137,7 @@ public final class GameOfLife extends Application {
         super.stop();
 
         queue.closeConnection();
-        
+
         GameHandler connection = GameHandler.getInstance();
         connection.stopCurrentRunningGame();
         connection.closeConnection();
@@ -125,29 +180,27 @@ public final class GameOfLife extends Application {
 
     public void loadGame() {
 
-        loadGameController.setItems();
-        loadGameController.clearSelection();
-
-        loadGame.toFront();
-        loadGame.setVisible(true);
-
         gamescene.setDisable(true);
 
-        loadGame.requestFocus();
+        loadingScreen.setVisible(true);
+        loadingScreen.toFront();
+
+        LoadingScreenTask task = new LoadingScreenTask(loadGameController, loadGame);
+        Thread t = new Thread(task);
+        t.start();
 
     }
 
     public void deleteGame() {
 
-        deleteGameController.setItems();
-        deleteGameController.clearSelection();
-
-        deleteGame.toFront();
-        deleteGame.setVisible(true);
-
         gamescene.setDisable(true);
 
-        deleteGame.requestFocus();
+        loadingScreen.setVisible(true);
+        loadingScreen.toFront();
+
+        LoadingScreenTask task = new LoadingScreenTask(deleteGameController, deleteGame);
+        Thread t = new Thread(task);
+        t.start();
 
     }
 
@@ -193,7 +246,7 @@ public final class GameOfLife extends Application {
 
                 if (successful) {
 
-                    gamesceneController.createTab( newGameController.getGameName() );
+                    gamesceneController.createTab(newGameController.getGameName());
 
                     closeNewGame();
 
@@ -260,7 +313,7 @@ public final class GameOfLife extends Application {
                     controller.clear();
 
                     showGameScreen();
-                    
+
                 }
 
             }
@@ -297,17 +350,18 @@ public final class GameOfLife extends Application {
             try {
 
                 int gameId = loadGameController.getSelectedGameID();
-                
+
                 if (gameId != TableViewWindow.ERROR_VALUE) {
 
-                    if (!gamesceneController.gameIsOpen( gameId )) {
+                    if (!gamesceneController.gameIsOpen(gameId)) {
 
-                        gamesceneController.createTab( gameId );
+                        gamesceneController.createTab(gameId);
 
                         closeLoadScreen();
 
+                    } else {
+                        closeLoadScreen();
                     }
-                    else closeLoadScreen();
 
                 }
 
@@ -340,7 +394,9 @@ public final class GameOfLife extends Application {
             System.out.println(gameId);
             if (gameId != TableViewWindow.ERROR_VALUE) {
 
-                if (gamesceneController.gameIsOpen(gameId)) gamesceneController.closeTab(gameId);
+                if (gamesceneController.gameIsOpen(gameId)) {
+                    gamesceneController.closeTab(gameId);
+                }
 
                 queue.deleteGame(User.getInstance().getId(), gameId);
 
@@ -359,9 +415,39 @@ public final class GameOfLife extends Application {
 
     }
 
-    /**
-     * @param args the command line arguments
-     */
+    private class LoadingScreenTask extends Task<Void> {
+
+        private final TableViewWindow view;
+        private final Parent parent;
+        
+        public LoadingScreenTask(TableViewWindow view, Parent parent) {
+            this.view = view;
+            this.parent = parent;
+        }
+
+        @Override
+        protected Void call() throws Exception {
+
+            ObservableList<GameUI> data = GameHandler.getInstance().getGameList(User.getInstance().getId());
+
+            Platform.runLater(() -> {
+                view.setItems(data);
+                view.clearSelection();
+                
+                loadingScreen.toBack();
+                loadingScreen.setVisible(false);
+                
+                parent.toFront();
+                parent.setVisible(true);
+                parent.requestFocus();
+            });
+
+            return null;
+
+        }
+
+    }
+
     public static void main(String[] args) {
         launch(args);
     }

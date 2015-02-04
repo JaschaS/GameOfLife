@@ -1,6 +1,5 @@
 package de.gameoflife.application;
 
-import de.gameoflife.connection.rmi.GameHandler;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -41,9 +40,9 @@ public class TableViewWindow {
 
     }
 
-    public void setItems() {
+    public void setItems(ObservableList<GameUI> data) {
 
-        ObservableList<GameUI> data = GameHandler.getInstance().getGameList(User.getInstance().getId());
+        //ObservableList<GameUI> data = GameHandler.getInstance().getGameList(User.getInstance().getId());
 
         gameList.setItems(data);
 

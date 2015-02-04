@@ -21,7 +21,7 @@ public class RabbitMQConnection {
     private Connection con;
     private Channel channel;
 
-    public RabbitMQConnection() {
+    public RabbitMQConnection() throws IOException {
         factory = new ConnectionFactory();
         factory.setUsername("vsys");
         factory.setPassword("vsys");
@@ -39,6 +39,7 @@ public class RabbitMQConnection {
             }
         } catch (IOException ex) {
             Logger.getLogger(RabbitMQConnection.class.getName()).log(Level.SEVERE, null, ex);
+            throw ex;
         }
     }
 

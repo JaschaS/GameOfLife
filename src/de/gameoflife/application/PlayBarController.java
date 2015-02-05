@@ -201,7 +201,7 @@ public final class PlayBarController implements Initializable {
         boolean isRunning = gameHandler.gameRunning();
 
         if (!isRunning) {
-
+            System.out.println("Play " + parent.getGameId());
             isRunning = gameHandler.startGame(parent.getGameId(), speedSlider.valueProperty(), parent.getCanvas());
 
             play.setDisable(isRunning);
@@ -302,7 +302,7 @@ public final class PlayBarController implements Initializable {
             analysisShow.setDisable(true);
             analysisStop.setDisable(false);
             analysisStart.setDisable(true);
-
+            
             gameHandler.startAnalysis(parent.getGameId(), parent.getCanvas().getCurrentGeneration());
 
             analyseTask = new Task<Void>() {

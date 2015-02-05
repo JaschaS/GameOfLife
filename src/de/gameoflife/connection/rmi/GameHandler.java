@@ -541,7 +541,7 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
             System.out.println("succ " + successful);
             
             if (successful) {
-                
+                System.out.println("StartGame " + gameId);
                 System.out.println("Engine gestartet");
                 getGame(gameId).setHistoryAvailable(true);
                 createUpdateTask(gameId, sliderProperty, canvas);
@@ -626,9 +626,9 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
         @Override
         protected Void call() throws Exception {
             System.out.println("start Game");
-            Generation gen;
+            //Generation gen;
             long time;
-            int currentGen = 0;
+            //int currentGen = 0;
 
             while (!isCancelled()) {
 
@@ -638,32 +638,32 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
                 } catch (InterruptedException interrupted) {
                 }
 
-                gen = handler.getNextGeneration(userId, gameId);
+                final Generation gen = handler.getNextGeneration(userId, gameId);
 
                 if (gen != null) {
 
-                    ++currentGen;
+                    //++currentGen;
 
                     //TODO wird ein Latch wirklich benoetigt?
                     final CountDownLatch doneLatch = new CountDownLatch(1);
 
-                    final int tmp = currentGen;
-
+                    //final int value = currentGen;
+                    
                     Platform.runLater(new Runnable() {
 
-                        final int value = tmp;
+                        //final int value = tmp;
 
                         @Override
                         public void run() {
+                            //System.out.println( "gameid: " + gameId);
+                            //Generation g = handler.getGeneration(userId, gameId, value);
 
-                            Generation g = handler.getGeneration(userId, gameId, value);
-
-                            if (g != null) {
-                                System.out.println(value);
-                                canvas.drawCells(g.getConfig());
-                                canvas.setCurrentGeneration(value);
+                            //if (g != null) {
+                                System.out.println(gen.getGenID() + " gen " + gen.getGameID());
+                                canvas.drawCells(gen.getConfig());
+                                canvas.setCurrentGeneration(gen.getGenID());
                                 doneLatch.countDown();
-                            }
+                            //}
                         }
                     });
 

@@ -47,11 +47,11 @@ public final class GameCanvas extends Group {
         grid = new Canvas(this.width, this.height);
 
         getChildren().addAll(grid, elements);
-        
+
         currentGeneration = new SimpleIntegerProperty(1);
 
         this.gameId = gameId;
-        
+
     }
 
     public void addEraserListener() {
@@ -93,14 +93,23 @@ public final class GameCanvas extends Group {
     }
 
     public void drawCells(int[][] grid) {
+        
+        //System.out.println("width " + this.grid.getWidth() + " height " + this.grid.getHeight());
+        //System.out.println("length " + grid.length + " length 1 " + grid[0].length);
+        for (int i = 0; i < grid.length; ++i) {
+            for (int j = 0; j < grid[i].length; ++j) {
+                System.out.print(grid[i][j] + " ");
+            }
+            System.out.println("");
+        }
 
         GraphicsContext gc = elements.getGraphicsContext2D();
 
         gc.clearRect(0, 0, width, height);
 
-        for (int i = 0, y = 0; y < this.grid.getHeight() && y < grid.length; y += cellSize) {
+        for (int i = 0, y = 0; i < grid.length && y < this.grid.getHeight(); y += cellSize) {
 
-            for (int j = 0, x = 0; x < this.grid.getWidth() && x < grid[i].length; x += cellSize) {
+            for (int j = 0, x = 0; j < grid[i].length && x < this.grid.getWidth(); x += cellSize) {
 
                 if (grid[i][j] > 0) {
                     gc.setFill(cellColor);
@@ -118,7 +127,7 @@ public final class GameCanvas extends Group {
     public void drawCells() {
 
         boolean[][] generation = gameHandler.getStartGen(gameId);
-        
+
         GraphicsContext gc = elements.getGraphicsContext2D();
 
         for (int i = 0, y = 0; y < grid.getHeight(); y += cellSize) {
@@ -164,9 +173,9 @@ public final class GameCanvas extends Group {
     }
 
     public void clear(boolean deleteGeneration) {
-        
+
         boolean[][] generation = gameHandler.getStartGen(gameId);
-        
+
         GraphicsContext gc = grid.getGraphicsContext2D();
 
         gc.clearRect(0, 0, width, height);
@@ -186,15 +195,15 @@ public final class GameCanvas extends Group {
 
             }
         }
-        
+
         gameHandler.setStartGen(gameId, generation);
 
     }
 
     public void setGridWidth(int newWidth) {
 
-        gameHandler.setStartGen(gameId, new boolean[gameHandler.getStartGenHeight(gameId)][newWidth] );
-        
+        gameHandler.setStartGen(gameId, new boolean[gameHandler.getStartGenHeight(gameId)][newWidth]);
+
         width = newWidth * cellSize;
         grid.setWidth(width);
         elements.setWidth(width);
@@ -205,7 +214,7 @@ public final class GameCanvas extends Group {
 
     public void setGridHeight(int newHeight) {
 
-        gameHandler.setStartGen(gameId, new boolean[newHeight][gameHandler.getStartGenWidth(gameId)] );
+        gameHandler.setStartGen(gameId, new boolean[newHeight][gameHandler.getStartGenWidth(gameId)]);
 
         height = newHeight * cellSize;
         grid.setHeight(height);
@@ -252,7 +261,7 @@ public final class GameCanvas extends Group {
         public GameCanvasEraserClickListener() {
             super(true);
         }
-        
+
         @Override
         public void handle(MouseEvent event) {
             super.handle(event);
@@ -299,7 +308,7 @@ public final class GameCanvas extends Group {
             this.check = check;
             generation = gameHandler.getStartGen(gameId);
         }
-        
+
         @Override
         public void handle(MouseEvent event) {
 
@@ -327,7 +336,7 @@ public final class GameCanvas extends Group {
             }
 
             gameHandler.setStartGen(gameId, generation);
-            
+
         }
 
         protected boolean valid(int i, int j) {

@@ -70,11 +70,8 @@ public final class GameOfLife extends Application {
         connectionErrorController.addActionEvent((ActionEvent event) -> {
             try {
 
-                GameHandler.getInstance().establishConnectionAnalysis();
-                GameHandler.getInstance().establishConnectionGameEngine();
-                GameHandler.getInstance().establishConnectionRuleEditor();
-
-                //GameHandler.getInstance().establishConnection();
+                GameHandler.getInstance().establishConnection();
+                
                 connectionError.setVisible(false);
                 connectionError.toBack();
 

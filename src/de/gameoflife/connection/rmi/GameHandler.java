@@ -530,7 +530,7 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
     /*
      * <-----------------------Sonstiges part ------------------------->
      */
-    public boolean startGame(final int gameId, DoubleProperty sliderProperty, GameCanvas canvas) {
+    public boolean startGame(final int gameId, DoubleProperty sliderProperty, GameCanvas canvas, boolean showCellAge) {
 
         User u = User.getInstance();
 
@@ -544,7 +544,7 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
                 System.out.println("StartGame " + gameId);
                 System.out.println("Engine gestartet");
                 getGame(gameId).setHistoryAvailable(true);
-                createUpdateTask(gameId, sliderProperty, canvas);
+                createUpdateTask(gameId, sliderProperty, canvas, showCellAge);
                 return true;
                 
             } else {
@@ -557,7 +557,7 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
                 System.out.println("stopppen!!");
                 stopGame(gameId);
 
-                createUpdateTask(gameId, sliderProperty, canvas);
+                createUpdateTask(gameId, sliderProperty, canvas, showCellAge);
                 return true;
             }
 
@@ -593,9 +593,9 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
         return canvasUpdateTask != null && canvasUpdateTask.isRunning();
     }
 
-    private void createUpdateTask(final int gameId, DoubleProperty sliderProperty, GameCanvas canvas) {
+    private void createUpdateTask(final int gameId, DoubleProperty sliderProperty, GameCanvas canvas, boolean showCellAge) {
 
-        canvasUpdateTask = new UpdateTask(gameId, canvas, sliderProperty);
+        canvasUpdateTask = new UpdateTask(gameId, canvas, sliderProperty, showCellAge);
 
         updateThread = new Thread(canvasUpdateTask);
         updateThread.setName("UpdateThread");
@@ -610,13 +610,15 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
         private final int gameId;
         private final GameCanvas canvas;
         private final DoubleProperty sliderProperty;
+        private final boolean showCellAge;
 
-        public UpdateTask(int gameId, GameCanvas canvas, DoubleProperty sliderProperty) {
+        public UpdateTask(int gameId, GameCanvas canvas, DoubleProperty sliderProperty, boolean showCellAge) {
             handler = GameHandler.getInstance();
             userId = User.getInstance().getId();
             this.gameId = gameId;
             this.canvas = canvas;
             this.sliderProperty = sliderProperty;
+            this.showCellAge = showCellAge;
         }
 
         public int getGameId() {
@@ -660,7 +662,7 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
 
                             //if (g != null) {
                                 System.out.println(gen.getGenID() + " gen " + gen.getGameID());
-                                canvas.drawCells(gen.getConfig());
+                                canvas.drawCells(gen, showCellAge);
                                 canvas.setCurrentGeneration(gen.getGenID());
                                 doneLatch.countDown();
                             //}
@@ -679,6 +681,10 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
 
         }
 
+    }
+    
+    public void clearGameList() {
+        gameList.clear();
     }
 
     /*public static void main(String[] args) {

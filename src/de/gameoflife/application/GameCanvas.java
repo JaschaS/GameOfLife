@@ -5,11 +5,15 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.event.EventHandler;
+import javafx.geometry.VPos;
 import javafx.scene.Group;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.TextAlignment;
+import queue.data.Generation;
 
 /**
  *
@@ -25,7 +29,9 @@ public final class GameCanvas extends Group {
     private int cellSize;
     private int width;
     private int height;
+    private int[][] currentGrid;
     private final int gameId;
+    private boolean showCellAge;
     private Color cellColor;
     private final SimpleIntegerProperty currentGeneration;
     private final GameHandler gameHandler = GameHandler.getInstance();
@@ -92,13 +98,20 @@ public final class GameCanvas extends Group {
         return currentGeneration;
     }
 
-    public void drawCells(int[][] grid) {
-        
+    public void drawCells(Generation gen, boolean showCellAge) {
+        drawCells(gen.getConfig(), showCellAge);
+    }
+
+    public void drawCells(int[][] gen, boolean showCellAge) {
+
         //System.out.println("width " + this.grid.getWidth() + " height " + this.grid.getHeight());
         //System.out.println("length " + grid.length + " length 1 " + grid[0].length);
-        for (int i = 0; i < grid.length; ++i) {
-            for (int j = 0; j < grid[i].length; ++j) {
-                System.out.print(grid[i][j] + " ");
+        currentGrid = gen;
+        this.showCellAge = showCellAge;
+
+        for (int i = 0; i < currentGrid.length; ++i) {
+            for (int j = 0; j < currentGrid[i].length; ++j) {
+                System.out.print(currentGrid[i][j] + " ");
             }
             System.out.println("");
         }
@@ -107,14 +120,29 @@ public final class GameCanvas extends Group {
 
         gc.clearRect(0, 0, width, height);
 
-        for (int i = 0, y = 0; i < grid.length && y < this.grid.getHeight(); y += cellSize) {
+        for (int i = 0, y = 0; i < currentGrid.length && y < this.grid.getHeight(); y += cellSize) {
 
-            for (int j = 0, x = 0; j < grid[i].length && x < this.grid.getWidth(); x += cellSize) {
+            for (int j = 0, x = 0; j < currentGrid[i].length && x < this.grid.getWidth(); x += cellSize) {
 
-                if (grid[i][j] > 0) {
+                if (currentGrid[i][j] > 0) {
+
                     gc.setFill(cellColor);
                     gc.setStroke(cellColor);
                     gc.fillRect(x, y, cellSize, cellSize);
+
+                    if (showCellAge) {
+
+                        String age = currentGrid[i][j] + "";
+                        int fontSize = cellSize - age.length();
+
+                        gc.setFill(cellColor.invert());
+                        gc.setFont(new Font(fontSize));
+                        gc.setTextBaseline(VPos.CENTER);
+                        gc.setTextAlign(TextAlignment.CENTER);
+                        gc.fillText(age, x + cellSize / 2 - age.length(), y + cellSize / 2, 100);
+
+                    }
+
                 }
 
                 ++j;
@@ -147,10 +175,26 @@ public final class GameCanvas extends Group {
 
     }
 
+    public void redrawCells() {
+        if (currentGrid == null) {
+            drawCells();
+        } else {
+            drawCells(currentGrid, showCellAge);
+        }
+    }
+
+    public void setShowCellAge(boolean value) {
+        showCellAge = value;
+    }
+    
     public void setCellColor(Color color) {
 
         cellColor = color;
-        drawCells();
+        if (currentGrid == null) {
+            drawCells();
+        } else {
+            drawCells(currentGrid, showCellAge);
+        }
 
     }
 
@@ -236,7 +280,12 @@ public final class GameCanvas extends Group {
         this.cellSize = size;
         clear(false);
         drawGrid();
-        drawCells();
+
+        if (currentGrid == null) {
+            drawCells();
+        } else {
+            drawCells(currentGrid, showCellAge);
+        }
 
     }
 

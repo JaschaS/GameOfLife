@@ -138,9 +138,9 @@ public final class EditorBarController implements Initializable {
             }
         });
 
-        editorToolBar.getItems().add(4, cellWidth);
-        editorToolBar.getItems().add(6, cellHeight);
-        editorToolBar.getItems().add(8, cellSize);
+        editorToolBar.getItems().add(5, cellWidth);
+        editorToolBar.getItems().add(7, cellHeight);
+        editorToolBar.getItems().add(10, cellSize);
 
         borderOverflow.selectedProperty().addListener((ObservableValue<? extends Boolean> ov, Boolean oldVal, Boolean newVal) -> {
 

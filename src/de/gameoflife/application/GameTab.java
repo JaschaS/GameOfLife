@@ -197,7 +197,7 @@ public final class GameTab implements Initializable {
         canvas.setCellSize(size);
 
     }
-
+    
     public void showPlayBar() {
         playBar.toFront();
         editorBar.toBack();

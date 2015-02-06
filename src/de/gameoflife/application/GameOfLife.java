@@ -3,7 +3,6 @@ package de.gameoflife.application;
 import com.goebl.david.Webb;
 import de.gameoflife.connection.rabbitmq.RabbitMQConnection;
 import de.gameoflife.connection.rmi.GameHandler;
-import javafx.event.EventHandler;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.rmi.NotBoundException;
@@ -147,6 +146,8 @@ public final class GameOfLife extends Application {
 
         currentNodeToBack();
 
+        GameHandler.getInstance().clearGameList();
+        
         currentNodeInFront = loginMask;
         loginMask.setVisible(true);
         loginMask.toFront();

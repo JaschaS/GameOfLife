@@ -24,6 +24,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
@@ -69,6 +70,8 @@ public final class PlayBarController implements Initializable {
     private Label currentGeneration;
     @FXML
     private ColorPicker colorPicker;
+    @FXML
+    private CheckBox showCellAge;
 
     private GameTab parent;
     private NumberTextField cellSize;
@@ -85,6 +88,17 @@ public final class PlayBarController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
+        showCellAge.selectedProperty().addListener((ObservableValue<? extends Boolean> ov, Boolean oldVal, Boolean newVal) -> {
+        
+            boolean isRunning = gameHandler.gameRunning();
+            
+            if(!isRunning) {
+                parent.getCanvas().setShowCellAge(showCellAge.isSelected());
+                parent.getCanvas().redrawCells();
+            }
+            
+        });
+        
         cellSize = new NumberTextField(100, 3, 100, "20");
         cellSize.setListener((int value) -> {
             if (parent != null) {
@@ -202,11 +216,13 @@ public final class PlayBarController implements Initializable {
 
         if (!isRunning) {
             System.out.println("Play " + parent.getGameId());
-            isRunning = gameHandler.startGame(parent.getGameId(), speedSlider.valueProperty(), parent.getCanvas());
+            isRunning = gameHandler.startGame(parent.getGameId(), speedSlider.valueProperty(), parent.getCanvas(), showCellAge.isSelected());
 
             play.setDisable(isRunning);
             stop.setDisable(!isRunning);
             prev.setDisable(true);
+            showCellAge.setDisable(true);
+            
             if (!isRunning) {
                 next.setDisable(!gameHandler.isHistoryAvailable(parent.getGameId()));
             } else {
@@ -227,7 +243,7 @@ public final class PlayBarController implements Initializable {
 
             play.setDisable(false);
             stop.setDisable(true);
-
+            showCellAge.setDisable(false);
             next.setDisable(false);
 
             if (parent.getCanvas().getCurrentGeneration() > 1) {
@@ -258,8 +274,8 @@ public final class PlayBarController implements Initializable {
                 prev.setDisable(false);
             }
 
+            parent.getCanvas().drawCells(gen, showCellAge.isSelected());
             parent.getCanvas().setCurrentGeneration(currentGen + step);
-            parent.getCanvas().drawCells(gen.getConfig());
         }
 
     }
@@ -286,8 +302,8 @@ public final class PlayBarController implements Initializable {
                 prev.setDisable(true);
             }
 
+            parent.getCanvas().drawCells(gen, showCellAge.isSelected());
             parent.getCanvas().setCurrentGeneration(currentGen);
-            parent.getCanvas().drawCells(gen.getConfig());
         }
 
     }

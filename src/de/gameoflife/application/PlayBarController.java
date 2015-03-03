@@ -261,6 +261,8 @@ public final class PlayBarController implements Initializable {
 
         if (!isRunning) {
 
+            System.out.println( User.getInstance().getId() + " gameid " + parent.getGameId());
+            
             int currentGen = parent.getCanvas().getCurrentGeneration();
 
             Generation gen = gameHandler.getGeneration(User.getInstance().getId(), parent.getGameId(), currentGen + step);
@@ -318,22 +320,23 @@ public final class PlayBarController implements Initializable {
             analysisShow.setDisable(true);
             analysisStop.setDisable(false);
             analysisStart.setDisable(true);
-            
+            System.out.println(" gen id " + parent.getCanvas().getCurrentGeneration());
             gameHandler.startAnalysis(parent.getGameId(), parent.getCanvas().getCurrentGeneration());
 
             analyseTask = new Task<Void>() {
                 @Override
                 protected Void call() throws Exception {
                     while (analyseData == null) {
-
+                        System.out.println(analyseData + "analyse");
                         Thread.sleep(10000); //sleep 10 seconds
                         //System.out.println("test");
 
                         //TODO: diese zeile durch die untere ersetzen
+                        System.out.println("analyse datenholen ");
                         analyseData = gameHandler.getAnalyseData(userId, parent.getGameId());
                         //analyseData=connection.getAnalyseData(User.getInstance().getId(), parent.getGameId() );
                     }
-
+                    System.out.println("Daten bekommen");
                     //Now analyseData is available
                     //Die Button sind teil des UI Threads, wenn du nur setDisable machst
                     //siehst du teilweise erst das update, wenn man mit der Maus drueber

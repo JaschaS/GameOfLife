@@ -8,7 +8,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.control.MultipleSelectionModel;
 import javafx.scene.input.MouseEvent;
-import rmi.data.rules.Evaluable;
 import rmi.data.rules.NumericRule;
 import rmi.data.rules.RulePattern;
 

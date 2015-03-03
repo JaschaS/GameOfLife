@@ -24,7 +24,7 @@ import javafx.scene.layout.AnchorPane;
  *
  * @author JScholz
  *
- * @version 2014-12-11-1 TDOO Stop alle spiele, wenn sich ausgeloggt wird!
+ * @version 2014-12-11-1 
  */
 public final class GameOfLifeController implements Initializable {
 

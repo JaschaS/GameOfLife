@@ -108,14 +108,14 @@ public final class GameCanvas extends Group {
         //System.out.println("length " + grid.length + " length 1 " + grid[0].length);
         currentGrid = gen;
         this.showCellAge = showCellAge;
-
+        /*
         for (int i = 0; i < currentGrid.length; ++i) {
             for (int j = 0; j < currentGrid[i].length; ++j) {
                 System.out.print(currentGrid[i][j] + " ");
             }
             System.out.println("");
         }
-
+                */
         GraphicsContext gc = elements.getGraphicsContext2D();
 
         gc.clearRect(0, 0, width, height);

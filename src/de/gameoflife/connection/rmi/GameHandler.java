@@ -661,7 +661,7 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
                             //Generation g = handler.getGeneration(userId, gameId, value);
 
                             //if (g != null) {
-                                System.out.println(gen.getGenID() + " gen " + gen.getGameID());
+                                //System.out.println(gen.getGenID() + " gen " + gen.getGameID());
                                 canvas.drawCells(gen, showCellAge);
                                 canvas.setCurrentGeneration(gen.getGenID());
                                 doneLatch.countDown();
@@ -671,9 +671,9 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
 
                     doneLatch.await();
 
-                } else {
-                    System.out.println("gen ist null");
-                }
+                } //else {
+                  //  System.out.println("gen ist null");
+                //}
 
             }
             System.out.println("stopped");

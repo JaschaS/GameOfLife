@@ -2,10 +2,8 @@ import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import java.util.Iterator;
-import java.util.List;
-import queue.data.Generation;
 import rmi.data.GameUI;
+import rmi.interfaces.IAnalysis;
 import rmi.interfaces.IGameEngineServer;
 import rmi.interfaces.IRemoteRuleEditor;
 import rmi.interfaces.IRemoteUI_Server;
@@ -13,15 +11,33 @@ import rmi.interfaces.IRemoteUI_Server;
 
 public class UI {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws InterruptedException {
 		
 		try {
 			// 0. Lookup Service
 			IRemoteRuleEditor ruleEditor = (IRemoteRuleEditor) Naming.lookup(IRemoteRuleEditor.FULLSERVICEIDENTIFIER);
+                        IAnalysis analyse = (IAnalysis) Naming.lookup(IAnalysis.RMI_ADDR);
                         IGameEngineServer gameEngine = (IGameEngineServer) Naming.lookup(IGameEngineServer.FULLSERVICEIDENTIFIER);
                         IRemoteUI_Server uiServer = (IRemoteUI_Server) Naming.lookup("rmi://143.93.91.71:1098/RemoteUIBackendIntern");
+                        
+                        GameUI g = ruleEditor.getGameObject(21, 6);
+                        
+                        System.out.println(g.isAnalysisAvailable());
+                        
+                        analyse.startAnalysis(21, 6, 100);
+                        
+                        String data = null;
+                        
+                        while(data == null) {
+                            System.out.println("Daten holen... ");
+                            data = uiServer.getAnalyseData(21, 6);
+                            System.out.println("data: " + data);
+                        }
+                        System.out.println("");
+                        System.out.println(data);
+                        
 			//IRemoteRuleEditor ruleEditor = (IRemoteRuleEditor) Naming.lookup("rmi://localhost/" + IRemoteRuleEditor.SERVICENAME);
-			gameEngine.stop(21, 7);
+			//gameEngine.stop(21, 7);
                         //final GameUI game = ruleEditor.generateNewGame(21, "RMI Test for UI");
                         
                         //System.out.println("Test game");

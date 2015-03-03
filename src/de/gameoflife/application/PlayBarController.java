@@ -351,9 +351,15 @@ public final class PlayBarController implements Initializable {
 
                     JSONObject json = new JSONObject(analyseData);
                     HashMap<String, JSONArray> patterns = new HashMap<>();
-                    patterns.put("static-object", json.optJSONArray("static-object"));
-                    patterns.put("population-density", json.optJSONArray("population-density"));
-                    patterns.put("extermination", json.optJSONArray("extermination"));
+                    JSONObject staticObject=json.optJSONObject("static-object");
+                    JSONObject populationDensity=json.optJSONObject("population-density");
+                    JSONObject extermination=json.optJSONObject("extermination");
+                    
+                            
+                            
+                    patterns.put("static-object", new JSONArray("["+staticObject.toString()+"]"));
+                    patterns.put("population-density", new JSONArray("["+populationDensity.toString()+"]"));
+                    patterns.put("extermination", new JSONArray("["+extermination.toString()+"]"));
                     patterns.put("beacon", json.optJSONArray("beacon"));
                     patterns.put("blinker", json.optJSONArray("blinker"));
                     patterns.put("glider", json.optJSONArray("glider"));
@@ -370,6 +376,7 @@ public final class PlayBarController implements Initializable {
                     Iterator<String> it = keys.iterator();
 
                     String patternName, count, x, y, genNo, genCount, period, direction, avg;
+                    int generationNumber;
                     JSONObject temp;
 
                     while (it.hasNext()) {
@@ -381,11 +388,17 @@ public final class PlayBarController implements Initializable {
                                 temp = patterns.get(patternName).getJSONObject(i);
                                 x = temp.optInt("start-x-coordinate", -1) + "";
                                 y = temp.optInt("start-y-coordinate", -1) + "";
-                                genNo = temp.optInt("start-generation-no.", -1) + "";
+                                generationNumber=temp.optInt("start-generation-no.", -1);
+                                if (generationNumber==-1){
+                                    genNo = temp.optString("generation-no.", "");
+                                } else{
+                                    genNo = generationNumber + "";
+                                }
                                 genCount = temp.optInt("generationcount", -1) + "";
                                 period = temp.optInt("periode") + "";
                                 direction = temp.optString("direction");
-                                avg = temp.optInt("avg", -1) + "";
+                                avg = temp.optDouble("avg", -1) + "";
+                                
 
                                 patternTable.add(new AnalysisPattern(patternName, direction, avg, count, period, x, y, genNo, genCount));
                             }

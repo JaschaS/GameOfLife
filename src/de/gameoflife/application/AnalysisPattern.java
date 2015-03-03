@@ -30,7 +30,7 @@ public class AnalysisPattern {
         if (direction == null){
             direction = "";
         }
-        if (avg.equals("-1")){
+        if (avg.equals("-1.0")){
             avg = "";
         }
         if (periode.equals("-1")){

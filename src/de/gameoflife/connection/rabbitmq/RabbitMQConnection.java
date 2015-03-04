@@ -66,11 +66,13 @@ public class RabbitMQConnection {
             try {
                 out = new ObjectOutputStream(bos);
                 out.writeObject(delInfo);
+                
                 byte[] delInfo_byte = bos.toByteArray();
 
                
 
                 channel.basicPublish("VisuExchange", "", null, delInfo_byte);
+                
             } finally {
                 try {
                     if (out != null) {
@@ -96,13 +98,11 @@ public class RabbitMQConnection {
             DeleteInfo delInfo = new DeleteInfo(userId, gameId);
             System.out.println(delInfo.getClass().toString());
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            ObjectOutput out = null;
+            ObjectOutputStream out = null;
             try {
                 out = new ObjectOutputStream(bos);
                 out.writeObject(delInfo);
                 byte[] delInfo_byte = bos.toByteArray();
-
-                
 
                 channel.basicPublish("VisuExchange", "", null, delInfo_byte);
                 System.out.println("objekt gesendet");

@@ -233,6 +233,8 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
                 return FXCollections.observableArrayList();
             }
 
+            gameList.clear();
+            
             List<GameUI> games = ruleEditor.getUserGames(userId);
 
             Iterator<GameUI> it = games.iterator();
@@ -579,8 +581,10 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
 
         if (canvasUpdateTask != null && canvasUpdateTask.isRunning()) {
 
-            stopEngine(User.getInstance().getId(), gameId);
+            boolean b = stopEngine(User.getInstance().getId(), gameId);
 
+            System.out.println( b );
+            
             canvasUpdateTask.cancel();
 
             canvasUpdateTask = null;
@@ -636,7 +640,7 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
 
                 try {
                     time = 60 * 1000 / (sliderProperty != null ? sliderProperty.longValue() : 60L);
-                    Thread.sleep(time);
+                    Thread.sleep(500);
                 } catch (InterruptedException interrupted) {
                 }
 

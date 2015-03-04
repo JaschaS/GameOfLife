@@ -220,11 +220,11 @@ public final class PlayBarController implements Initializable {
 
             play.setDisable(isRunning);
             stop.setDisable(!isRunning);
-            prev.setDisable(true);
             showCellAge.setDisable(true);
             
             if (!isRunning) {
                 next.setDisable(!gameHandler.isHistoryAvailable(parent.getGameId()));
+                parent.showErrorDialog("Error: Engine couldn't start the game.");
             } else {
                 next.setDisable(true);
             }

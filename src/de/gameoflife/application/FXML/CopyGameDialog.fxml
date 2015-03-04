@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.*?>
+<?import javafx.scene.canvas.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<GridPane alignment="CENTER" hgap="10" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="135.0" prefWidth="375.0" style="-fx-background-color: rgb(241,241,241); -fx-effect: dropshadow(three-pass-box, grey, 30, 0.5, 0, 0); -fx-border-radius: 5 5 5 5;   -fx-background-radius: 5 5 5 5;" vgap="12" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.gameoflife.application.CopyGameDialogController">
+    <columnConstraints>
+      <ColumnConstraints halignment="RIGHT" />
+      <ColumnConstraints halignment="LEFT" prefWidth="250.0" />
+      <ColumnConstraints />
+    </columnConstraints>
+     <children>
+           
+                <Label style="-fx-text-fill: red;" text="" GridPane.columnIndex="1" />
+            <HBox prefHeight="0.0" prefWidth="200.0" spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="2">
+               <children>
+                    <Button fx:id="ok" text="ok" />
+            <Button fx:id="cancel" text="cancel" />
+            <Button fx:id="copyGame" text="copy game" />
+               </children>
+            </HBox>
+      <ImageView fitHeight="28.0" fitWidth="38.0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="1">
+         <image>
+            <Image url="@../../../../ic_error_black_48dp.png" />
+         </image>
+      </ImageView>
+      <Label fx:id="error" prefHeight="16.0" prefWidth="247.0" text="History and analysis data will be erased. " GridPane.columnIndex="1" GridPane.rowIndex="1" />                
+                
+     </children>
+   <rowConstraints>
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+   </rowConstraints>
+</GridPane>

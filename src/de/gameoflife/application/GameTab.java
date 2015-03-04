@@ -33,16 +33,18 @@ public final class GameTab implements Initializable {
     private StackPane barpane;
     @FXML
     private AnchorPane tabContent;
-    @FXML
-    private AnchorPane analysisContent;
 
     private GameCanvas canvas;
     private Parent editorBar;
     private Parent playBar;
     private Parent deathRulesParent;
     private Parent birthRulesParent;
+    private Parent errorDialog;
+    private Parent copyWarning;
     private EditorBarController editorController;
     private PlayBarController playController;
+    private ErrorDialogController errorDialogController;
+    private CopyGameDialogController copyWarningController;
     private int gameId;
     private GameOfLifeController parentcontroller;
     private DeathRulesController deathRulesController;
@@ -58,6 +60,53 @@ public final class GameTab implements Initializable {
         assert (tabContent == null);
 
         try {
+
+            FXMLLoader copyGameLoader = new FXMLLoader(getClass().getResource("FXML/CopyGameDialog.fxml"));
+
+            copyWarning = (Parent) copyGameLoader.load();
+            copyWarning.setVisible(false);
+
+            copyWarningController = copyGameLoader.getController();
+            copyWarningController.okClickEvent((ActionEvent event) -> {
+
+                hideCopyWarningDialog();
+                showEditorBar();
+
+            });
+            copyWarningController.cancelClickEvent((ActionEvent event) -> {
+
+                hideCopyWarningDialog();
+
+            });
+            copyWarningController.copyGameClickEvent((ActionEvent event) -> {
+
+                int copyGameId = gameHandler.copyGame(gameId);
+
+                try {
+                    hideCopyWarningDialog();
+                    parentcontroller.createTab(copyGameId);
+                } catch (IOException ex) {
+                    Logger.getLogger(GameTab.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+            });
+
+            FXMLLoader errorInfoLoader = new FXMLLoader(getClass().getResource("FXML/ErrorDialog.fxml"));
+
+            errorDialog = (Parent) errorInfoLoader.load();
+            errorDialog.setVisible(false);
+
+            errorDialogController = errorInfoLoader.getController();
+            errorDialogController.setErrorText("");
+            errorDialogController.okClickEvent((ActionEvent event) -> {
+
+                tabContent.toFront();
+                tabContent.setDisable(false);
+
+                errorDialog.setVisible(false);
+                errorDialog.toBack();
+
+            });
 
             FXMLLoader birthRuleLoader = new FXMLLoader(getClass().getResource("FXML/BirthRules.fxml"));
 
@@ -125,15 +174,7 @@ public final class GameTab implements Initializable {
             playController.editorActionEvent((ActionEvent event) -> {
 
                 if (gameHandler.isHistoryAvailable(gameId)) {
-
-                    int copyGameId = gameHandler.copyGame(gameId);
-
-                    try {
-                        parentcontroller.createTab(copyGameId);
-                    } catch (IOException ex) {
-                        Logger.getLogger(GameTab.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-
+                    showCopyWarningDialog();
                 } else {
                     showEditorBar();
                 }
@@ -142,7 +183,7 @@ public final class GameTab implements Initializable {
 
             barpane.getChildren().addAll(playBar, editorBar);
 
-            pane.getChildren().addAll(deathRulesParent, birthRulesParent);
+            pane.getChildren().addAll(deathRulesParent, birthRulesParent, errorDialog, copyWarning);
 
         } catch (IOException ex) {
             Logger.getLogger(GameTab.class.getName()).log(Level.SEVERE, null, ex);
@@ -165,6 +206,38 @@ public final class GameTab implements Initializable {
     public void setCellColor(Color color) {
 
         canvas.setCellColor(color);
+
+    }
+
+    public void showCopyWarningDialog() {
+
+        tabContent.toBack();
+        tabContent.setDisable(true);
+
+        copyWarning.setVisible(true);
+        copyWarning.toFront();
+
+    }
+
+    public void hideCopyWarningDialog() {
+
+        tabContent.toFront();
+        tabContent.setDisable(false);
+
+        copyWarning.setVisible(false);
+        copyWarning.toBack();
+
+    }
+
+    public void showErrorDialog(String text) {
+
+        errorDialogController.setErrorText(text);
+
+        tabContent.toBack();
+        tabContent.setDisable(true);
+
+        errorDialog.setVisible(true);
+        errorDialog.toFront();
 
     }
 
@@ -197,7 +270,7 @@ public final class GameTab implements Initializable {
         canvas.setCellSize(size);
 
     }
-    
+
     public void showPlayBar() {
         playBar.toFront();
         editorBar.toBack();
@@ -213,7 +286,7 @@ public final class GameTab implements Initializable {
     }
 
     public void initCanvas(int gameId) {
-        
+
         this.gameId = gameId;
 
         boolean[][] startGeneration = gameHandler.getStartGen(gameId);
@@ -237,8 +310,8 @@ public final class GameTab implements Initializable {
         content.setCenter(canvas);
 
         playController.bindPropertyToCurrentGen(canvas.getCurrentGame().asString());
-        
-        playController.activateNextButton( !gameHandler.isHistoryAvailable(gameId) );
+
+        playController.activateNextButton(!gameHandler.isHistoryAvailable(gameId));
     }
 
     public void showDeathRules() {
@@ -268,7 +341,7 @@ public final class GameTab implements Initializable {
     public void parentController(GameOfLifeController controller) {
         parentcontroller = controller;
     }
-    
+
     public void renameGame() {
         parentcontroller.renameGame(gameId);
     }

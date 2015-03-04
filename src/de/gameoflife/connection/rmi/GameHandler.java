@@ -640,7 +640,8 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
 
                 try {
                     time = 60 * 1000 / (sliderProperty != null ? sliderProperty.longValue() : 60L);
-                    Thread.sleep(500);
+                    //System.out.println(time);
+                    Thread.sleep(time);
                 } catch (InterruptedException interrupted) {
                 }
 
@@ -675,9 +676,9 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
 
                     doneLatch.await();
 
-                } //else {
-                  //  System.out.println("gen ist null");
-                //}
+                } else {
+                    System.out.println("gen ist null");
+                }
 
             }
             System.out.println("stopped");

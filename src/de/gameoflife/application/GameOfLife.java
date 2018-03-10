@@ -52,6 +52,8 @@ public final class GameOfLife extends Application {
     private DeleteGameController deleteGameController;
     private Node currentNodeInFront;
     private RabbitMQConnection queue;
+    
+    private final String loginMaskURL = "http://localhost:8080";
 
     @Override
     public void start(Stage primaryStage) throws IOException {
@@ -326,8 +328,9 @@ public final class GameOfLife extends Application {
 
             } else {
 
+                //TODO loginMaskUrl in Datenbank speichern
                 Webb webb = Webb.create();
-                webb.setBaseUri("http://143.93.91.71/Ajax");
+                webb.setBaseUri(loginMaskURL);
 
                 JSONObject result = webb.get("/login")
                         .param("loginname", controller.getUserName())
@@ -346,8 +349,9 @@ public final class GameOfLife extends Application {
 
                     JSONObject user = result.getJSONObject("callback");
 
+                    //TODO vorname in user aendern?
                     String username = user.getString("vorname");
-                    int id = Integer.parseInt(user.getString("id"));
+                    int id = user.getInt ("id");
 
                     User.create(username, id);
 

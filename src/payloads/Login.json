@@ -1,0 +1,8 @@
+{
+  "error": true,
+  "message": "msg",
+  "callback": {
+    "vorname": "Vorname",
+    "id": 1
+  }
+}

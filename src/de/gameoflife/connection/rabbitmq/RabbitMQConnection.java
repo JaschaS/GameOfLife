@@ -22,7 +22,7 @@ public class RabbitMQConnection {
     private Channel channel;
 
     public RabbitMQConnection() throws IOException {
-        factory = new ConnectionFactory();
+        /*factory = new ConnectionFactory();
         factory.setUsername("vsys");
         factory.setPassword("vsys");
         factory.setVirtualHost("vsyshost");
@@ -40,11 +40,11 @@ public class RabbitMQConnection {
         } catch (IOException ex) {
             Logger.getLogger(RabbitMQConnection.class.getName()).log(Level.SEVERE, null, ex);
             throw ex;
-        }
+        }*/
     }
 
     public void closeConnection() {
-        try {
+        /*try {
             if (channel != null && channel.isOpen()) {
                 channel.close();
             }
@@ -54,11 +54,11 @@ public class RabbitMQConnection {
             }
         } catch (IOException ex) {
             Logger.getLogger(RabbitMQConnection.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        }*/
     }
 
     public void deleteUser(final int userId) {
-        try {
+        /*try {
             DeleteInfo delInfo = new DeleteInfo(userId);
 
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -90,11 +90,11 @@ public class RabbitMQConnection {
 
         } catch (IOException ex) {
             Logger.getLogger(RabbitMQConnection.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        }*/
     }
 
     public void deleteGame(final int userId, final int gameId) {
-        try {
+        /*try {
             DeleteInfo delInfo = new DeleteInfo(userId, gameId);
             System.out.println(delInfo.getClass().toString());
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -123,7 +123,7 @@ public class RabbitMQConnection {
 
         } catch (IOException ex) {
             Logger.getLogger(RabbitMQConnection.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        }*/
     }
 
 }

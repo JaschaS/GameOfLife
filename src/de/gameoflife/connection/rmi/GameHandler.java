@@ -136,13 +136,13 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
      */
     @Override
     public boolean establishConnectionRuleEditor() throws NotBoundException, MalformedURLException, RemoteException {
-        try {
+        /*try {
             ruleEditor = (IRemoteRuleEditor) Naming.lookup("rmi://143.93.91.72/" + IRemoteRuleEditor.SERVICENAME);
         } catch (NotBoundException | MalformedURLException | RemoteException ex) {
 
             Logger.getLogger(GameHandler.class.getName()).log(Level.SEVERE, null, ex);
             throw ex;
-        }
+        }*/
         return true;
     }
 
@@ -261,7 +261,7 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
      */
     @Override
     public boolean establishConnectionGameEngine() throws NotBoundException, MalformedURLException, RemoteException {
-        try {
+        /*try {
 
             gameEngine = (IGameEngineServer) Naming.lookup(IGameEngineServer.FULLSERVICEIDENTIFIER);
 
@@ -269,7 +269,7 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
 
             Logger.getLogger(GameHandler.class.getName()).log(Level.SEVERE, null, ex);
             throw ex;
-        }
+        }*/
         return true;
     }
 
@@ -329,7 +329,7 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
 
     @Override
     public boolean establishConnectionAnalysis() throws NotBoundException, MalformedURLException, RemoteException {
-        try {
+        /*try {
 
             analysis = (IAnalysis) Naming.lookup(IAnalysis.RMI_ADDR);
 
@@ -337,7 +337,7 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
 
             Logger.getLogger(GameHandler.class.getName()).log(Level.SEVERE, null, ex);
             throw ex;
-        }
+        }*/
         return true;
     }
 
@@ -364,13 +364,13 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
      * <-----------------------UI Server part ------------------------->
      */
     public boolean establishConnectionUIServer() throws NotBoundException, MalformedURLException, RemoteException {
-        try {
+        /*try {
             uiServer = (IRemoteUI_Server) Naming.lookup("rmi://143.93.91.71:1098/RemoteUIBackendIntern");
         } catch (NotBoundException | MalformedURLException | RemoteException ex) {
 
             Logger.getLogger(GameHandler.class.getName()).log(Level.SEVERE, null, ex);
             throw ex;
-        }
+        }*/
         return true;
     }
 

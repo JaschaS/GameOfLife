@@ -1,6 +1,8 @@
 package de.gameoflife.application;
 
 import de.gameoflife.connection.rmi.GameHandler;
+import de.gameoflife.connection.rmi.IConnectionAnalysis;
+import de.gameoflife.connection.rmi.IConnectionGameEngine;
 import java.io.IOException;
 import java.net.URL;
 import java.rmi.NotBoundException;
@@ -265,7 +267,8 @@ public final class PlayBarController implements Initializable {
             
             int currentGen = parent.getCanvas().getCurrentGeneration();
 
-            Generation gen = gameHandler.getGeneration(User.getInstance().getId(), parent.getGameId(), currentGen + step);
+            IConnectionGameEngine engine = gameHandler.getEngine ();
+            Generation gen = engine.getGeneration(User.getInstance().getId(), parent.getGameId(), currentGen + step);
 
             if (gen == null) {
                 System.out.println("Next Step: gen ist null");
@@ -293,7 +296,8 @@ public final class PlayBarController implements Initializable {
             if(currentGen > step) currentGen -= step;
             else currentGen = 1;
             
-            Generation gen = gameHandler.getGeneration(User.getInstance().getId(), parent.getGameId(), currentGen);
+            IConnectionGameEngine engine = gameHandler.getEngine ();
+            Generation gen = engine.getGeneration(User.getInstance().getId(), parent.getGameId(), currentGen);
 
             if (gen == null) {
                 System.out.println("Prev Step: gen ist null");
@@ -321,7 +325,9 @@ public final class PlayBarController implements Initializable {
             analysisStop.setDisable(false);
             analysisStart.setDisable(true);
             System.out.println(" gen id " + parent.getCanvas().getCurrentGeneration());
-            gameHandler.startAnalysis(parent.getGameId(), parent.getCanvas().getCurrentGeneration());
+            
+            IConnectionAnalysis analysis = gameHandler.getAnalysis ();
+            analysis.startAnalysis(parent.getGameId(), parent.getCanvas().getCurrentGeneration());
 
             analyseTask = new Task<Void>() {
                 @Override
@@ -333,7 +339,8 @@ public final class PlayBarController implements Initializable {
 
                         //TODO: diese zeile durch die untere ersetzen
                         System.out.println("analyse datenholen ");
-                        analyseData = gameHandler.getAnalyseData(userId, parent.getGameId());
+                        //TODO Analyse Data null
+                        analyseData = null;//analysis.getAnalyseData(userId, parent.getGameId());
                         //analyseData=connection.getAnalyseData(User.getInstance().getId(), parent.getGameId() );
                     }
                     System.out.println("Daten bekommen");

@@ -1,6 +1,7 @@
 package de.gameoflife.application;
 
 import de.gameoflife.connection.rmi.GameHandler;
+import de.gameoflife.connection.rmi.IConnectionRuleEditor;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -80,7 +81,8 @@ public final class GameTab implements Initializable {
             });
             copyWarningController.copyGameClickEvent((ActionEvent event) -> {
 
-                int copyGameId = gameHandler.copyGame(gameId);
+                IConnectionRuleEditor ruleEditor = gameHandler.getRuleEditor ();
+                int copyGameId = ruleEditor.copyGame(gameId);
 
                 try {
                     hideCopyWarningDialog();
@@ -159,7 +161,8 @@ public final class GameTab implements Initializable {
                     editorController.isErasing();
                 }
 
-                gameHandler.saveGame(gameId);
+                IConnectionRuleEditor ruleEditor = gameHandler.getRuleEditor ();
+                ruleEditor.saveGame(gameId);
 
                 showPlayBar();
 

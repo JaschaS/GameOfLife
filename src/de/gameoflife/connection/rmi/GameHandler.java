@@ -3,7 +3,6 @@ package de.gameoflife.connection.rmi;
 import de.gameoflife.application.GameCanvas;
 import de.gameoflife.application.User;
 import java.net.MalformedURLException;
-import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.Collection;
@@ -16,38 +15,35 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.beans.property.DoubleProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import queue.data.Generation;
 import rmi.data.GameUI;
 import rmi.data.rules.Evaluable;
-import rmi.interfaces.IAnalysis;
-import rmi.interfaces.IGameEngineServer;
-import rmi.interfaces.IRemoteRuleEditor;
 import rmi.interfaces.IRemoteUI_Server;
 
 /**
  *
  * @author Daniel
  */
-public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
-        IConnectionGameEngine, IConnectionAnalysis, IRemoteUI_Server {
+public class GameHandler implements IGameConfiguration {
 
     //Contains all games which the user has opened in his GUI. 
     //For performance it creates an index over the game ids.
     private HashMap<Integer, GameUI> gameList = null;
 
     //Handles the communication between the RuleEditor and UI.
-    private IRemoteRuleEditor ruleEditor = null;
-
+    //private IRemoteRuleEditor ruleEditor = null;
+    private RuleEditorHandler ruleEditorHandler = null;
+    
     //Handles the communication between the Engine and UI.
-    private IGameEngineServer gameEngine = null;
+    private EngineHandler engineHandler = null;
+    //private IGameEngineServer gameEngine = null;
 
     //Handles the communication between the Analyse and UI.
-    private IAnalysis analysis = null;
+    //private IAnalysis analysis = null;
+    private AnalysisHandler analysisHandler = null;
 
-    private IRemoteUI_Server uiServer = null;
+    //private IRemoteUI_Server uiServer = null;
 
     private static GameHandler instance;
 
@@ -56,6 +52,9 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
 
     private GameHandler() {
         gameList = new HashMap<>();
+        ruleEditorHandler = new RuleEditorHandler ();
+        engineHandler = new EngineHandler ();
+        analysisHandler = new AnalysisHandler ();
     }
 
     public static void init() throws NotBoundException, MalformedURLException, RemoteException {
@@ -87,21 +86,37 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
         }
 
     }
+    
+    public IConnectionRuleEditor getRuleEditor() {
+        return ruleEditorHandler;
+    }
+    
+    public IConnectionGameEngine getEngine() {
+        return engineHandler;
+    }
+    
+    public IConnectionAnalysis getAnalysis() {
+        return analysisHandler;
+    }
 
     public boolean establishConnection() throws NotBoundException, MalformedURLException, RemoteException {
         //TODO fehler abfangen
-        establishConnectionRuleEditor();
-        establishConnectionGameEngine();
-        establishConnectionAnalysis();
-        establishConnectionUIServer();
+        //establishConnectionRuleEditor();
+
+        //establishConnectionGameEngine();
+        //establishConnectionAnalysis();
+        //establishConnectionUIServer();
         return true;
     }
 
     public boolean closeConnection() {
-        closeConnectionRuleEditor();
-        closeConnectionGameEngine();
-        closeConnectionAnalysis();
-        closeConnectionUIServer();
+        //closeConnectionRuleEditor();
+        ruleEditorHandler.closeConnectionRuleEditor ();
+        engineHandler.closeConnectionGameEngine ();
+        analysisHandler.closeConnectionAnalysis ();
+        //closeConnectionGameEngine();
+        //closeConnectionAnalysis();
+        //closeConnectionUIServer();
         return true;
     }
 
@@ -134,15 +149,15 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
     /*
      * <---------------------------RuleEditor part ---------------------------->
      */
-    @Override
+/*    @Override
     public boolean establishConnectionRuleEditor() throws NotBoundException, MalformedURLException, RemoteException {
-        /*try {
+        try {
             ruleEditor = (IRemoteRuleEditor) Naming.lookup("rmi://143.93.91.72/" + IRemoteRuleEditor.SERVICENAME);
         } catch (NotBoundException | MalformedURLException | RemoteException ex) {
 
             Logger.getLogger(GameHandler.class.getName()).log(Level.SEVERE, null, ex);
             throw ex;
-        }*/
+        }
         return true;
     }
 
@@ -154,14 +169,14 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
 
     @Override
     public boolean generateNewGame(int userId, String name) {
-        try {
-            if (ruleEditor != null) {
-                GameUI g = ruleEditor.generateNewGame(userId, name);
+        //try {
+        //    if (ruleEditor != null) {
+                GameUI g = new GameUI (userId, 1, name);//ruleEditor.generateNewGame(userId, name);
                 System.out.println( g.isHistoryAvailable() );
                 gameList.put(g.getGameId(), g);
-            } else {
+          } else {
                 //TODO: throw error that the connection must be established first
-                System.out.println("rule editor null");
+                System.err.println("rule editor null");
                 return false;
             }
         } catch (RemoteException ex) {
@@ -254,14 +269,14 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
             Logger.getLogger(GameHandler.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         }
-    }
+    }*/
 
     /*
      * <-----------------------------Engine part ------------------------------>
      */
-    @Override
+/*    @Override
     public boolean establishConnectionGameEngine() throws NotBoundException, MalformedURLException, RemoteException {
-        /*try {
+        try {
 
             gameEngine = (IGameEngineServer) Naming.lookup(IGameEngineServer.FULLSERVICEIDENTIFIER);
 
@@ -269,7 +284,7 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
 
             Logger.getLogger(GameHandler.class.getName()).log(Level.SEVERE, null, ex);
             throw ex;
-        }*/
+        }
         return true;
     }
 
@@ -322,14 +337,14 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
             Logger.getLogger(GameHandler.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         }
-    }
+    }*/
     /*
      * <----------------------------Analysis part ----------------------------->
      */
 
-    @Override
+ /*   @Override
     public boolean establishConnectionAnalysis() throws NotBoundException, MalformedURLException, RemoteException {
-        /*try {
+        try {
 
             analysis = (IAnalysis) Naming.lookup(IAnalysis.RMI_ADDR);
 
@@ -337,7 +352,7 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
 
             Logger.getLogger(GameHandler.class.getName()).log(Level.SEVERE, null, ex);
             throw ex;
-        }*/
+        }
         return true;
     }
 
@@ -358,19 +373,19 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
         } catch (RemoteException ex) {
             Logger.getLogger(GameHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
+    }*/
 
     /*
      * <-----------------------UI Server part ------------------------->
      */
-    public boolean establishConnectionUIServer() throws NotBoundException, MalformedURLException, RemoteException {
-        /*try {
+/*    public boolean establishConnectionUIServer() throws NotBoundException, MalformedURLException, RemoteException {
+        try {
             uiServer = (IRemoteUI_Server) Naming.lookup("rmi://143.93.91.71:1098/RemoteUIBackendIntern");
         } catch (NotBoundException | MalformedURLException | RemoteException ex) {
 
             Logger.getLogger(GameHandler.class.getName()).log(Level.SEVERE, null, ex);
             throw ex;
-        }*/
+        }
         return true;
     }
 
@@ -389,7 +404,7 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
             Logger.getLogger(GameHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
-    }
+    }*/
 
     /*
      * <-----------------------GameConfiguration part ------------------------->
@@ -539,7 +554,7 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
         if (canvasUpdateTask == null) {
             
             System.out.println("es läuft noch kein updateTask");
-            boolean successful = startEngine(u.getId(), gameId);
+            boolean successful = true;//startEngine(u.getId(), gameId);
             System.out.println("succ " + successful);
             
             if (successful) {
@@ -581,7 +596,7 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
 
         if (canvasUpdateTask != null && canvasUpdateTask.isRunning()) {
 
-            boolean b = stopEngine(User.getInstance().getId(), gameId);
+            boolean b = true;//stopEngine(User.getInstance().getId(), gameId);
 
             System.out.println( b );
             
@@ -645,7 +660,7 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
                 } catch (InterruptedException interrupted) {
                 }
 
-                final Generation gen = handler.getNextGeneration(userId, gameId);
+                final Generation gen = null;//handler.getNextGeneration(userId, gameId);
 
                 if (gen != null) {
 
@@ -715,8 +730,8 @@ public class GameHandler implements IGameConfiguration, IConnectionRuleEditor,
      game.setStartGen(field);
          
      }*/
-    @Override
+    /*@Override
     public String getAnalyseData(int userId, int gameId) throws RemoteException {
         return uiServer.getAnalyseData(userId, gameId);
-    }
+    }*/
 }

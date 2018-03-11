@@ -1,6 +1,7 @@
 package de.gameoflife.application;
 
 import de.gameoflife.connection.rmi.GameHandler;
+import de.gameoflife.connection.rmi.IConnectionRuleEditor;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -223,7 +224,8 @@ public final class EditorBarController implements Initializable {
             isErasing();
         }
 
-        boolean successful = gameHandler.saveGame(parent.getGameId());
+        IConnectionRuleEditor ruleEditor = gameHandler.getRuleEditor ();
+        boolean successful = ruleEditor.saveGame(parent.getGameId());
 
         System.out.println("Save successful: " + successful);
     }

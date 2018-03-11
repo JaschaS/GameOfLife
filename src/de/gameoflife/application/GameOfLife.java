@@ -3,6 +3,7 @@ package de.gameoflife.application;
 import com.goebl.david.Webb;
 import de.gameoflife.connection.rabbitmq.RabbitMQConnection;
 import de.gameoflife.connection.rmi.GameHandler;
+import de.gameoflife.connection.rmi.IConnectionRuleEditor;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.rmi.NotBoundException;
@@ -257,10 +258,11 @@ public final class GameOfLife extends Application {
             try {
 
                 GameHandler handler = GameHandler.getInstance();
+                IConnectionRuleEditor ruleEditor = handler.getRuleEditor ();
 
                 if (newGameController.createsAGame()) {
 
-                    boolean successful = handler.generateNewGame(User.getInstance().getId(), newGameController.getGameName());
+                    boolean successful = ruleEditor.generateNewGame(User.getInstance().getId(), newGameController.getGameName());
 
                     if (successful) {
 
@@ -286,7 +288,7 @@ public final class GameOfLife extends Application {
 
                             game.setGameName(newGameController.getGameName());
 
-                            handler.saveGame(game.getGameId());
+                            ruleEditor.saveGame(game.getGameId());
 
                         }
 
@@ -476,7 +478,9 @@ public final class GameOfLife extends Application {
         @Override
         protected Void call() throws Exception {
 
-            ObservableList<GameUI> data = GameHandler.getInstance().getGameList(User.getInstance().getId());
+            GameHandler handler = GameHandler.getInstance();
+            IConnectionRuleEditor ruleEditor = handler.getRuleEditor ();
+            ObservableList<GameUI> data = ruleEditor.getGameList(User.getInstance().getId());
 
             Platform.runLater(() -> {
                 view.setItems(data);

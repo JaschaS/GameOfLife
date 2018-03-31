@@ -25,6 +25,7 @@ import rmi.interfaces.IRemoteUI_Server;
  *
  * @author Daniel
  */
+@Deprecated
 public class GameHandler implements IGameConfiguration {
 
     //Contains all games which the user has opened in his GUI. 

@@ -1,5 +1,6 @@
 package de.gameoflife.application;
 
+import de.gameoflife.application.login.LoginMaskController;
 import com.goebl.david.Webb;
 import de.gameoflife.connection.rabbitmq.RabbitMQConnection;
 import de.gameoflife.connection.rmi.GameHandler;
@@ -322,7 +323,14 @@ public final class GameOfLife extends Application {
 
         loginMask = (Parent) loginMaskLoader.load();
         LoginMaskController controller = loginMaskLoader.getController();
-        controller.loginOnActionEvent((ActionEvent event) -> {
+        controller.loginOnActionEvent (() -> {
+                final String username = User.getInstance ().getUsername ();
+
+                gamesceneController.setUsername("Welcome, " + username);
+                controller.clear();
+                showGameScreen();
+        });
+        /*controller.loginOnActionEvent((ActionEvent event) -> {
 
             if (controller.getUserName().equals("") || controller.getPassword().equals("")) {
 
@@ -367,7 +375,7 @@ public final class GameOfLife extends Application {
 
             }
 
-        });
+        });*/
 
         stackpane.setStyle("-fx-background-color: rgba(71, 71, 71, 0.5);");
     }

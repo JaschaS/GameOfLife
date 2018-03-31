@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+option java_package = "de.gameoflife.payloads";
+option java_outer_classname = "GoFGame";
+
+message Game {
+  string gameName = 1;
+  string creationDate = 2;
+  string lastModifiedDate = 3;
+  int32 userID = 4;
+  int32 gameID = 5;
+  bool borderOverflow = 6;
+  bool historyAvailable = 7;
+  bool analysisAvailable = 8;
+  repeated bool startGeneration = 9;
+  repeated Evaluable birthRules = 10;
+  repeated Evaluable deathRules = 11;
+}
+
+message Evaluable {
+    repeated bool neighbours = 1;
+}

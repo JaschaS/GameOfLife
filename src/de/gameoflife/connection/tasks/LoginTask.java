@@ -1,13 +1,15 @@
 package de.gameoflife.connection.tasks;
 
 import com.goebl.david.Webb;
+import com.google.protobuf.ByteString;
+import de.gameoflife.payloads.Login;
 import org.json.JSONObject;
 
 /**
  *
  * @author JScholz
  */
-public class LoginTask extends DefaultTask<JSONObject> {
+public class LoginTask extends DefaultTask<Login.UserLogin> {
 
     //TODO load url from database
     private final String user;
@@ -15,8 +17,8 @@ public class LoginTask extends DefaultTask<JSONObject> {
 
     public LoginTask ( final String user, final String passwordHash ) {
 
-        super("http://localhost:8080");
-        
+        super ( "http://localhost:8080" );
+
         assert user != null && !user.isEmpty ();
         assert passwordHash != null && !passwordHash.isEmpty ();
 
@@ -31,9 +33,9 @@ public class LoginTask extends DefaultTask<JSONObject> {
     public String getPasswordHash () {
         return passwordHash;
     }
-
+    
     @Override
-    protected JSONObject call () throws Exception {
+    protected Login.UserLogin call () throws Exception {
         Webb webb = Webb.create ();
         webb.setBaseUri ( getUrl () );
 
@@ -43,8 +45,20 @@ public class LoginTask extends DefaultTask<JSONObject> {
                 .ensureSuccess ()
                 .asJsonObject ()
                 .getBody ();
-        
-        return result;
+
+        error = result.getBoolean ( "error" );
+        if ( error ) {
+            errorMassage = result.getString ( "errorMessage" );
+        }
+        else {
+
+            final String rawData = result.getString ( "message" );
+            Login.UserLogin user = Login.UserLogin.parseFrom ( ByteString.copyFromUtf8 ( rawData ) );
+
+            return user;
+        }
+
+        return null;
     }
 
 }

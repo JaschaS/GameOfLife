@@ -22,6 +22,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import org.json.JSONObject;
 import rmi.data.GameUI;
 
 /**
@@ -81,7 +82,7 @@ public final class GameOfLife extends Application {
                 Logger.getLogger ( GameOfLife.class.getName () ).log ( Level.SEVERE, null, ex );
             }
         } );
-
+        
         loadingScreen = FXMLLoader.load ( getClass ().getResource ( "FXML/LoadingScreen.fxml" ) );
         loadingScreen.setVisible ( false );
         loadingScreen.toBack ();
@@ -187,8 +188,8 @@ public final class GameOfLife extends Application {
         currentNodeToBack ();
 
         currentNodeInFront = parent;
-        gamescene.setVisible ( true );
-        gamescene.toFront ();
+        parent.setVisible ( true );
+        parent.toFront ();
     }
 
     private void loadOrDeleteGame ( final Parent parent, final TableViewWindow view ) {

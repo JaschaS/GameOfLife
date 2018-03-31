@@ -1,7 +1,11 @@
 package de.gameoflife.application.login;
 
+import com.google.protobuf.ByteString;
+import com.google.protobuf.InvalidProtocolBufferException;
 import de.gameoflife.application.User;
 import de.gameoflife.connection.tasks.LoginTask;
+import de.gameoflife.payloads.Login;
+import de.gameoflife.payloads.Login.UserLogin;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -39,10 +43,10 @@ public final class LoginMaskController implements Initializable {
     private LoginTask task;
     private final ArrayList<SuccededListener> succedListener;
 
-    public LoginMaskController() {
+    public LoginMaskController () {
         succedListener = new ArrayList<> ();
     }
-    
+
     @Override
     public void initialize ( URL location, ResourceBundle resources ) {
         login.defaultButtonProperty ().bind ( login.focusedProperty () );
@@ -62,12 +66,12 @@ public final class LoginMaskController implements Initializable {
                 task.addEventFilter (
                         WorkerStateEvent.WORKER_STATE_SUCCEEDED,
                         ( WorkerStateEvent stateEvent ) -> {
-                    try {
-                        taskSucceded ();
-                    }
-                    catch ( InterruptedException | ExecutionException ex ) {
-                        Logger.getLogger ( LoginMaskController.class.getName() ).log ( Level.SEVERE, null, ex );
-                    }
+                            try {
+                                taskSucceded ();
+                            }
+                            catch ( InterruptedException | ExecutionException ex ) {
+                                Logger.getLogger ( LoginMaskController.class.getName () ).log ( Level.SEVERE, null, ex );
+                            }
                         }
                 );
 
@@ -104,31 +108,31 @@ public final class LoginMaskController implements Initializable {
 
         assert task != null && task.isDone ();
 
-        final JSONObject result = task.get ();
-        final boolean error = result.getBoolean ( "error" );
+        final Login.UserLogin result = task.get ();
+
+        //TODO Error inside Protobuf
+        final boolean error = task.hasError ();//result.getBoolean ( "error" );
 
         if ( error ) {
-            setErrorText ( result.getString ( "message" ) );
+            setErrorText ( task.getErrorMessage () );//result.getString ( "errorMessage" ) );
         }
         else {
-            JSONObject user = result.getJSONObject ( "callback" );
-
-            //TODO vorname in user aendern?
-            final String username = user.getString ( "vorname" );
-            final int id = user.getInt ( "id" );
+            final String username = result.getUsername ();
+            final int id = result.getUserID ();
 
             User.create ( username, id );
 
-            for(SuccededListener listener : succedListener) {
-            
+            for ( SuccededListener listener : succedListener ) {
+
                 listener.succeded ();
-            
+
             }
         }
     }
-    
+
     public interface SuccededListener {
-        public void succeded();
+
+        public void succeded ();
     }
 
 }

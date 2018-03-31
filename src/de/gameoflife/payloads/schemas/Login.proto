@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+option java_package = "de.gameoflife.payloads";
+option java_outer_classname = "Login";
+
+message UserLogin {
+  string username = 1;
+  int32 userID = 2;
+}

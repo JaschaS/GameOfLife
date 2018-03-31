@@ -42,8 +42,6 @@ public class TableViewWindow {
 
     public void setItems(ObservableList<GameUI> data) {
 
-        //ObservableList<GameUI> data = GameHandler.getInstance().getGameList(User.getInstance().getId());
-
         gameList.setItems(data);
 
     }

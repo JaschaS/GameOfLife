@@ -1,10 +1,10 @@
 package de.gameoflife.application;
 
 import de.gameoflife.application.login.LoginMaskController;
-import com.goebl.david.Webb;
 import de.gameoflife.connection.rabbitmq.RabbitMQConnection;
 import de.gameoflife.connection.rmi.GameHandler;
 import de.gameoflife.connection.rmi.IConnectionRuleEditor;
+import de.gameoflife.connection.tasks.LoadingScreenTask;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.rmi.NotBoundException;
@@ -12,10 +12,8 @@ import java.rmi.RemoteException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.collections.ObservableList;
-import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -24,7 +22,6 @@ import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
-import org.json.JSONObject;
 import rmi.data.GameUI;
 
 /**
@@ -200,7 +197,7 @@ public final class GameOfLife extends Application {
         loadingScreen.setVisible ( true );
         loadingScreen.toFront ();
 
-        LoadingScreenTask task = new LoadingScreenTask ( view, parent );
+        LoadingScreenTask task = new LoadingScreenTask ( view, parent, loadingScreen );
         Thread t = new Thread ( task );
         t.start ();
     }
@@ -401,41 +398,6 @@ public final class GameOfLife extends Application {
             closeScreen ( deleteGame );
 
         } );
-
-    }
-
-    private class LoadingScreenTask extends Task<Void> {
-
-        private final TableViewWindow view;
-        private final Parent parent;
-
-        public LoadingScreenTask ( TableViewWindow view, Parent parent ) {
-            this.view = view;
-            this.parent = parent;
-        }
-
-        @Override
-        protected Void call () throws Exception {
-
-            GameHandler handler = GameHandler.getInstance ();
-            IConnectionRuleEditor ruleEditor = handler.getRuleEditor ();
-            ObservableList<GameUI> data = ruleEditor.getGameList ( User.getInstance ().getId () );
-
-            Platform.runLater ( () -> {
-                view.setItems ( data );
-                view.clearSelection ();
-
-                loadingScreen.toBack ();
-                loadingScreen.setVisible ( false );
-
-                parent.toFront ();
-                parent.setVisible ( true );
-                parent.requestFocus ();
-            } );
-
-            return null;
-
-        }
 
     }
 

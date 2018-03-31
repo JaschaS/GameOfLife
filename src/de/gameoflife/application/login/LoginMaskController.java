@@ -1,6 +1,5 @@
 package de.gameoflife.application.login;
 
-import com.goebl.david.Webb;
 import de.gameoflife.application.User;
 import de.gameoflife.connection.tasks.LoginTask;
 import java.net.URL;
@@ -11,15 +10,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import static javafx.scene.input.KeyCode.T;
 import org.json.JSONObject;
 
 /**
@@ -41,7 +37,7 @@ public final class LoginMaskController implements Initializable {
     @FXML
     private Button login;
     private LoginTask task;
-    private ArrayList<SuccededListener> succedListener;
+    private final ArrayList<SuccededListener> succedListener;
 
     public LoginMaskController() {
         succedListener = new ArrayList<> ();
@@ -69,10 +65,7 @@ public final class LoginMaskController implements Initializable {
                     try {
                         taskSucceded ();
                     }
-                    catch ( InterruptedException ex ) {
-                        Logger.getLogger ( LoginMaskController.class.getName() ).log ( Level.SEVERE, null, ex );
-                    }
-                    catch ( ExecutionException ex ) {
+                    catch ( InterruptedException | ExecutionException ex ) {
                         Logger.getLogger ( LoginMaskController.class.getName() ).log ( Level.SEVERE, null, ex );
                     }
                         }

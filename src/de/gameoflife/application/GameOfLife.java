@@ -30,16 +30,16 @@ import rmi.data.GameUI;
 /**
  *
  * @author JScholz
- *
+ * <p>
  * @version 2014-12-11-1
- *
+ * <p>
  */
 public final class GameOfLife extends Application {
 
     public static ReadOnlyDoubleProperty stageWidthProperty;
     public static ReadOnlyDoubleProperty stageHeightProperty;
 
-    private final StackPane stackpane = new StackPane();
+    private final StackPane stackpane = new StackPane ();
     private Stage primaryStage;
     private AnchorPane gamescene;
     private Parent newGame;
@@ -54,422 +54,353 @@ public final class GameOfLife extends Application {
     private DeleteGameController deleteGameController;
     private Node currentNodeInFront;
     private RabbitMQConnection queue;
-    
-    private final String loginMaskURL = "http://localhost:8080";
 
     @Override
-    public void start(Stage primaryStage) throws IOException {
+    public void start ( Stage primaryStage ) throws IOException {
 
-        stageWidthProperty = primaryStage.widthProperty();
-        stageHeightProperty = primaryStage.heightProperty();
+        stageWidthProperty = primaryStage.widthProperty ();
+        stageHeightProperty = primaryStage.heightProperty ();
 
         this.primaryStage = primaryStage;
 
-        FXMLLoader connectionErrorLoader = new FXMLLoader(getClass().getResource("FXML/ConnectionError.fxml")); //FXMLLoader.load( getClass().getResource("FXML/NewGame.fxml") );
+        FXMLLoader connectionErrorLoader = new FXMLLoader ( getClass ().getResource ( "FXML/ConnectionError.fxml" ) ); //FXMLLoader.load( getClass().getResource("FXML/NewGame.fxml") );
 
-        Parent connectionError = (Parent) connectionErrorLoader.load();
-        connectionError.setVisible(false);
-        ConnectionErrorController connectionErrorController = connectionErrorLoader.getController();
-        connectionErrorController.addActionEvent((ActionEvent event) -> {
+        Parent connectionError = ( Parent ) connectionErrorLoader.load ();
+        connectionError.setVisible ( false );
+        ConnectionErrorController connectionErrorController = connectionErrorLoader.getController ();
+        connectionErrorController.addActionEvent ( ( ActionEvent event ) -> {
             try {
 
-                GameHandler.getInstance().establishConnection();
-                
-                connectionError.setVisible(false);
-                connectionError.toBack();
+                GameHandler.getInstance ().establishConnection ();
 
-                loginMask.setVisible(true);
-                loginMask.toFront();
+                connectionError.setVisible ( false );
+                connectionError.toBack ();
 
-            } catch (NotBoundException | MalformedURLException | RemoteException ex) {
-                Logger.getLogger(GameOfLife.class.getName()).log(Level.SEVERE, null, ex);
+                loginMask.setVisible ( true );
+                loginMask.toFront ();
+
             }
-        });
+            catch ( NotBoundException | MalformedURLException | RemoteException ex ) {
+                Logger.getLogger ( GameOfLife.class.getName () ).log ( Level.SEVERE, null, ex );
+            }
+        } );
 
-        loadingScreen = FXMLLoader.load(getClass().getResource("FXML/LoadingScreen.fxml"));
-        loadingScreen.setVisible(false);
-        loadingScreen.toBack();
+        loadingScreen = FXMLLoader.load ( getClass ().getResource ( "FXML/LoadingScreen.fxml" ) );
+        loadingScreen.setVisible ( false );
+        loadingScreen.toBack ();
 
-        initLoginScreen();
-        initGameScreen();
-        initLoadGame();
-        initDeleteGame();
-        initNewGameScreen();
+        initLoginScreen ();
+        initGameScreen ();
+        initLoadGame ();
+        initDeleteGame ();
+        initNewGameScreen ();
 
-        ObservableList<Node> children = stackpane.getChildren();
-        children.addAll(loginMask, gamescene, newGame, loadGame, deleteGame, loadingScreen, connectionError);
+        ObservableList<Node> children = stackpane.getChildren ();
+        children.addAll ( loginMask, gamescene, newGame, loadGame, deleteGame, loadingScreen, connectionError );
 
         currentNodeInFront = loginMask;
 
-        Scene scene = new Scene(stackpane, 1280, 720);
+        Scene scene = new Scene ( stackpane, 1280, 720 );
 
-        primaryStage.centerOnScreen();
-        primaryStage.setTitle("Game of Life");
-        primaryStage.setScene(scene);
-        primaryStage.show();
+        primaryStage.centerOnScreen ();
+        primaryStage.setTitle ( "Game of Life" );
+        primaryStage.setScene ( scene );
+        primaryStage.show ();
 
         try {
 
-            queue = new RabbitMQConnection();
+            queue = new RabbitMQConnection ();
 
-            GameHandler.init();
+            GameHandler.init ();
 
-        } catch (NotBoundException | MalformedURLException | RemoteException ex) {
+        }
+        catch ( NotBoundException | MalformedURLException | RemoteException ex ) {
 
-            loginMask.setVisible(false);
-            loginMask.toBack();
+            loginMask.setVisible ( false );
+            loginMask.toBack ();
 
-            connectionError.setVisible(true);
-            connectionError.toFront();
+            connectionError.setVisible ( true );
+            connectionError.toFront ();
 
-        } catch (IOException ex) {
+        }
+        catch ( IOException ex ) {
 
-            loginMask.setVisible(false);
-            loginMask.toBack();
+            loginMask.setVisible ( false );
+            loginMask.toBack ();
 
-            connectionError.setVisible(true);
-            connectionError.toFront();
+            connectionError.setVisible ( true );
+            connectionError.toFront ();
 
         }
     }
 
     @Override
-    public void stop() throws Exception {
-        super.stop();
+    public void stop () throws Exception {
+        super.stop ();
 
-        queue.closeConnection();
+        queue.closeConnection ();
 
-        GameHandler connection = GameHandler.getInstance();
-        connection.stopCurrentRunningGame();
-        connection.closeConnection();
+        GameHandler connection = GameHandler.getInstance ();
+        connection.stopCurrentRunningGame ();
+        connection.closeConnection ();
 
-        System.exit(0);
+        System.exit ( 0 );
     }
 
-    public void showLoginScreen() {
-
-        currentNodeToBack();
-
-        GameHandler.getInstance().clearGameList();
-        
-        currentNodeInFront = loginMask;
-        loginMask.setVisible(true);
-        loginMask.toFront();
-
-        User.removeInstance();
+    public void showLoginScreen () {
+        showScreen ( loginMask );
+        GameHandler.getInstance ().clearGameList ();
+        User.removeInstance ();
 
     }
 
-    public void showGameScreen() {
+    public void showGameScreen () {
+        showScreen ( gamescene );
+    }
 
-        currentNodeToBack();
+    public void newGame () {
 
-        currentNodeInFront = gamescene;
-        gamescene.toFront();
-        gamescene.setVisible(true);
+        newGame.toFront ();
+        newGame.setVisible ( true );
+
+        gamescene.setDisable ( true );
+
+        newGameController.setFocus ();
 
     }
 
-    public void newGame() {
+    public void renameGame ( int gameId ) {
 
-        newGame.toFront();
-        newGame.setVisible(true);
+        newGameController.setGameId ( gameId );
+        newGameController.createsAGame ( false );
 
-        gamescene.setDisable(true);
-
-        newGameController.setFocus();
+        newGame ();
 
     }
 
-    public void renameGame(int gameId) {
-
-        newGameController.setGameId(gameId);
-        newGameController.createsAGame(false);
-
-        newGame.toFront();
-        newGame.setVisible(true);
-
-        gamescene.setDisable(true);
-
-        newGameController.setFocus();
-
+    public void loadGame () {
+        loadOrDeleteGame ( loadGame, loadGameController );
     }
 
-    public void loadGame() {
-
-        gamescene.setDisable(true);
-
-        loadingScreen.setVisible(true);
-        loadingScreen.toFront();
-
-        LoadingScreenTask task = new LoadingScreenTask(loadGameController, loadGame);
-        Thread t = new Thread(task);
-        t.start();
-
+    public void deleteGame () {
+        loadOrDeleteGame ( deleteGame, deleteGameController );
     }
 
-    public void deleteGame() {
+    private void showScreen ( final Parent parent ) {
+        currentNodeToBack ();
 
-        gamescene.setDisable(true);
-
-        loadingScreen.setVisible(true);
-        loadingScreen.toFront();
-
-        LoadingScreenTask task = new LoadingScreenTask(deleteGameController, deleteGame);
-        Thread t = new Thread(task);
-        t.start();
-
+        currentNodeInFront = parent;
+        gamescene.setVisible ( true );
+        gamescene.toFront ();
     }
 
-    private void closeLoadScreen() {
+    private void loadOrDeleteGame ( final Parent parent, final TableViewWindow view ) {
+        gamescene.setDisable ( true );
 
-        loadGame.setVisible(false);
-        loadGame.toBack();
-        gamescene.setDisable(false);
+        loadingScreen.setVisible ( true );
+        loadingScreen.toFront ();
 
+        LoadingScreenTask task = new LoadingScreenTask ( view, parent );
+        Thread t = new Thread ( task );
+        t.start ();
     }
 
-    private void closeDeleteScreen() {
-
-        deleteGame.setVisible(false);
-        deleteGame.toBack();
-        gamescene.setDisable(false);
-
+    private void closeNewGame () {
+        newGameController.clearText ();
+        closeScreen ( newGame );
     }
 
-    private void closeNewGame() {
-        newGameController.clearText();
-        newGame.setVisible(false);
-        newGame.toBack();
-        gamescene.setDisable(false);
+    private void currentNodeToBack () {
+        currentNodeInFront.setVisible ( false );
+        currentNodeInFront.toBack ();
     }
 
-    private void currentNodeToBack() {
-        currentNodeInFront.setVisible(false);
-        currentNodeInFront.toBack();
+    private void closeScreen ( final Parent parent ) {
+        parent.setVisible ( false );
+        parent.toBack ();
+        gamescene.setDisable ( false );
     }
 
-    private void initNewGameScreen() throws IOException {
-        FXMLLoader newGameLoader = new FXMLLoader(getClass().getResource("FXML/NewGame.fxml")); //FXMLLoader.load( getClass().getResource("FXML/NewGame.fxml") );
+    private void initNewGameScreen () throws IOException {
+        FXMLLoader newGameLoader = new FXMLLoader ( getClass ().getResource ( "FXML/NewGame.fxml" ) ); //FXMLLoader.load( getClass().getResource("FXML/NewGame.fxml") );
 
-        newGame = (Parent) newGameLoader.load();
-        newGame.setVisible(false);
-        newGameController = newGameLoader.getController();
-        newGameController.createEvent((ActionEvent event1) -> {
+        newGame = ( Parent ) newGameLoader.load ();
+        newGame.setVisible ( false );
+        newGameController = newGameLoader.getController ();
+        newGameController.createEvent ( ( ActionEvent event1 ) -> {
             try {
 
-                GameHandler handler = GameHandler.getInstance();
+                GameHandler handler = GameHandler.getInstance ();
                 IConnectionRuleEditor ruleEditor = handler.getRuleEditor ();
 
-                if (newGameController.createsAGame()) {
+                if ( newGameController.createsAGame () ) {
 
-                    boolean successful = ruleEditor.generateNewGame(User.getInstance().getId(), newGameController.getGameName());
+                    boolean successful = ruleEditor.generateNewGame ( User.getInstance ().getId (), newGameController.getGameName () );
 
-                    if (successful) {
+                    if ( successful ) {
 
-                        gamesceneController.createTab(newGameController.getGameName());
+                        gamesceneController.createTab ( newGameController.getGameName () );
 
-                        closeNewGame();
+                        closeNewGame ();
 
-                    } else {
+                    }
+                    else {
 
-                        newGameController.setErrorText("An error occurred.");
+                        newGameController.setErrorText ( "An error occurred." );
 
                     }
 
-                } else {
+                }
+                else {
 
-                    String newName = newGameController.getGameName();
+                    String newName = newGameController.getGameName ();
 
-                    if (!newName.equals("")) {
+                    if ( !newName.equals ( "" ) ) {
 
-                        GameUI game = handler.getGame(newGameController.getGameId());
+                        GameUI game = handler.getGame ( newGameController.getGameId () );
 
-                        if (!newName.equals(game.getGameName())) {
+                        if ( !newName.equals ( game.getGameName () ) ) {
 
-                            game.setGameName(newGameController.getGameName());
+                            game.setGameName ( newGameController.getGameName () );
 
-                            ruleEditor.saveGame(game.getGameId());
+                            ruleEditor.saveGame ( game.getGameId () );
 
                         }
 
-                        gamesceneController.renameSelectedTab(newName);
-                        newGameController.createsAGame(true);
-                        closeNewGame();
+                        gamesceneController.renameSelectedTab ( newName );
+                        newGameController.createsAGame ( true );
+                        closeNewGame ();
 
-                    } else {
+                    }
+                    else {
 
-                        newGameController.setErrorText("Wrong input.");
+                        newGameController.setErrorText ( "Wrong input." );
 
                     }
 
                 }
 
-            } catch (IOException ex) {
-                Logger.getLogger(GameOfLife.class.getName()).log(Level.SEVERE, null, ex);
             }
-        });
-
-        newGameController.cancelEvent((ActionEvent event2) -> {
-
-            closeNewGame();
-
-        });
-
-    }
-
-    private void initLoginScreen() throws IOException {
-        FXMLLoader loginMaskLoader = new FXMLLoader(getClass().getResource("FXML/LoginMask.fxml"));
-
-        loginMask = (Parent) loginMaskLoader.load();
-        LoginMaskController controller = loginMaskLoader.getController();
-        controller.loginOnActionEvent (() -> {
-                final String username = User.getInstance ().getUsername ();
-
-                gamesceneController.setUsername("Welcome, " + username);
-                controller.clear();
-                showGameScreen();
-        });
-        /*controller.loginOnActionEvent((ActionEvent event) -> {
-
-            if (controller.getUserName().equals("") || controller.getPassword().equals("")) {
-
-                controller.setErrorText("Username or password empty!");
-
-            } else {
-
-                //TODO loginMaskUrl in Datenbank speichern
-                Webb webb = Webb.create();
-                webb.setBaseUri(loginMaskURL);
-
-                JSONObject result = webb.get("/login")
-                        .param("loginname", controller.getUserName())
-                        .param("password", controller.getPassword())
-                        .ensureSuccess()
-                        .asJsonObject()
-                        .getBody();
-
-                boolean error = result.getBoolean("error");
-
-                if (error) {
-
-                    controller.setErrorText(result.getString("message"));
-
-                } else {
-
-                    JSONObject user = result.getJSONObject("callback");
-
-                    //TODO vorname in user aendern?
-                    String username = user.getString("vorname");
-                    int id = user.getInt ("id");
-
-                    User.create(username, id);
-
-                    gamesceneController.setUsername("Welcome, " + username);
-
-                    controller.clear();
-
-                    showGameScreen();
-
-                }
-
+            catch ( IOException ex ) {
+                Logger.getLogger ( GameOfLife.class.getName () ).log ( Level.SEVERE, null, ex );
             }
+        } );
 
-        });*/
+        newGameController.cancelEvent ( ( ActionEvent event2 ) -> {
 
-        stackpane.setStyle("-fx-background-color: rgba(71, 71, 71, 0.5);");
+            closeNewGame ();
+
+        } );
+
     }
 
-    private void initGameScreen() throws IOException {
+    private void initLoginScreen () throws IOException {
+        FXMLLoader loginMaskLoader = new FXMLLoader ( getClass ().getResource ( "FXML/LoginMask.fxml" ) );
 
-        FXMLLoader gamesceneLoader = new FXMLLoader(getClass().getResource("FXML/GoF.fxml"));
+        loginMask = ( Parent ) loginMaskLoader.load ();
+        LoginMaskController controller = loginMaskLoader.getController ();
+        controller.loginOnActionEvent ( () -> {
+            final String username = User.getInstance ().getUsername ();
 
-        gamescene = (AnchorPane) gamesceneLoader.load();
-        gamescene.setVisible(false);
-        gamescene.prefWidthProperty().bind(stackpane.widthProperty());
-        gamescene.prefHeightProperty().bind(stackpane.heightProperty());
-
-        gamesceneController = gamesceneLoader.getController();
-        gamesceneController.setRootApplication(this);
+            gamesceneController.setUsername ( "Welcome, " + username );
+            controller.clear ();
+            showGameScreen ();
+        } );
+        stackpane.setStyle ( "-fx-background-color: rgba(71, 71, 71, 0.5);" );
     }
 
-    private void initLoadGame() throws IOException {
+    private void initGameScreen () throws IOException {
 
-        FXMLLoader loadingScreenLoader = new FXMLLoader(getClass().getResource("FXML/LoadGame.fxml"));
+        FXMLLoader gamesceneLoader = new FXMLLoader ( getClass ().getResource ( "FXML/GoF.fxml" ) );
 
-        loadGame = (Parent) loadingScreenLoader.load();
-        loadGame.setVisible(false);
+        gamescene = ( AnchorPane ) gamesceneLoader.load ();
+        gamescene.setVisible ( false );
+        gamescene.prefWidthProperty ().bind ( stackpane.widthProperty () );
+        gamescene.prefHeightProperty ().bind ( stackpane.heightProperty () );
 
-        loadGameController = loadingScreenLoader.getController();
+        gamesceneController = gamesceneLoader.getController ();
+        gamesceneController.setRootApplication ( this );
+    }
 
-        loadGameController.okButtonEvent((ActionEvent event) -> {
+    private void initLoadGame () throws IOException {
+
+        FXMLLoader loadingScreenLoader = new FXMLLoader ( getClass ().getResource ( "FXML/LoadGame.fxml" ) );
+
+        loadGame = ( Parent ) loadingScreenLoader.load ();
+        loadGame.setVisible ( false );
+
+        loadGameController = loadingScreenLoader.getController ();
+
+        loadGameController.okButtonEvent ( ( ActionEvent event ) -> {
 
             try {
 
-                int gameId = loadGameController.getSelectedGameID();
+                int gameId = loadGameController.getSelectedGameID ();
 
-                if (gameId != TableViewWindow.ERROR_VALUE) {
+                if ( gameId != TableViewWindow.ERROR_VALUE ) {
 
-                    if (!gamesceneController.gameIsOpen(gameId)) {
+                    if ( !gamesceneController.gameIsOpen ( gameId ) ) {
 
-                        gamesceneController.createTab(gameId);
+                        gamesceneController.createTab ( gameId );
 
-                        closeLoadScreen();
+                        closeScreen ( loadGame );
 
-                    } else {
-                        closeLoadScreen();
+                    }
+                    else {
+                        closeScreen ( loadGame );
                     }
 
                 }
 
-            } catch (IOException ex) {
-                Logger.getLogger(GameOfLife.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            catch ( IOException ex ) {
+                Logger.getLogger ( GameOfLife.class.getName () ).log ( Level.SEVERE, null, ex );
             }
 
-        });
+        } );
 
-        loadGameController.cancelEvent((ActionEvent event) -> {
+        loadGameController.cancelEvent ( ( ActionEvent event ) -> {
 
-            closeLoadScreen();
+            closeScreen ( loadGame );
 
-        });
+        } );
 
     }
 
-    private void initDeleteGame() throws IOException {
+    private void initDeleteGame () throws IOException {
 
-        FXMLLoader deleteGameLoader = new FXMLLoader(getClass().getResource("FXML/DeleteGame.fxml"));
+        FXMLLoader deleteGameLoader = new FXMLLoader ( getClass ().getResource ( "FXML/DeleteGame.fxml" ) );
 
-        deleteGame = (Parent) deleteGameLoader.load();
-        deleteGame.setVisible(false);
+        deleteGame = ( Parent ) deleteGameLoader.load ();
+        deleteGame.setVisible ( false );
 
-        deleteGameController = deleteGameLoader.getController();
+        deleteGameController = deleteGameLoader.getController ();
 
-        deleteGameController.okButtonEvent((ActionEvent deleteEvent) -> {
+        deleteGameController.okButtonEvent ( ( ActionEvent deleteEvent ) -> {
 
-            int gameId = deleteGameController.getSelectedGameID();
-            System.out.println(gameId);
-            
-            if (gameId != TableViewWindow.ERROR_VALUE) {
+            int gameId = deleteGameController.getSelectedGameID ();
+            System.out.println ( gameId );
 
-                if (gamesceneController.gameIsOpen(gameId)) {
-                    gamesceneController.closeTab(gameId);
+            if ( gameId != TableViewWindow.ERROR_VALUE ) {
+
+                if ( gamesceneController.gameIsOpen ( gameId ) ) {
+                    gamesceneController.closeTab ( gameId );
                 }
 
-                queue.deleteGame(User.getInstance().getId(), gameId);
+                queue.deleteGame ( User.getInstance ().getId (), gameId );
 
                 //TODO Spiel Tab offen und loeschen soll das Tab schließen.
-                closeDeleteScreen();
+                closeScreen ( deleteGame );
 
             }
 
-        });
+        } );
 
-        deleteGameController.cancelEvent((ActionEvent cancelEvent) -> {
+        deleteGameController.cancelEvent ( ( ActionEvent cancelEvent ) -> {
 
-            closeDeleteScreen();
+            closeScreen ( deleteGame );
 
-        });
+        } );
 
     }
 
@@ -478,29 +409,29 @@ public final class GameOfLife extends Application {
         private final TableViewWindow view;
         private final Parent parent;
 
-        public LoadingScreenTask(TableViewWindow view, Parent parent) {
+        public LoadingScreenTask ( TableViewWindow view, Parent parent ) {
             this.view = view;
             this.parent = parent;
         }
 
         @Override
-        protected Void call() throws Exception {
+        protected Void call () throws Exception {
 
-            GameHandler handler = GameHandler.getInstance();
+            GameHandler handler = GameHandler.getInstance ();
             IConnectionRuleEditor ruleEditor = handler.getRuleEditor ();
-            ObservableList<GameUI> data = ruleEditor.getGameList(User.getInstance().getId());
+            ObservableList<GameUI> data = ruleEditor.getGameList ( User.getInstance ().getId () );
 
-            Platform.runLater(() -> {
-                view.setItems(data);
-                view.clearSelection();
+            Platform.runLater ( () -> {
+                view.setItems ( data );
+                view.clearSelection ();
 
-                loadingScreen.toBack();
-                loadingScreen.setVisible(false);
+                loadingScreen.toBack ();
+                loadingScreen.setVisible ( false );
 
-                parent.toFront();
-                parent.setVisible(true);
-                parent.requestFocus();
-            });
+                parent.toFront ();
+                parent.setVisible ( true );
+                parent.requestFocus ();
+            } );
 
             return null;
 
@@ -508,8 +439,8 @@ public final class GameOfLife extends Application {
 
     }
 
-    public static void main(String[] args) {
-        launch(args);
+    public static void main ( String[] args ) {
+        launch ( args );
     }
 
 }

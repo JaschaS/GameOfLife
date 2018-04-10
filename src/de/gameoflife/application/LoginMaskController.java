@@ -1,11 +1,7 @@
-package de.gameoflife.application.login;
+package de.gameoflife.application;
 
-import com.google.protobuf.ByteString;
-import com.google.protobuf.InvalidProtocolBufferException;
-import de.gameoflife.application.User;
 import de.gameoflife.connection.tasks.LoginTask;
 import de.gameoflife.payloads.Login;
-import de.gameoflife.payloads.Login.UserLogin;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -20,7 +16,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import org.json.JSONObject;
 
 /**
  * FXML Controller class
@@ -42,6 +37,8 @@ public final class LoginMaskController implements Initializable {
     private Button login;
     private LoginTask task;
     private final ArrayList<SuccededListener> succedListener;
+    private GameOfLifeController gamesceneController;
+    private GameOfLife appHandler;
 
     public LoginMaskController () {
         succedListener = new ArrayList<> ();
@@ -80,14 +77,39 @@ public final class LoginMaskController implements Initializable {
             }
         } );
 
+        succedListener.add ( () -> {
+            final String username = User.getInstance ().getUsername ();
+            final GameOfLifeController controller = getGameOfLifeController ();
+            final GameOfLife app = getGameOfLife ();
+                    
+            assert controller != null;
+            assert app != null;
+                    
+            controller.setUsername ( "Welcome, " + username );
+            clear ();
+
+            app.showGameScreen ();
+        } );
     }
 
-    public void loginOnActionEvent ( SuccededListener listener ) {
-        succedListener.add ( listener );
+    public void setGameOfLifeController ( final GameOfLifeController controller ) {
+        gamesceneController = controller;
+    }
+
+    public void setGameOfLife ( final GameOfLife app ) {
+        appHandler = app;
     }
 
     public void setErrorText ( String text ) {
         error.setText ( text );
+    }
+
+    public GameOfLifeController getGameOfLifeController () {
+        return gamesceneController;
+    }
+
+    public GameOfLife getGameOfLife () {
+        return appHandler;
     }
 
     public String getUserName () {

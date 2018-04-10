@@ -1,9 +1,9 @@
 package de.gameoflife.application;
 
-import de.gameoflife.application.login.LoginMaskController;
 import de.gameoflife.connection.rabbitmq.RabbitMQConnection;
 import de.gameoflife.connection.rmi.GameHandler;
 import de.gameoflife.connection.rmi.IConnectionRuleEditor;
+import de.gameoflife.connection.tasks.DeleteGameTask;
 import de.gameoflife.connection.tasks.LoadingScreenTask;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -22,7 +22,6 @@ import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
-import org.json.JSONObject;
 import rmi.data.GameUI;
 
 /**
@@ -82,13 +81,13 @@ public final class GameOfLife extends Application {
                 Logger.getLogger ( GameOfLife.class.getName () ).log ( Level.SEVERE, null, ex );
             }
         } );
-        
+
         loadingScreen = FXMLLoader.load ( getClass ().getResource ( "FXML/LoadingScreen.fxml" ) );
         loadingScreen.setVisible ( false );
         loadingScreen.toBack ();
 
-        initLoginScreen ();
         initGameScreen ();
+        initLoginScreen ();
         initLoadGame ();
         initDeleteGame ();
         initNewGameScreen ();
@@ -152,10 +151,6 @@ public final class GameOfLife extends Application {
 
     }
 
-    public void showGameScreen () {
-        showScreen ( gamescene );
-    }
-
     public void newGame () {
 
         newGame.toFront ();
@@ -182,6 +177,10 @@ public final class GameOfLife extends Application {
 
     public void deleteGame () {
         loadOrDeleteGame ( deleteGame, deleteGameController );
+    }
+
+    public void showGameScreen () {
+        showScreen ( gamescene );
     }
 
     private void showScreen ( final Parent parent ) {
@@ -297,13 +296,8 @@ public final class GameOfLife extends Application {
 
         loginMask = ( Parent ) loginMaskLoader.load ();
         LoginMaskController controller = loginMaskLoader.getController ();
-        controller.loginOnActionEvent ( () -> {
-            final String username = User.getInstance ().getUsername ();
-
-            gamesceneController.setUsername ( "Welcome, " + username );
-            controller.clear ();
-            showGameScreen ();
-        } );
+        controller.setGameOfLife ( this );
+        controller.setGameOfLifeController ( gamesceneController );
         stackpane.setStyle ( "-fx-background-color: rgba(71, 71, 71, 0.5);" );
     }
 
@@ -328,40 +322,9 @@ public final class GameOfLife extends Application {
         loadGame.setVisible ( false );
 
         loadGameController = loadingScreenLoader.getController ();
-
-        loadGameController.okButtonEvent ( ( ActionEvent event ) -> {
-
-            try {
-
-                int gameId = loadGameController.getSelectedGameID ();
-
-                if ( gameId != TableViewWindow.ERROR_VALUE ) {
-
-                    if ( !gamesceneController.gameIsOpen ( gameId ) ) {
-
-                        gamesceneController.createTab ( gameId );
-
-                        closeScreen ( loadGame );
-
-                    }
-                    else {
-                        closeScreen ( loadGame );
-                    }
-
-                }
-
-            }
-            catch ( IOException ex ) {
-                Logger.getLogger ( GameOfLife.class.getName () ).log ( Level.SEVERE, null, ex );
-            }
-
-        } );
-
-        loadGameController.cancelEvent ( ( ActionEvent event ) -> {
-
-            closeScreen ( loadGame );
-
-        } );
+        loadGameController.setGamescene ( gamescene );
+        loadGameController.setGamesceneController ( gamesceneController );
+        loadGameController.setLoadGameParent ( loadGame );
 
     }
 
@@ -373,33 +336,9 @@ public final class GameOfLife extends Application {
         deleteGame.setVisible ( false );
 
         deleteGameController = deleteGameLoader.getController ();
-
-        deleteGameController.okButtonEvent ( ( ActionEvent deleteEvent ) -> {
-
-            int gameId = deleteGameController.getSelectedGameID ();
-            System.out.println ( gameId );
-
-            if ( gameId != TableViewWindow.ERROR_VALUE ) {
-
-                if ( gamesceneController.gameIsOpen ( gameId ) ) {
-                    gamesceneController.closeTab ( gameId );
-                }
-
-                queue.deleteGame ( User.getInstance ().getId (), gameId );
-
-                //TODO Spiel Tab offen und loeschen soll das Tab schließen.
-                closeScreen ( deleteGame );
-
-            }
-
-        } );
-
-        deleteGameController.cancelEvent ( ( ActionEvent cancelEvent ) -> {
-
-            closeScreen ( deleteGame );
-
-        } );
-
+        deleteGameController.setGamescene ( gamescene );
+        deleteGameController.setGamesceneController ( gamesceneController );
+        deleteGameController.setLoadGameParent ( deleteGame );
     }
 
     public static void main ( String[] args ) {

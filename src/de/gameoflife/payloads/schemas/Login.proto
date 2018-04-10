@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option java_package = "de.gameoflife.payloads";
+option java_package = "de.gameoflife.application.login";
 option java_outer_classname = "Login";
 
 message UserLogin {

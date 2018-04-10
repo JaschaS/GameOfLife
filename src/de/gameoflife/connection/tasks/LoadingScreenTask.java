@@ -12,7 +12,6 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Parent;
-import org.json.JSONArray;
 import org.json.JSONObject;
 import rmi.data.GameUI;
 

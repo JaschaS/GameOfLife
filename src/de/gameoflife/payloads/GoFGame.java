@@ -94,7 +94,7 @@ public final class GoFGame {
     /**
      * <code>repeated .Evaluable birthRules = 10;</code>
      */
-    de.gameoflife.payloads.GoFGame.Evaluable getBirthRules(int index);
+        de.gameoflife.payloads.GoFGame.Evaluable getBirthRules(int index);
     /**
      * <code>repeated .Evaluable birthRules = 10;</code>
      */
@@ -107,7 +107,7 @@ public final class GoFGame {
     /**
      * <code>repeated .Evaluable birthRules = 10;</code>
      */
-    de.gameoflife.payloads.GoFGame.EvaluableOrBuilder getBirthRulesOrBuilder(
+        de.gameoflife.payloads.GoFGame.EvaluableOrBuilder getBirthRulesOrBuilder(
         int index);
 
     /**
@@ -118,7 +118,7 @@ public final class GoFGame {
     /**
      * <code>repeated .Evaluable deathRules = 11;</code>
      */
-    de.gameoflife.payloads.GoFGame.Evaluable getDeathRules(int index);
+        de.gameoflife.payloads.GoFGame.Evaluable getDeathRules(int index);
     /**
      * <code>repeated .Evaluable deathRules = 11;</code>
      */
@@ -131,7 +131,7 @@ public final class GoFGame {
     /**
      * <code>repeated .Evaluable deathRules = 11;</code>
      */
-    de.gameoflife.payloads.GoFGame.EvaluableOrBuilder getDeathRulesOrBuilder(
+        de.gameoflife.payloads.GoFGame.EvaluableOrBuilder getDeathRulesOrBuilder(
         int index);
   }
   /**
@@ -260,8 +260,7 @@ public final class GoFGame {
                 birthRules_ = new java.util.ArrayList<de.gameoflife.payloads.GoFGame.Evaluable>();
                 mutable_bitField0_ |= 0x00000200;
               }
-              birthRules_.add(
-                  input.readMessage(de.gameoflife.payloads.GoFGame.Evaluable.parser(), extensionRegistry));
+              birthRules_.add(input.readMessage(de.gameoflife.payloads.GoFGame.Evaluable.parser(), extensionRegistry));
               break;
             }
             case 90: {
@@ -269,8 +268,7 @@ public final class GoFGame {
                 deathRules_ = new java.util.ArrayList<de.gameoflife.payloads.GoFGame.Evaluable>();
                 mutable_bitField0_ |= 0x00000400;
               }
-              deathRules_.add(
-                  input.readMessage(de.gameoflife.payloads.GoFGame.Evaluable.parser(), extensionRegistry));
+              deathRules_.add(input.readMessage(de.gameoflife.payloads.GoFGame.Evaluable.parser(), extensionRegistry));
               break;
             }
           }
@@ -302,8 +300,7 @@ public final class GoFGame {
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
       return de.gameoflife.payloads.GoFGame.internal_static_Game_fieldAccessorTable
-          .ensureFieldAccessorsInitialized(
-              de.gameoflife.payloads.GoFGame.Game.class, de.gameoflife.payloads.GoFGame.Game.Builder.class);
+          .ensureFieldAccessorsInitialized(de.gameoflife.payloads.GoFGame.Game.class, de.gameoflife.payloads.GoFGame.Game.Builder.class);
     }
 
     private int bitField0_;
@@ -666,7 +663,7 @@ public final class GoFGame {
       if (!(obj instanceof de.gameoflife.payloads.GoFGame.Game)) {
         return super.equals(obj);
       }
-      de.gameoflife.payloads.GoFGame.Game other = (de.gameoflife.payloads.GoFGame.Game) obj;
+            de.gameoflife.payloads.GoFGame.Game other = (de.gameoflife.payloads.GoFGame.Game) obj;
 
       boolean result = true;
       result = result && getGameName()
@@ -835,14 +832,13 @@ public final class GoFGame {
         de.gameoflife.payloads.GoFGame.GameOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return de.gameoflife.payloads.GoFGame.internal_static_Game_descriptor;
+        return  de.gameoflife.payloads.GoFGame.internal_static_Game_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return de.gameoflife.payloads.GoFGame.internal_static_Game_fieldAccessorTable
-            .ensureFieldAccessorsInitialized(
-                de.gameoflife.payloads.GoFGame.Game.class, de.gameoflife.payloads.GoFGame.Game.Builder.class);
+        return  de.gameoflife.payloads.GoFGame.internal_static_Game_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(de.gameoflife.payloads.GoFGame.Game.class, de.gameoflife.payloads.GoFGame.Game.Builder.class);
       }
 
       // Construct using de.gameoflife.payloads.GoFGame.Game.newBuilder()
@@ -899,15 +895,15 @@ public final class GoFGame {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return de.gameoflife.payloads.GoFGame.internal_static_Game_descriptor;
+        return  de.gameoflife.payloads.GoFGame.internal_static_Game_descriptor;
       }
 
       public de.gameoflife.payloads.GoFGame.Game getDefaultInstanceForType() {
-        return de.gameoflife.payloads.GoFGame.Game.getDefaultInstance();
+        return  de.gameoflife.payloads.GoFGame.Game.getDefaultInstance();
       }
 
       public de.gameoflife.payloads.GoFGame.Game build() {
-        de.gameoflife.payloads.GoFGame.Game result = buildPartial();
+                de.gameoflife.payloads.GoFGame.Game result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
@@ -915,7 +911,7 @@ public final class GoFGame {
       }
 
       public de.gameoflife.payloads.GoFGame.Game buildPartial() {
-        de.gameoflife.payloads.GoFGame.Game result = new de.gameoflife.payloads.GoFGame.Game(this);
+                de.gameoflife.payloads.GoFGame.Game result = new de.gameoflife.payloads.GoFGame.Game(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
         result.gameName_ = gameName_;
@@ -1093,7 +1089,7 @@ public final class GoFGame {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        de.gameoflife.payloads.GoFGame.Game parsedMessage = null;
+                de.gameoflife.payloads.GoFGame.Game parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
@@ -1521,7 +1517,7 @@ public final class GoFGame {
       }
 
       private com.google.protobuf.RepeatedFieldBuilderV3<
-          de.gameoflife.payloads.GoFGame.Evaluable, de.gameoflife.payloads.GoFGame.Evaluable.Builder, de.gameoflife.payloads.GoFGame.EvaluableOrBuilder> birthRulesBuilder_;
+            de.gameoflife.payloads.GoFGame.Evaluable, de.gameoflife.payloads.GoFGame.Evaluable.Builder, de.gameoflife.payloads.GoFGame.EvaluableOrBuilder> birthRulesBuilder_;
 
       /**
        * <code>repeated .Evaluable birthRules = 10;</code>
@@ -1621,7 +1617,7 @@ public final class GoFGame {
        * <code>repeated .Evaluable birthRules = 10;</code>
        */
       public Builder addBirthRules(
-          de.gameoflife.payloads.GoFGame.Evaluable.Builder builderForValue) {
+            de.gameoflife.payloads.GoFGame.Evaluable.Builder builderForValue) {
         if (birthRulesBuilder_ == null) {
           ensureBirthRulesIsMutable();
           birthRules_.add(builderForValue.build());
@@ -1718,16 +1714,14 @@ public final class GoFGame {
        * <code>repeated .Evaluable birthRules = 10;</code>
        */
       public de.gameoflife.payloads.GoFGame.Evaluable.Builder addBirthRulesBuilder() {
-        return getBirthRulesFieldBuilder().addBuilder(
-            de.gameoflife.payloads.GoFGame.Evaluable.getDefaultInstance());
+        return getBirthRulesFieldBuilder().addBuilder(de.gameoflife.payloads.GoFGame.Evaluable.getDefaultInstance());
       }
       /**
        * <code>repeated .Evaluable birthRules = 10;</code>
        */
       public de.gameoflife.payloads.GoFGame.Evaluable.Builder addBirthRulesBuilder(
           int index) {
-        return getBirthRulesFieldBuilder().addBuilder(
-            index, de.gameoflife.payloads.GoFGame.Evaluable.getDefaultInstance());
+        return getBirthRulesFieldBuilder().addBuilder(index, de.gameoflife.payloads.GoFGame.Evaluable.getDefaultInstance());
       }
       /**
        * <code>repeated .Evaluable birthRules = 10;</code>
@@ -1737,11 +1731,11 @@ public final class GoFGame {
         return getBirthRulesFieldBuilder().getBuilderList();
       }
       private com.google.protobuf.RepeatedFieldBuilderV3<
-          de.gameoflife.payloads.GoFGame.Evaluable, de.gameoflife.payloads.GoFGame.Evaluable.Builder, de.gameoflife.payloads.GoFGame.EvaluableOrBuilder> 
+            de.gameoflife.payloads.GoFGame.Evaluable, de.gameoflife.payloads.GoFGame.Evaluable.Builder, de.gameoflife.payloads.GoFGame.EvaluableOrBuilder> 
           getBirthRulesFieldBuilder() {
         if (birthRulesBuilder_ == null) {
           birthRulesBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
-              de.gameoflife.payloads.GoFGame.Evaluable, de.gameoflife.payloads.GoFGame.Evaluable.Builder, de.gameoflife.payloads.GoFGame.EvaluableOrBuilder>(
+                    de.gameoflife.payloads.GoFGame.Evaluable, de.gameoflife.payloads.GoFGame.Evaluable.Builder, de.gameoflife.payloads.GoFGame.EvaluableOrBuilder>(
                   birthRules_,
                   ((bitField0_ & 0x00000200) == 0x00000200),
                   getParentForChildren(),
@@ -1761,7 +1755,7 @@ public final class GoFGame {
       }
 
       private com.google.protobuf.RepeatedFieldBuilderV3<
-          de.gameoflife.payloads.GoFGame.Evaluable, de.gameoflife.payloads.GoFGame.Evaluable.Builder, de.gameoflife.payloads.GoFGame.EvaluableOrBuilder> deathRulesBuilder_;
+            de.gameoflife.payloads.GoFGame.Evaluable, de.gameoflife.payloads.GoFGame.Evaluable.Builder, de.gameoflife.payloads.GoFGame.EvaluableOrBuilder> deathRulesBuilder_;
 
       /**
        * <code>repeated .Evaluable deathRules = 11;</code>
@@ -1861,7 +1855,7 @@ public final class GoFGame {
        * <code>repeated .Evaluable deathRules = 11;</code>
        */
       public Builder addDeathRules(
-          de.gameoflife.payloads.GoFGame.Evaluable.Builder builderForValue) {
+            de.gameoflife.payloads.GoFGame.Evaluable.Builder builderForValue) {
         if (deathRulesBuilder_ == null) {
           ensureDeathRulesIsMutable();
           deathRules_.add(builderForValue.build());
@@ -1958,16 +1952,14 @@ public final class GoFGame {
        * <code>repeated .Evaluable deathRules = 11;</code>
        */
       public de.gameoflife.payloads.GoFGame.Evaluable.Builder addDeathRulesBuilder() {
-        return getDeathRulesFieldBuilder().addBuilder(
-            de.gameoflife.payloads.GoFGame.Evaluable.getDefaultInstance());
+        return getDeathRulesFieldBuilder().addBuilder(de.gameoflife.payloads.GoFGame.Evaluable.getDefaultInstance());
       }
       /**
        * <code>repeated .Evaluable deathRules = 11;</code>
        */
       public de.gameoflife.payloads.GoFGame.Evaluable.Builder addDeathRulesBuilder(
           int index) {
-        return getDeathRulesFieldBuilder().addBuilder(
-            index, de.gameoflife.payloads.GoFGame.Evaluable.getDefaultInstance());
+        return getDeathRulesFieldBuilder().addBuilder(index, de.gameoflife.payloads.GoFGame.Evaluable.getDefaultInstance());
       }
       /**
        * <code>repeated .Evaluable deathRules = 11;</code>
@@ -1977,11 +1969,11 @@ public final class GoFGame {
         return getDeathRulesFieldBuilder().getBuilderList();
       }
       private com.google.protobuf.RepeatedFieldBuilderV3<
-          de.gameoflife.payloads.GoFGame.Evaluable, de.gameoflife.payloads.GoFGame.Evaluable.Builder, de.gameoflife.payloads.GoFGame.EvaluableOrBuilder> 
+            de.gameoflife.payloads.GoFGame.Evaluable, de.gameoflife.payloads.GoFGame.Evaluable.Builder, de.gameoflife.payloads.GoFGame.EvaluableOrBuilder> 
           getDeathRulesFieldBuilder() {
         if (deathRulesBuilder_ == null) {
           deathRulesBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
-              de.gameoflife.payloads.GoFGame.Evaluable, de.gameoflife.payloads.GoFGame.Evaluable.Builder, de.gameoflife.payloads.GoFGame.EvaluableOrBuilder>(
+                    de.gameoflife.payloads.GoFGame.Evaluable, de.gameoflife.payloads.GoFGame.Evaluable.Builder, de.gameoflife.payloads.GoFGame.EvaluableOrBuilder>(
                   deathRules_,
                   ((bitField0_ & 0x00000400) == 0x00000400),
                   getParentForChildren(),
@@ -2147,8 +2139,7 @@ public final class GoFGame {
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
       return de.gameoflife.payloads.GoFGame.internal_static_Evaluable_fieldAccessorTable
-          .ensureFieldAccessorsInitialized(
-              de.gameoflife.payloads.GoFGame.Evaluable.class, de.gameoflife.payloads.GoFGame.Evaluable.Builder.class);
+          .ensureFieldAccessorsInitialized(de.gameoflife.payloads.GoFGame.Evaluable.class, de.gameoflife.payloads.GoFGame.Evaluable.Builder.class);
     }
 
     public static final int NEIGHBOURS_FIELD_NUMBER = 1;
@@ -2226,7 +2217,7 @@ public final class GoFGame {
       if (!(obj instanceof de.gameoflife.payloads.GoFGame.Evaluable)) {
         return super.equals(obj);
       }
-      de.gameoflife.payloads.GoFGame.Evaluable other = (de.gameoflife.payloads.GoFGame.Evaluable) obj;
+            de.gameoflife.payloads.GoFGame.Evaluable other = (de.gameoflife.payloads.GoFGame.Evaluable) obj;
 
       boolean result = true;
       result = result && getNeighboursList()
@@ -2348,14 +2339,13 @@ public final class GoFGame {
         de.gameoflife.payloads.GoFGame.EvaluableOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return de.gameoflife.payloads.GoFGame.internal_static_Evaluable_descriptor;
+        return  de.gameoflife.payloads.GoFGame.internal_static_Evaluable_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return de.gameoflife.payloads.GoFGame.internal_static_Evaluable_fieldAccessorTable
-            .ensureFieldAccessorsInitialized(
-                de.gameoflife.payloads.GoFGame.Evaluable.class, de.gameoflife.payloads.GoFGame.Evaluable.Builder.class);
+        return  de.gameoflife.payloads.GoFGame.internal_static_Evaluable_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(de.gameoflife.payloads.GoFGame.Evaluable.class, de.gameoflife.payloads.GoFGame.Evaluable.Builder.class);
       }
 
       // Construct using de.gameoflife.payloads.GoFGame.Evaluable.newBuilder()
@@ -2382,15 +2372,15 @@ public final class GoFGame {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return de.gameoflife.payloads.GoFGame.internal_static_Evaluable_descriptor;
+        return  de.gameoflife.payloads.GoFGame.internal_static_Evaluable_descriptor;
       }
 
       public de.gameoflife.payloads.GoFGame.Evaluable getDefaultInstanceForType() {
-        return de.gameoflife.payloads.GoFGame.Evaluable.getDefaultInstance();
+        return  de.gameoflife.payloads.GoFGame.Evaluable.getDefaultInstance();
       }
 
       public de.gameoflife.payloads.GoFGame.Evaluable build() {
-        de.gameoflife.payloads.GoFGame.Evaluable result = buildPartial();
+                de.gameoflife.payloads.GoFGame.Evaluable result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
@@ -2398,7 +2388,7 @@ public final class GoFGame {
       }
 
       public de.gameoflife.payloads.GoFGame.Evaluable buildPartial() {
-        de.gameoflife.payloads.GoFGame.Evaluable result = new de.gameoflife.payloads.GoFGame.Evaluable(this);
+                de.gameoflife.payloads.GoFGame.Evaluable result = new de.gameoflife.payloads.GoFGame.Evaluable(this);
         int from_bitField0_ = bitField0_;
         if (((bitField0_ & 0x00000001) == 0x00000001)) {
           neighbours_ = java.util.Collections.unmodifiableList(neighbours_);
@@ -2469,7 +2459,7 @@ public final class GoFGame {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        de.gameoflife.payloads.GoFGame.Evaluable parsedMessage = null;
+                de.gameoflife.payloads.GoFGame.Evaluable parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
